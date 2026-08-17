@@ -1,7 +1,7 @@
 {
   "tasks": {
-    "format": "deno run -A npm:prettier@3.6.2 --write .",
-    "format:check": "deno run -A npm:prettier@3.6.2 --check .",
+    "format": "deno run -A npm:prettier@3.9.6 --write .",
+    "format:check": "deno run -A npm:prettier@3.9.6 --check .",
     "lint": "docker run --rm -v \"$PWD:/work\" -w /work node:22-bookworm-slim npx --yes gscan@6.4.2 content/themes/source --verbose",
     "test": "deno task lint && docker compose config --quiet"
   },

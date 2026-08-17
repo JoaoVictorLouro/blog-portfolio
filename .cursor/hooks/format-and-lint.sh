@@ -10,7 +10,7 @@ root=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
 cd "$root"
 
 if [[ -n "${file_path:-}" && -f "$file_path" ]]; then
-  if ! deno run -A npm:prettier@3.6.2 --write "$file_path" >/dev/null 2>&1; then
+  if ! deno run -A npm:prettier@3.9.6 --write "$file_path" >/dev/null 2>&1; then
     echo "format-and-lint: prettier skipped or failed for $file_path" >&2
   fi
 fi

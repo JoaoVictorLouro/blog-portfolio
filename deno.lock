@@ -2,7 +2,7 @@
   "version": "5",
   "specifiers": {
     "npm:gscan@6.4.2": "6.4.2_@opentelemetry+core@2.10.0__@opentelemetry+api@1.9.1",
-    "npm:prettier@3.6.2": "3.6.2"
+    "npm:prettier@3.9.6": "3.9.6"
   },
   "npm": {
     "@apm-js-collab/code-transformer-bundler-plugins@0.5.0": {
@@ -1508,10 +1508,10 @@
       "integrity": "sha512-F3asv42UuXchdzt+xXqfW1OGlVBe+mxa2mqI0pg5yAHZPvFmY3Y6drSf/GQ1A86WgWEN9Kzh/WrgKa6iGcHXLg==",
       "tarball": "https://adrollserv.jfrog.io/adrollserv/api/npm/npm-virtual/pend/-/pend-1.2.0.tgz"
     },
-    "prettier@3.6.2": {
-      "integrity": "sha512-I7AIg5boAr5R0FFtJ6rCfD+LFsWHp81dolrFD8S79U9tb8Az2nGrJncnMSnys+bpQJfRUzqs9hnA81OAA3hCuQ==",
+    "prettier@3.9.6": {
+      "integrity": "sha512-OpN0zzVdiaiAhxpuuj5efpIS4sY9j7bY6uR5mnj5yPzGkdkjNKSJeUThPb60Jw29QuAZgA4o+/iB49kFiaBX6g==",
       "bin": true,
-      "tarball": "https://adrollserv.jfrog.io/adrollserv/api/npm/npm-virtual/prettier/-/prettier-3.6.2.tgz"
+      "tarball": "https://adrollserv.jfrog.io/adrollserv/api/npm/npm-virtual/prettier/-/prettier-3.9.6.tgz"
     },
     "prettyjson@1.2.5": {
       "integrity": "sha512-rksPWtoZb2ZpT5OVgtmy0KHVM+Dca3iVwWY9ifwhcexfjebtgjg3wmrUt9PvJ59XIYBcknQeYHD8IAnVlh9lAw==",
