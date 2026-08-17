@@ -67,3 +67,6 @@ task recreate
 
 - **Pull requests** — Deno format check, gscan lint, and theme/Compose tests
 - **Publish** — build and push the Docker image to GHCR
+- **Renovate** — dependency updates Saturdays 09:00–20:00 (`America/Sao_Paulo`); minor and patch for `>=1.0.0` automerge (0.x and majors stay manual)
+
+Install the [Renovate GitHub App](https://github.com/apps/renovate) on this repository if it is not already enabled.
