@@ -1,0 +1,52 @@
+version: "3"
+
+dotenv: [.env]
+
+tasks:
+  default:
+    cmds:
+      - task: up
+
+  setup:
+    desc: Create .env from example if missing and ensure data directory exists
+    cmds:
+      - |
+        if [ ! -f .env ]; then
+          cp .env.example .env
+          echo "Created .env from .env.example"
+        else
+          echo ".env already exists"
+        fi
+      - mkdir -p data/content
+
+  up:
+    desc: Start Ghost in the background
+    deps: [setup]
+    cmds:
+      - docker compose up -d
+
+  down:
+    desc: Stop Ghost
+    cmds:
+      - docker compose down
+
+  logs:
+    desc: Follow Ghost container logs
+    cmds:
+      - docker compose logs -f ghost
+
+  status:
+    desc: Show Compose service status
+    cmds:
+      - docker compose ps
+
+  update:
+    desc: Pull the latest Ghost image and restart
+    cmds:
+      - docker compose pull
+      - docker compose up -d
+
+  recreate:
+    desc: Recreate the Ghost container (use after .env changes)
+    cmds:
+      - docker compose up -d --force-recreate ghost

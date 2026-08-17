@@ -1,0 +1,26 @@
+services:
+  ghost:
+    image: ghost:6-alpine
+    restart: unless-stopped
+    ports:
+      - "${PORT:-2368}:2368"
+    environment:
+      NODE_ENV: development
+      url: ${URL:-http://localhost:2368}
+      database__client: sqlite3
+      database__connection__filename: /var/lib/ghost/content/data/ghost.db
+      database__useNullAsDefault: "true"
+    volumes:
+      - ./data/content:/var/lib/ghost/content
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "require('http').get('http://127.0.0.1:2368/', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s

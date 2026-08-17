@@ -1,0 +1,21 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Local env & secrets
+.env
+.env.*
+!.env.example
+
+# Runtime Ghost data (bind-mounted, not baked into images)
+data/
+
+# Docs & editor noise
+*.md
+.idea/
+.vscode/
+.DS_Store
+
+# Task / local tooling
+Taskfile.yml
