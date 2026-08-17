@@ -1,23 +1,27 @@
 services:
   ghost:
-    image: ghost:6-alpine
+    build: .
+    image: ghcr.io/joaovictorlouro/blog-portfolio:latest
     restart: unless-stopped
     ports:
-      - "${PORT:-2368}:2368"
+      - '${PORT:-2368}:2368'
     environment:
       NODE_ENV: development
       url: ${URL:-http://localhost:2368}
       database__client: sqlite3
       database__connection__filename: /var/lib/ghost/content/data/ghost.db
-      database__useNullAsDefault: "true"
+      database__useNullAsDefault: 'true'
     volumes:
       - ./data/content:/var/lib/ghost/content
+      - ./content/themes:/var/lib/ghost/content/themes
+      - ./content/settings:/var/lib/ghost/content/settings
+      - ./content/public:/var/lib/ghost/content/public
     healthcheck:
       test:
         [
-          "CMD",
-          "node",
-          "-e",
+          'CMD',
+          'node',
+          '-e',
           "require('http').get('http://127.0.0.1:2368/', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))",
         ]
       interval: 30s

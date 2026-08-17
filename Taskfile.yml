@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 
 dotenv: [.env]
 
@@ -17,13 +17,13 @@ tasks:
         else
           echo ".env already exists"
         fi
-      - mkdir -p data/content
+      - mkdir -p data/content content/themes content/settings content/public
 
   up:
-    desc: Start Ghost in the background
+    desc: Build and start Ghost in the background
     deps: [setup]
     cmds:
-      - docker compose up -d
+      - docker compose up -d --build
 
   down:
     desc: Stop Ghost
@@ -41,12 +41,27 @@ tasks:
       - docker compose ps
 
   update:
-    desc: Pull the latest Ghost image and restart
+    desc: Pull base images, rebuild, and restart
     cmds:
       - docker compose pull
-      - docker compose up -d
+      - docker compose up -d --build
 
   recreate:
     desc: Recreate the Ghost container (use after .env changes)
     cmds:
-      - docker compose up -d --force-recreate ghost
+      - docker compose up -d --force-recreate --build ghost
+
+  format:
+    desc: Format repo files with Prettier (via Deno)
+    cmds:
+      - deno task format
+
+  lint:
+    desc: Lint Ghost theme with gscan
+    cmds:
+      - deno task lint
+
+  test:
+    desc: Run theme checks and validate Compose config
+    cmds:
+      - deno task test

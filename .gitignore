@@ -3,8 +3,12 @@
 .env.local
 .env.*.local
 
-# Ghost content & SQLite (bind-mounted from Compose)
+# Runtime Ghost data (sqlite, uploads, logs) — not versioned
 data/
+
+# Theme build artifacts
+content/themes/*/node_modules/
+content/themes/*/assets/built/
 
 # OS
 .DS_Store
@@ -16,6 +20,10 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+# Local tooling caches
+node_modules/
+.deno/
 
 # Logs & temp
 *.log

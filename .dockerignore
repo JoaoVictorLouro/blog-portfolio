@@ -2,6 +2,7 @@
 .git
 .gitignore
 .gitattributes
+.github
 
 # Local env & secrets
 .env
@@ -19,3 +20,8 @@ data/
 
 # Task / local tooling
 Taskfile.yml
+deno.json
+deno.lock
+node_modules/
+.prettierrc
+.prettierignore

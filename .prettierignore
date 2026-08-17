@@ -1,0 +1,8 @@
+node_modules/
+data/
+content/themes/**/*.hbs
+content/themes/source/yarn.lock
+content/themes/*/node_modules/
+content/themes/*/assets/built/
+*.min.css
+*.min.js
