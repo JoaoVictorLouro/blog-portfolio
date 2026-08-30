@@ -1,7 +1,7 @@
 {{!< default}}
 
 <main class="np-main np-home">
-    <section class="np-glass np-hero"{{#if @site.cover_image}} style="--np-hero-image: url('{{img_url @site.cover_image size="xxl"}}');"{{/if}}>
+    <section class="np-glass np-hero" data-np-tilt="subtle"{{#if @site.cover_image}} style="--np-hero-image: url('{{img_url @site.cover_image size="xxl"}}');"{{/if}}>
         {{#if @site.cover_image}}
             <div class="np-hero-media"></div>
             <div class="np-hero-shade" aria-hidden="true"></div>

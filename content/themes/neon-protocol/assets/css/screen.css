@@ -790,8 +790,23 @@ html.np-page-entering main {
   transition: transform 0.3s ease;
 }
 
-.np-card:hover {
+.np-card:hover:not([data-np-tilt]) {
   transform: translateY(-4px);
+}
+
+[data-np-tilt] {
+  --np-tilt-max: 6deg;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform 0.2s ease-out;
+}
+
+[data-np-tilt='subtle'] {
+  --np-tilt-max: 2deg;
+}
+
+[data-np-tilt].is-tilting {
+  transition: none;
 }
 
 .np-card-stripe {
@@ -1848,6 +1863,11 @@ html.np-tab-hidden *::after {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  [data-np-tilt] {
+    transform: none !important;
+    transition: none;
+  }
+
   .np-hero-media,
   .np-article-hero-media {
     animation: none;

@@ -336,6 +336,58 @@
     }, PAGE_GLITCH_MS);
   }
 
+  function parseTiltMax(el) {
+    const raw = getComputedStyle(el).getPropertyValue('--np-tilt-max').trim();
+    const value = Number.parseFloat(raw);
+    if (Number.isFinite(value)) {
+      return value;
+    }
+    return el.getAttribute('data-np-tilt') === 'subtle' ? 2 : 6;
+  }
+
+  function initTilt() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      return;
+    }
+    const targets = document.querySelectorAll('[data-np-tilt]');
+    if (!targets.length) {
+      return;
+    }
+    targets.forEach((el) => {
+      const maxDeg = parseTiltMax(el);
+
+      function handlePointerMove(event) {
+        if (event.pointerType !== 'mouse') {
+          return;
+        }
+        const rect = el.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) {
+          return;
+        }
+        const px = (event.clientX - rect.left) / rect.width;
+        const py = (event.clientY - rect.top) / rect.height;
+        const rotateY = (px - 0.5) * 2 * maxDeg;
+        const rotateX = (0.5 - py) * 2 * maxDeg;
+        el.classList.add('is-tilting');
+        el.style.transform = `perspective(900px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg)`;
+      }
+
+      function handlePointerLeave(event) {
+        if (event.pointerType && event.pointerType !== 'mouse') {
+          return;
+        }
+        el.classList.remove('is-tilting');
+        el.style.transform = '';
+      }
+
+      el.addEventListener('pointermove', handlePointerMove);
+      el.addEventListener('pointerleave', handlePointerLeave);
+    });
+  }
+
   document.addEventListener('click', (event) => {
     if (event.target.closest('[data-np-theme-toggle]')) {
       handleThemeToggle();
@@ -354,5 +406,6 @@
   syncTabVisibility();
   syncNavAriaCurrent();
   initNodeMap();
+  initTilt();
   bootstrapFxVisibility();
 })();
