@@ -27,10 +27,13 @@
 
     <div class="np-home-layout">
         <section>
-            <div class="np-section-head">
-                <h2 class="np-title" style="color: var(--np-secondary-container);">RECENT_ARTICLES</h2>
+            <header class="np-about-banner np-about-banner--row">
+                <div>
+                    <h2 class="np-title" style="color: var(--np-secondary-container);">RECENT_ARTICLES</h2>
+                    <p class="np-meta">LATEST TRANSMISSIONS // FEED SYNC</p>
+                </div>
                 <div class="np-live"><i></i><span class="np-label">LIVE FEED</span></div>
-            </div>
+            </header>
             <div class="np-home-feed">
                 {{#get "posts" filter="tag:-hash-portfolio" include="tags,authors" limit="4" as |recent|}}
                     {{#foreach recent}}
