@@ -290,6 +290,102 @@ button {
   opacity: 0;
 }
 
+.np-page-glitch {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  overflow: hidden;
+  mix-blend-mode: screen;
+  background: linear-gradient(
+    105deg,
+    color-mix(in srgb, var(--np-neon-teal) 16%, transparent) 0%,
+    transparent 28%,
+    color-mix(in srgb, var(--np-deep-violet) 14%, transparent) 52%,
+    transparent 70%,
+    color-mix(in srgb, var(--np-lantern-amber) 12%, transparent) 100%
+  );
+}
+
+.np-page-glitch::before,
+.np-page-glitch::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background-repeat: no-repeat;
+}
+
+.np-page-glitch::before {
+  background:
+    linear-gradient(
+      0deg,
+      transparent 0%,
+      transparent 8%,
+      color-mix(in srgb, var(--np-neon-teal) 28%, transparent) 16%,
+      transparent 24%,
+      transparent 100%
+    ),
+    color-mix(in srgb, var(--np-neon-teal) 10%, transparent);
+  background-size:
+    100% 72px,
+    100% 100%;
+  transform: translate(3px, -18px);
+}
+
+.np-page-glitch::after {
+  background:
+    linear-gradient(
+      0deg,
+      transparent 0%,
+      transparent 18%,
+      color-mix(in srgb, var(--np-cyber-magenta) 17%, transparent) 26%,
+      transparent 34%,
+      transparent 100%
+    ),
+    color-mix(in srgb, var(--np-cyber-magenta) 17%, transparent);
+  background-size:
+    100% 72px,
+    100% 100%;
+  transform: translate(-3px, 12px);
+}
+
+html.np-page-glitching .np-page-glitch {
+  visibility: visible;
+  animation: np-page-glitch-flash 0.34s ease-in-out forwards;
+}
+
+html.np-page-glitching .np-page-glitch::before {
+  opacity: 1;
+  animation:
+    np-page-glitch-scan 0.34s ease-out forwards,
+    np-page-glitch-slice 0.34s steps(3, end) forwards,
+    np-page-glitch-jitter 0.34s steps(4, end) forwards;
+}
+
+html.np-page-glitching .np-page-glitch::after {
+  opacity: 1;
+  animation:
+    np-page-glitch-scan-alt 0.34s ease-out forwards,
+    np-page-glitch-slice-alt 0.34s steps(3, end) forwards,
+    np-page-glitch-jitter-alt 0.34s steps(4, end) forwards;
+}
+
+html.np-page-glitching main {
+  animation: np-page-glitch-fade-out 0.34s ease-in forwards;
+}
+
+html.np-page-glitching .np-shell {
+  animation: np-page-glitch-shake 0.15s steps(2, end);
+}
+
+html.np-page-entering main {
+  opacity: 0;
+  animation: np-page-glitch-fade-in 0.3s ease-out forwards;
+}
+
 .np-nav {
   position: fixed;
   top: 0;
@@ -1585,6 +1681,159 @@ button {
   }
 }
 
+@keyframes np-page-glitch-flash {
+  0% {
+    opacity: 0;
+  }
+  18% {
+    opacity: 0.85;
+  }
+  55% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes np-page-glitch-scan {
+  0% {
+    opacity: 0.85;
+    background-position:
+      0 -55%,
+      center;
+  }
+  35% {
+    background-position:
+      0 8%,
+      center;
+  }
+  100% {
+    opacity: 0.4;
+    background-position:
+      0 145%,
+      center;
+  }
+}
+
+@keyframes np-page-glitch-scan-alt {
+  0% {
+    opacity: 0.75;
+    background-position:
+      0 125%,
+      center;
+  }
+  40% {
+    background-position:
+      0 58%,
+      center;
+  }
+  100% {
+    opacity: 0.35;
+    background-position:
+      0 -50%,
+      center;
+  }
+}
+
+@keyframes np-page-glitch-slice {
+  0% {
+    clip-path: inset(2% 0 78% 0);
+  }
+  50% {
+    clip-path: inset(48% 0 22% 0);
+  }
+  100% {
+    clip-path: inset(12% 0 64% 0);
+  }
+}
+
+@keyframes np-page-glitch-slice-alt {
+  0% {
+    clip-path: inset(72% 0 4% 0);
+  }
+  50% {
+    clip-path: inset(22% 0 52% 0);
+  }
+  100% {
+    clip-path: inset(58% 0 14% 0);
+  }
+}
+
+@keyframes np-page-glitch-jitter {
+  0% {
+    transform: translate(4px, -22px) skewX(-0.6deg);
+  }
+  25% {
+    transform: translate(-6px, -8px) skewX(0.8deg);
+  }
+  50% {
+    transform: translate(7px, 14px) skewX(-0.4deg);
+  }
+  75% {
+    transform: translate(-3px, 28px) skewX(0.5deg);
+  }
+  100% {
+    transform: translate(5px, 36px) skewX(-0.3deg);
+  }
+}
+
+@keyframes np-page-glitch-jitter-alt {
+  0% {
+    transform: translate(-5px, 26px) skewX(0.7deg);
+  }
+  25% {
+    transform: translate(8px, 6px) skewX(-0.9deg);
+  }
+  50% {
+    transform: translate(-7px, -16px) skewX(0.4deg);
+  }
+  75% {
+    transform: translate(4px, -28px) skewX(-0.6deg);
+  }
+  100% {
+    transform: translate(-6px, -38px) skewX(0.3deg);
+  }
+}
+
+@keyframes np-page-glitch-fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes np-page-glitch-fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes np-page-glitch-shake {
+  0%,
+  100% {
+    filter: none;
+    transform: translate(0, 0);
+  }
+  25% {
+    filter: brightness(1.18) contrast(1.1) hue-rotate(8deg);
+    transform: translate(-4px, 1px);
+  }
+  50% {
+    filter: brightness(0.9) contrast(1.14) hue-rotate(-6deg);
+    transform: translate(4px, -1px);
+  }
+  75% {
+    filter: brightness(1.22) contrast(1.06) hue-rotate(4deg);
+    transform: translate(-2px, 0);
+  }
+}
+
 html.np-tab-hidden *,
 html.np-tab-hidden *::before,
 html.np-tab-hidden *::after {
@@ -1617,6 +1866,19 @@ html.np-tab-hidden *::after {
   .np-map-scan-beam,
   .np-map-blip::before {
     animation: none;
+  }
+
+  html.np-page-glitching .np-page-glitch,
+  html.np-page-glitching .np-page-glitch::before,
+  html.np-page-glitching .np-page-glitch::after,
+  html.np-page-glitching .np-shell,
+  html.np-page-glitching main,
+  html.np-page-entering main {
+    animation: none;
+  }
+
+  html.np-page-entering main {
+    opacity: 1;
   }
 }
 

@@ -234,12 +234,115 @@
     });
   }
 
+  const PAGE_GLITCH_MS = 340;
+  let pageGlitchPending = false;
+
+  function shouldInterceptNav(event, link) {
+    if (event.defaultPrevented || event.button !== 0) {
+      return false;
+    }
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+      return false;
+    }
+    if (link.hasAttribute('download') || link.getAttribute('target') === '_blank') {
+      return false;
+    }
+    if (
+      link.closest('[data-ghost-search], [data-np-theme-toggle], [data-np-filter], [data-np-copy]')
+    ) {
+      return false;
+    }
+    const href = link.getAttribute('href');
+    if (
+      !href ||
+      href.startsWith('#') ||
+      href.startsWith('mailto:') ||
+      href.startsWith('tel:') ||
+      href.startsWith('javascript:')
+    ) {
+      return false;
+    }
+    let url;
+    try {
+      url = new URL(link.href, window.location.href);
+    } catch {
+      return false;
+    }
+    if (url.origin !== window.location.origin) {
+      return false;
+    }
+    if (
+      url.pathname === window.location.pathname &&
+      url.search === window.location.search &&
+      url.hash !== ''
+    ) {
+      return false;
+    }
+    if (url.href === window.location.href) {
+      return false;
+    }
+    return true;
+  }
+
+  function kickDataStream() {
+    const bar = document.getElementById('np-data-stream');
+    if (!bar) {
+      return;
+    }
+    bar.classList.remove('is-done', 'is-loading');
+    void bar.offsetWidth;
+    bar.classList.add('is-loading');
+  }
+
+  function handlePageGlitchNav(event) {
+    if (pageGlitchPending) {
+      event.preventDefault();
+      return;
+    }
+    const link = event.target.closest('a[href]');
+    if (!link || !shouldInterceptNav(event, link)) {
+      return;
+    }
+    event.preventDefault();
+    pageGlitchPending = true;
+    const nextUrl = link.href;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      window.location.assign(nextUrl);
+      return;
+    }
+    root.classList.add('np-page-glitching');
+    kickDataStream();
+    try {
+      sessionStorage.setItem('np-page-enter', '1');
+    } catch {
+      // Ignore private-mode storage failures.
+    }
+    window.setTimeout(() => {
+      window.location.assign(nextUrl);
+    }, PAGE_GLITCH_MS);
+  }
+
+  function bootstrapFxVisibility() {
+    if (!root.classList.contains('np-page-entering')) {
+      initFxVisibility();
+      return;
+    }
+    // Wait for main fade-in: opacity:0 makes checkVisibility mark heroes as paused forever.
+    window.setTimeout(() => {
+      root.classList.remove('np-page-entering');
+      window.requestAnimationFrame(() => {
+        initFxVisibility();
+      });
+    }, PAGE_GLITCH_MS);
+  }
+
   document.addEventListener('click', (event) => {
     if (event.target.closest('[data-np-theme-toggle]')) {
       handleThemeToggle();
     }
     handleCopyLink(event);
     handlePortfolioFilter(event);
+    handlePageGlitchNav(event);
   });
 
   document.addEventListener('submit', handleMailto);
@@ -251,5 +354,5 @@
   syncTabVisibility();
   syncNavAriaCurrent();
   initNodeMap();
-  initFxVisibility();
+  bootstrapFxVisibility();
 })();
