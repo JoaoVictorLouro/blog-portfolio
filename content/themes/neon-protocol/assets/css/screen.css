@@ -792,6 +792,15 @@ html.np-page-entering main {
   position: relative;
   z-index: 5;
   max-width: 48rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.np-hero-body > h1,
+.np-hero-body > p,
+.np-hero-body > .np-btn {
+  margin: 0;
 }
 
 .np-hero-kicker {
@@ -799,7 +808,7 @@ html.np-page-entering main {
   flex-wrap: wrap;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .np-grid {
@@ -1234,11 +1243,12 @@ html.np-page-entering main {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  align-items: flex-start;
+  align-items: flex-end;
   gap: 0.35rem;
   padding: 1.5rem 2rem;
   overflow: hidden;
   pointer-events: none;
+  text-align: right;
   font-family: var(--np-font-mono);
   font-size: 0.75rem;
   letter-spacing: 0.08em;
@@ -1286,9 +1296,16 @@ html.np-page-entering main {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  gap: 0.4rem;
   padding: 3rem 2rem;
   max-width: 56rem;
   margin: 0 auto;
+}
+
+.np-article-hero-body > h1,
+.np-article-hero-body > .np-meta,
+.np-article-hero-body > .np-card-tags {
+  margin: 0;
 }
 
 .np-article-wrap {
@@ -1428,25 +1445,46 @@ html.np-page-entering main {
 }
 
 .np-about-banner {
-  margin-bottom: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 2rem;
   padding-left: 1.5rem;
   border-left: 4px solid var(--np-neon-teal);
 }
 
+.np-about-banner :is(h1, h2, p) {
+  margin: 0;
+}
+
 .np-about-banner--row {
-  display: flex;
+  flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;
   gap: 1rem;
 }
 
+.np-about-banner--row > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
 .np-about-banner--row .np-live {
   flex-shrink: 0;
-  margin-top: 0.35rem;
+  margin-top: 0;
 }
 
 .np-home-layout .np-about-banner {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.np-home-feed .np-card {
+  gap: 0.625rem;
+}
+
+.np-home-feed .np-card .np-heading {
+  margin: 0;
 }
 
 .np-avatar {
