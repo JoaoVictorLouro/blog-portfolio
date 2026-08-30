@@ -168,6 +168,11 @@ button {
   color: var(--np-charcoal);
 }
 
+#sodo-search-root,
+#ghost-portal-root {
+  color-scheme: light;
+}
+
 .np-shell {
   position: relative;
   z-index: 1;
