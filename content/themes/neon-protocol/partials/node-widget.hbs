@@ -11,6 +11,9 @@
         data-zoom="{{#if @custom.node_zoom}}{{@custom.node_zoom}}{{else}}13{{/if}}"
     >
         <img class="np-map-image" alt="OpenStreetMap snapshot of current node" decoding="async" hidden>
+        {{#if @custom.node_label}}
+            <span class="np-chip is-live np-map-location">{{@custom.node_label}}</span>
+        {{/if}}
         <div class="np-map-scan" aria-hidden="true">
             <div class="np-map-scan-beam"></div>
         </div>

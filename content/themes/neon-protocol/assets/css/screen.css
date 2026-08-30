@@ -943,6 +943,17 @@ html.np-page-entering main {
   opacity: 0.8;
 }
 
+.np-map-location {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 3;
+  max-width: calc(100% - 1rem);
+  white-space: normal;
+  text-align: right;
+  pointer-events: none;
+}
+
 .np-map-attrib:hover,
 .np-map-attrib:focus-visible {
   color: var(--np-neon-teal);
@@ -953,6 +964,11 @@ html.np-page-entering main {
   color: #1b1b1b;
   background: rgb(255 255 255 / 0.72);
   padding: 0.1rem 0.3rem;
+}
+
+.np-map.is-light .np-map-location {
+  background: rgb(255 255 255 / 0.88);
+  color: #1b1b1b;
 }
 
 .np-map-blip::before {
