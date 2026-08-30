@@ -264,7 +264,40 @@ button {
     'wght' 400,
     'GRAD' 0,
     'opsz' 24;
-  font-size: 1.25rem;
+  font-size: 1.15em;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.np-meta:has(.material-symbols-outlined),
+.np-heading:has(.material-symbols-outlined),
+.np-label:has(.material-symbols-outlined),
+.np-bbs-bar > span:has(.material-symbols-outlined) {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+}
+
+.np-page-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  max-width: 100%;
+  line-height: 1;
+  vertical-align: top;
+}
+
+.np-page-title .material-symbols-outlined {
+  font-size: 1em;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.np-display:has(.np-page-title),
+.np-title:has(.np-page-title) {
   line-height: 1;
 }
 
@@ -1219,6 +1252,7 @@ html.np-page-entering main {
   white-space: nowrap;
   text-shadow: 0 0 10px rgba(0, 242, 255, 0.06);
   animation: np-stream-flicker 5s ease infinite;
+  color: var(--np-border-bright);
 }
 
 .np-cover-stream span:nth-child(2) {
