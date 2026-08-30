@@ -1,0 +1,22 @@
+<section class="np-bbs" aria-label="{{t "Comments"}}">
+    <div class="np-bbs-frame">
+        <div class="np-bbs-bar">
+            <span><span class="material-symbols-outlined">terminal</span> bbs_connection established</span>
+            <span>ENC: AES-256</span>
+        </div>
+        <div class="np-bbs-body">
+            {{#if @custom.discourse_url}}
+                <div id="discourse-comments"></div>
+                <script>
+                    window.DiscourseEmbed = {
+                        discourseUrl: '{{@custom.discourse_url}}',
+                        discourseEmbedUrl: '{{url absolute="true"}}'
+                    };
+                </script>
+                <script src="{{@custom.discourse_url}}javascripts/embed.js" async></script>
+            {{else}}
+                <p>{{t "No uplink"}}</p>
+            {{/if}}
+        </div>
+    </div>
+</section>

@@ -1,0 +1,11 @@
+<nav class="np-pagination np-more" aria-label="{{t "Page {page} of {pages}" page=page pages=pages}}">
+    {{#if next}}
+        <a class="np-btn np-btn-primary" href="{{page_url next}}">
+            <span class="material-symbols-outlined" aria-hidden="true">download</span>
+            {{t "Load more"}}
+        </a>
+    {{/if}}
+    {{#if prev}}
+        <a class="np-btn np-btn-ghost" href="{{page_url prev}}">{{t "Newer posts"}}</a>
+    {{/if}}
+</nav>

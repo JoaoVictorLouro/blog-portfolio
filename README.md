@@ -16,20 +16,25 @@ Local Ghost 6 blog using SQLite in Docker, with versioned theme/settings/public 
 task up
 ```
 
-- Site: [http://localhost:2368](http://localhost:2368)
-- Admin setup: [http://localhost:2368/ghost](http://localhost:2368/ghost)
+Set `GHOST_ADMIN_EMAIL` and `GHOST_ADMIN_PASSWORD` in `.env.secrets` before the first start (see `.env.secrets.example`). General settings such as `URL` and `PORT` live in `.env` (see `.env.example`). Bootstrap creates the owner on first boot, activates the **neon-protocol** theme, seeds nav (HOME / ARTICLES / PORTFOLIO / ABOUT), creates `/about/`, and leaves free newsletter sign-up on. Dark theme is the default; the sensors icon in the header toggles light mode.
 
-Runtime data (SQLite, uploads, logs) lives under `./data/content` and is gitignored.
+- Site: [http://localhost:2368](http://localhost:2368) — home
+- Articles: [http://localhost:2368/articles/](http://localhost:2368/articles/)
+- Portfolio: [http://localhost:2368/portfolio/](http://localhost:2368/portfolio/)
+- About: [http://localhost:2368/about/](http://localhost:2368/about/)
+- Admin: [http://localhost:2368/ghost](http://localhost:2368/ghost) (log in with the env credentials; no setup wizard)
+
+Runtime data (SQLite, uploads, logs) lives under `./data/content` and is gitignored. An existing database that already has an owner keeps that user; later `.env.secrets` password changes are ignored.
 
 ## Versioned content
 
 Tracked under `content/`:
 
-| Path                | Purpose                                     |
-| ------------------- | ------------------------------------------- |
-| `content/themes/`   | Themes (Source is vendored as the baseline) |
-| `content/settings/` | `routes.yaml`, `redirects.yaml`, etc.       |
-| `content/public/`   | Public assets (`.well-known`, admin-auth)   |
+| Path                | Purpose                                                           |
+| ------------------- | ----------------------------------------------------------------- |
+| `content/themes/`   | Themes (`neon-protocol` active; Source kept as a vendor baseline) |
+| `content/settings/` | `routes.yaml`, `redirects.yaml`, etc.                             |
+| `content/public/`   | Public assets (`.well-known`, admin-auth)                         |
 
 These folders are bind-mounted into Ghost and baked into the published image.
 
@@ -46,10 +51,10 @@ task logs       # follow logs
 task status     # status / health
 task down       # stop
 task update     # pull base images, rebuild, restart
-task recreate   # recreate container after .env changes
-task setup      # create .env if missing and ensure dirs
+task recreate   # recreate container after env file changes
+task setup      # create .env / .env.secrets if missing and ensure dirs
 task format     # Prettier write (Deno)
-task lint       # gscan theme checks
+task lint       # gscan neon-protocol theme checks
 task test       # gscan + docker compose config
 ```
 
@@ -57,11 +62,33 @@ Or via Deno directly: `deno task format`, `deno task lint`, `deno task test`.
 
 ## Configuration
 
-Edit `.env` to change `URL` or `PORT`. After changing env vars, recreate the container:
+Edit `.env` for general settings and `.env.secrets` for owner credentials. After changing env vars, recreate the container:
 
 ```bash
 task recreate
 ```
+
+`.env` (from `.env.example`):
+
+| Variable           | Purpose                              |
+| ------------------ | ------------------------------------ |
+| `URL`              | Public URL Ghost uses for links      |
+| `PORT`             | Host port mapped to Ghost            |
+| `GHOST_ADMIN_NAME` | Owner display name (default `Admin`) |
+| `GHOST_SITE_TITLE` | Site title (default `Blog`)          |
+
+`.env.secrets` (from `.env.secrets.example`):
+
+| Variable               | Purpose                                  |
+| ---------------------- | ---------------------------------------- |
+| `GHOST_ADMIN_EMAIL`    | Owner email (created once on first boot) |
+| `GHOST_ADMIN_PASSWORD` | Owner password (min 10 characters)       |
+
+If you still have a combined `.env` from before this split, move `GHOST_ADMIN_EMAIL` and `GHOST_ADMIN_PASSWORD` into `.env.secrets`.
+
+Members can subscribe to the newsletter. Paid plans and Ghost native comments are turned off. Article pages can embed Discourse when a Discourse URL is set in **Settings → Design**. Ghost Admin still has **Settings → Staff → Invite**; bootstrap never creates a second staff user.
+
+Tag portfolio posts with the internal `#portfolio` tag to show them on `/portfolio/`. Contact form endpoint, GitHub, and social URLs are theme design settings.
 
 ## CI
 

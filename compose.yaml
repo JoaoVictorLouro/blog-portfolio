@@ -5,16 +5,23 @@ services:
     restart: unless-stopped
     ports:
       - '${PORT:-2368}:2368'
+    env_file:
+      - path: .env
+        required: false
+      - path: .env.secrets
+        required: false
     environment:
       NODE_ENV: development
       url: ${URL:-http://localhost:2368}
       database__client: sqlite3
       database__connection__filename: /var/lib/ghost/content/data/ghost.db
       database__useNullAsDefault: 'true'
+      security__staffDeviceVerification: 'false'
     volumes:
       - ./data/content:/var/lib/ghost/content
       - ./content/themes:/var/lib/ghost/content/themes
       - ./content/settings:/var/lib/ghost/content/settings
+      - ./content/settings/redirects.yaml:/var/lib/ghost/content/data/redirects.yaml
       - ./content/public:/var/lib/ghost/content/public
     healthcheck:
       test:
@@ -28,3 +35,24 @@ services:
       timeout: 5s
       retries: 5
       start_period: 60s
+
+  bootstrap:
+    build: .
+    image: ghcr.io/joaovictorlouro/blog-portfolio:latest
+    restart: 'no'
+    network_mode: service:ghost
+    depends_on:
+      ghost:
+        condition: service_healthy
+    env_file:
+      - path: .env
+        required: false
+      - path: .env.secrets
+        required: false
+    environment:
+      URL: ${URL:-http://localhost:2368}
+      GHOST_ADMIN_NAME: ${GHOST_ADMIN_NAME:-Admin}
+      GHOST_SITE_TITLE: ${GHOST_SITE_TITLE:-Blog}
+    volumes:
+      - ./scripts/ghost-bootstrap.mjs:/ghost-bootstrap.mjs:ro
+    entrypoint: ['node', '/ghost-bootstrap.mjs']

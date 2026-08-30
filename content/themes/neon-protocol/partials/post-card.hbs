@@ -1,0 +1,41 @@
+<article class="np-glass np-card {{post_class}} {{#if wide}}np-wide np-span-8{{else}}np-span-4{{/if}}">
+    <div class="np-card-stripe {{#if wide}}is-amber{{else}}is-magenta{{/if}}"></div>
+    {{#if wide}}
+        {{#if feature_image}}
+            <div class="np-card-media np-wide-media">
+                <img src="{{img_url feature_image size="l"}}"
+                    srcset="{{img_url feature_image size="s"}} 320w, {{img_url feature_image size="m"}} 600w, {{img_url feature_image size="l"}} 960w, {{img_url feature_image size="xl"}} 1200w"
+                    sizes="(min-width: 768px) 40vw, 100vw"
+                    alt="{{#if feature_image_alt}}{{feature_image_alt}}{{else}}{{title}}{{/if}}"
+                    loading="lazy">
+            </div>
+        {{/if}}
+        <div class="np-wide-body">
+            <div class="np-card-tags">
+                {{#if primary_tag}}<span class="np-chip is-amber">{{primary_tag.name}}</span>{{/if}}
+            </div>
+            <h2 class="np-heading"><a href="{{url}}">{{title}}</a></h2>
+            {{#if excerpt}}<p>{{excerpt words="24"}}</p>{{/if}}
+            <div class="np-card-tags">
+                <time class="np-label" datetime="{{date format="YYYY-MM-DD"}}">{{date format="YYYY.MM.DD"}}</time>
+                <a href="{{url}}" aria-label="{{title}}"><span class="material-symbols-outlined">arrow_forward</span></a>
+            </div>
+        </div>
+    {{else}}
+        {{#if feature_image}}
+            <div class="np-card-media">
+                <img src="{{img_url feature_image size="m"}}"
+                    srcset="{{img_url feature_image size="s"}} 320w, {{img_url feature_image size="m"}} 600w, {{img_url feature_image size="l"}} 960w"
+                    sizes="(min-width: 768px) 30vw, 100vw"
+                    alt="{{#if feature_image_alt}}{{feature_image_alt}}{{else}}{{title}}{{/if}}"
+                    loading="lazy">
+            </div>
+        {{/if}}
+        {{#if primary_tag}}<span class="np-chip is-amber">{{primary_tag.name}}</span>{{/if}}
+        <h2 class="np-heading"><a href="{{url}}">{{title}}</a></h2>
+        <div class="np-card-tags">
+            <time class="np-label" datetime="{{date format="YYYY-MM-DD"}}">{{date format="YYYY.MM.DD"}}</time>
+            <a href="{{url}}" aria-label="{{title}}"><span class="material-symbols-outlined">arrow_forward</span></a>
+        </div>
+    {{/if}}
+</article>

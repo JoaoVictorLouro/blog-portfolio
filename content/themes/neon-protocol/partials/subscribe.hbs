@@ -1,0 +1,13 @@
+<div class="np-widget np-glass is-feed">
+    <h3 class="np-meta"><span class="material-symbols-outlined">terminal</span> {{t "Subscribe"}}</h3>
+    <p>{{t "Receive encrypted drops directly to your local node."}}</p>
+    {{#if @site.members_enabled}}
+        <form class="np-subscribe" data-members-form="subscribe">
+            <span class="np-prompt" aria-hidden="true">&gt;</span>
+            <input data-members-email type="email" required placeholder="ENTER_ADDRESS" aria-label="{{t "Subscribe"}}">
+            <button type="submit">{{t "Subscribe"}}</button>
+        </form>
+    {{else}}
+        <a class="np-btn np-btn-ghost" href="{{@site.url}}/rss/">RSS</a>
+    {{/if}}
+</div>

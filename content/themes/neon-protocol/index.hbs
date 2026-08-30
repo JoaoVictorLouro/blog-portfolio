@@ -1,0 +1,44 @@
+{{!< default}}
+
+<main class="np-main">
+    <header class="np-archive-head">
+        <div>
+            <h1 class="np-display">ARTICLES</h1>
+        </div>
+    </header>
+
+    <div class="np-toolbar">
+        <div class="np-search">
+            <span class="material-symbols-outlined" aria-hidden="true">search</span>
+            <button type="button" data-ghost-search>{{t "Search"}}</button>
+        </div>
+        <div class="np-card-tags">
+            <span class="np-chip is-live">STATUS: ONLINE</span>
+            <a class="np-btn np-btn-ghost" href="#posts">
+                <span class="material-symbols-outlined">filter_list</span> FILTER
+            </a>
+        </div>
+    </div>
+
+    <div id="posts">
+        {{#foreach posts}}
+            {{#if @first}}
+                {{> "post-card-hero"}}
+            {{/if}}
+        {{/foreach}}
+
+        <div class="np-bento">
+            {{#foreach posts}}
+                {{#unless @first}}
+                    {{> "post-card" wide=@odd}}
+                {{/unless}}
+            {{/foreach}}
+        </div>
+    </div>
+
+    {{#unless posts}}
+        <p class="np-empty np-meta">{{t "No posts"}}</p>
+    {{/unless}}
+
+    {{pagination}}
+</main>

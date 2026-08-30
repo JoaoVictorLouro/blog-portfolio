@@ -8,6 +8,7 @@
 .env
 .env.*
 !.env.example
+!.env.secrets.example
 
 # Runtime Ghost data (bind-mounted, not baked into images)
 data/

@@ -1,0 +1,28 @@
+{{!< default}}
+
+<main class="np-main is-wide">
+    <header class="np-archive-head">
+        <div>
+            <h1 class="np-display">PORTFOLIO</h1>
+            <p class="np-body">{{#if @site.description}}{{@site.description}}{{else}}Encrypted visual logs. Access level: Alpha.{{/if}}</p>
+        </div>
+        <div class="np-filters">
+            <button class="np-btn np-btn-ghost is-active" type="button" data-np-filter="all">ALL</button>
+            {{#get "tags" limit="12" include="count.posts" filter="visibility:public" as |archive_tags|}}
+                {{#foreach archive_tags}}
+                    <button class="np-chip" type="button" data-np-filter="{{slug}}">{{name}}</button>
+                {{/foreach}}
+            {{/get}}
+        </div>
+    </header>
+
+    <div class="np-masonry">
+        {{#foreach posts}}
+            {{> "masonry-item"}}
+        {{else}}
+            <p class="np-empty np-meta">{{t "No posts"}}</p>
+        {{/foreach}}
+    </div>
+
+    {{pagination}}
+</main>

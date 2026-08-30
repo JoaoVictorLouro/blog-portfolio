@@ -8,7 +8,7 @@ file_path=$(
 
 base=$(basename "$file_path")
 
-if [[ "$base" == ".env" ]] || [[ "$base" == .env.* && "$base" != ".env.example" ]]; then
+if [[ "$base" == ".env" || "$base" == .env.* ]] && [[ "$base" != *.example ]]; then
   printf '%s\n' '{"permission":"deny","user_message":"Reading .env files is blocked for agents."}'
   exit 0
 fi

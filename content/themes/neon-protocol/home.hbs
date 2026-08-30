@@ -1,0 +1,63 @@
+{{!< default}}
+
+<main class="np-main np-home">
+    <section class="np-glass np-hero">
+        {{#if @site.cover_image}}
+            <div class="np-hero-media" style="background-image: url('{{img_url @site.cover_image size="xxl"}}');"></div>
+        {{/if}}
+        <div class="np-hero-body">
+            <div class="np-hero-kicker">
+                <span class="np-chip is-live">SYSTEM.READY</span>
+                {{#if @custom.node_label}}
+                    <span class="np-meta" style="color: var(--np-neon-teal);">Location: {{@custom.node_label}}</span>
+                {{/if}}
+            </div>
+            <h1 class="np-display">{{@site.title}}</h1>
+            {{#if @site.description}}
+                <p class="np-body">{{@site.description}}</p>
+            {{/if}}
+            <a class="np-btn np-btn-primary" href="{{@site.url}}/articles/">
+                INITIATE_SEQUENCE <span class="material-symbols-outlined" aria-hidden="true">bolt</span>
+            </a>
+        </div>
+    </section>
+
+    <div class="np-home-layout">
+        <section>
+            <div class="np-section-head">
+                <h2 class="np-title" style="color: var(--np-secondary-container);">RECENT_ARTICLES</h2>
+                <div class="np-live"><i></i><span class="np-label">LIVE FEED</span></div>
+            </div>
+            <div class="np-home-feed">
+                {{#get "posts" filter="tag:-hash-portfolio" include="tags,authors" limit="4" as |recent|}}
+                    {{#foreach recent}}
+                        {{> "log-card"}}
+                    {{else}}
+                        <p class="np-empty np-meta">{{t "No posts"}}</p>
+                    {{/foreach}}
+                {{/get}}
+            </div>
+        </section>
+
+        <aside class="np-sidebar">
+            {{#if @custom.show_node_widget}}
+                <div class="np-widget np-glass is-node">
+                    <h3 class="np-meta" style="color: var(--np-secondary-container);">
+                        <span class="material-symbols-outlined" style="color: var(--np-lantern-amber);">my_location</span>
+                        CURRENT_NODE
+                    </h3>
+                    <div class="np-map">
+                        {{#if @site.cover_image}}
+                            <div class="np-hero-media" style="opacity:0.6; mix-blend-mode:screen; background-image:url('{{img_url @site.cover_image size="l"}}');"></div>
+                        {{/if}}
+                        <div class="np-map-scan"></div>
+                        <div class="np-map-blip"></div>
+                    </div>
+                    <div class="np-kv"><span>LAT/LONG:</span><strong>{{@custom.node_coordinates}}</strong></div>
+                    <div class="np-kv"><span>UPLINK:</span><strong style="color: var(--np-lantern-amber);">SECURE</strong></div>
+                </div>
+            {{/if}}
+            {{> "subscribe"}}
+        </aside>
+    </div>
+</main>

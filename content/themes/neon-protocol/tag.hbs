@@ -1,0 +1,20 @@
+{{!< default}}
+
+<main class="np-main">
+    {{#tag}}
+        <header class="np-about-banner">
+            <h1 class="np-display">{{name}}</h1>
+            {{#if description}}<p class="np-body">{{description}}</p>{{/if}}
+        </header>
+    {{/tag}}
+
+    <div class="np-bento">
+        {{#foreach posts}}
+            {{> "post-card" wide=@odd}}
+        {{else}}
+            <p class="np-empty np-meta">{{t "No posts"}}</p>
+        {{/foreach}}
+    </div>
+
+    {{pagination}}
+</main>

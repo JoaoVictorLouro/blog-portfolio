@@ -1,0 +1,5 @@
+301:
+  ^/logs/$: /articles/
+  ^/logs/(.+)$: /articles/$1
+  ^/archive/$: /portfolio/
+  ^/archive/(.+)$: /portfolio/$1

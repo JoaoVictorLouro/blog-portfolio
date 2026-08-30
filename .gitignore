@@ -1,5 +1,6 @@
-# Environment
+# Environment (keep *.example templates tracked)
 .env
+.env.secrets
 .env.local
 .env.*.local
 

@@ -1,0 +1,79 @@
+{
+  "name": "neon-protocol",
+  "description": "Night City Ghost theme: glass, neon, and terminal chrome for a cyber-nomad blog.",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "ghost": ">=5.0.0"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Joao Victor Louro",
+    "email": "hello@joaovictorlouro.com",
+    "url": "https://joaovictorlouro.com"
+  },
+  "keywords": [
+    "ghost-theme"
+  ],
+  "config": {
+    "posts_per_page": 12,
+    "card_assets": true,
+    "image_sizes": {
+      "xs": {
+        "width": 160
+      },
+      "s": {
+        "width": 320
+      },
+      "m": {
+        "width": 600
+      },
+      "l": {
+        "width": 960
+      },
+      "xl": {
+        "width": 1200
+      },
+      "xxl": {
+        "width": 2000
+      }
+    },
+    "custom": {
+      "contact_form_action": {
+        "type": "text",
+        "description": "Form endpoint (Formspree, Web3Forms). Empty uses a mailto fallback."
+      },
+      "contact_email": {
+        "type": "text",
+        "description": "Mailto fallback address when no form endpoint is set."
+      },
+      "discourse_url": {
+        "type": "text",
+        "description": "Discourse site URL ending with a slash, used for the article BBS embed."
+      },
+      "github_url": {
+        "type": "text",
+        "description": "GitHub profile or repo URL for NETWORK_NODES."
+      },
+      "social_url": {
+        "type": "text",
+        "description": "Primary social profile URL for NETWORK_NODES."
+      },
+      "show_node_widget": {
+        "type": "boolean",
+        "default": true,
+        "group": "homepage"
+      },
+      "node_label": {
+        "type": "text",
+        "default": "Neo-Tokyo // Sector 4",
+        "group": "homepage"
+      },
+      "node_coordinates": {
+        "type": "text",
+        "default": "35.6528° N, 139.8394° E",
+        "group": "homepage"
+      }
+    }
+  }
+}

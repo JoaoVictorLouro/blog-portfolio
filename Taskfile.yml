@@ -1,6 +1,6 @@
 version: '3'
 
-dotenv: [.env]
+dotenv: [.env, .env.secrets]
 
 tasks:
   default:
@@ -8,7 +8,7 @@ tasks:
       - task: up
 
   setup:
-    desc: Create .env from example if missing and ensure data directory exists
+    desc: Create env files from examples if missing and ensure data directory exists
     cmds:
       - |
         if [ ! -f .env ]; then
@@ -16,6 +16,21 @@ tasks:
           echo "Created .env from .env.example"
         else
           echo ".env already exists"
+        fi
+        if [ ! -f .env.secrets ]; then
+          cp .env.secrets.example .env.secrets
+          echo "Created .env.secrets from .env.secrets.example"
+          if [ -f .env ]; then
+            for key in GHOST_ADMIN_EMAIL GHOST_ADMIN_PASSWORD mail__options__auth__user mail__options__auth__pass; do
+              line=$(grep -E "^${key}=" .env | tail -n1 || true)
+              [ -n "$line" ] || continue
+              grep -vE "^${key}=" .env.secrets > .env.secrets.tmp
+              printf '%s\n' "$line" >> .env.secrets.tmp
+              mv .env.secrets.tmp .env.secrets
+            done
+          fi
+        else
+          echo ".env.secrets already exists"
         fi
       - mkdir -p data/content content/themes content/settings content/public
 
@@ -47,7 +62,7 @@ tasks:
       - docker compose up -d --build
 
   recreate:
-    desc: Recreate the Ghost container (use after .env changes)
+    desc: Recreate the Ghost container (use after env file changes)
     cmds:
       - docker compose up -d --force-recreate --build ghost
 
@@ -57,7 +72,7 @@ tasks:
       - deno task format
 
   lint:
-    desc: Lint Ghost theme with gscan
+    desc: Lint neon-protocol Ghost theme with gscan
     cmds:
       - deno task lint
 

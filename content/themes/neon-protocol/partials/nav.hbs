@@ -1,0 +1,30 @@
+<header class="np-nav" role="banner">
+    <div id="np-data-stream" class="np-data-stream"></div>
+    <a class="np-brand" href="{{@site.url}}">
+        {{#if @site.logo}}
+            <img src="{{@site.logo}}" alt="{{@site.title}}">
+        {{else}}
+            {{@site.title}}
+        {{/if}}
+    </a>
+    <nav class="np-nav-menu" aria-label="{{t "Menu"}}">
+        <ul class="np-nav-links">
+            {{#foreach navigation}}
+                <li><a class="{{#if current}}is-active{{/if}}" href="{{url}}">{{label}}</a></li>
+            {{else}}
+                <li><a href="{{@site.url}}/">HOME</a></li>
+                <li><a href="{{@site.url}}/articles/">ARTICLES</a></li>
+                <li><a href="{{@site.url}}/portfolio/">PORTFOLIO</a></li>
+                <li><a href="{{@site.url}}/about/">ABOUT</a></li>
+            {{/foreach}}
+        </ul>
+    </nav>
+    <div class="np-nav-actions">
+        <button class="np-icon-btn" type="button" data-np-theme-toggle aria-pressed="false" aria-label="{{t "Theme"}}">
+            <span class="material-symbols-outlined" aria-hidden="true">sensors</span>
+        </button>
+        <button class="np-icon-btn" type="button" data-ghost-search aria-label="{{t "Search"}}">
+            <span class="material-symbols-outlined" aria-hidden="true">terminal</span>
+        </button>
+    </div>
+</header>

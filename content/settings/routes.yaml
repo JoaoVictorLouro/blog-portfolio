@@ -1,0 +1,17 @@
+routes:
+  /:
+    template: home
+
+collections:
+  /articles/:
+    permalink: /articles/{slug}/
+    template: index
+    filter: tag:-hash-portfolio
+  /portfolio/:
+    permalink: /portfolio/{slug}/
+    template: portfolio
+    filter: tag:hash-portfolio
+
+taxonomies:
+  tag: /tag/{slug}/
+  author: /author/{slug}/
