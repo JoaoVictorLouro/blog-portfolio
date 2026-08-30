@@ -80,3 +80,9 @@ tasks:
     desc: Run theme checks and validate Compose config
     cmds:
       - deno task test
+
+  seed-style-review:
+    desc: Populate style-review Ghost articles for UI, listing, and search testing
+    deps: [setup]
+    cmds:
+      - deno run -A scripts/seed-style-review-post.mjs

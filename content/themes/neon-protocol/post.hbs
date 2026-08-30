@@ -12,18 +12,20 @@
             {{/if}}
         </div>
         <div class="np-article-hero-body">
-            <div class="np-card-tags">
-                {{#foreach tags visibility="public"}}
-                    <span class="np-chip is-magenta">{{name}}</span>
-                {{/foreach}}
-            </div>
-            <h1 class="np-display">{{title}}</h1>
-            <div class="np-meta" style="border-left: 2px solid var(--np-neon-teal); padding-left: 1rem;">
-                {{#foreach authors}}
-                    <span>AUTHOR: <span style="color: var(--np-secondary-container);">{{name}}</span></span>
-                {{/foreach}}
-                <span> /// </span>
-                <time datetime="{{date format="YYYY-MM-DD"}}">UPLOADED: {{date format="YYYY.MM.DD"}}</time>
+            <div class="np-article-hero-panel">
+                <div class="np-card-tags">
+                    {{#foreach tags visibility="public"}}
+                        <span class="np-chip is-amber">{{name}}</span>
+                    {{/foreach}}
+                </div>
+                <h1 class="np-display">{{title}}</h1>
+                <div class="np-meta" style="border-left: 2px solid var(--np-neon-teal); padding-left: 1rem;">
+                    {{#foreach authors}}
+                        <span>AUTHOR: <span style="color: var(--np-secondary-container);">{{name}}</span></span>
+                    {{/foreach}}
+                    <span> /// </span>
+                    <time datetime="{{date format="YYYY-MM-DD"}}">UPLOADED: {{date format="YYYY.MM.DD"}}</time>
+                </div>
             </div>
         </div>
     </header>

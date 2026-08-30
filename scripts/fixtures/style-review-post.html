@@ -1,0 +1,180 @@
+<p>
+  <strong>STYLE_REVIEW fixture.</strong> Dev-only smoke test for neon-protocol typography, Koenig
+  cards, and prose styling. Toggle light/dark via the sensors control in the nav.
+</p>
+
+<h2 id="typography">01 // Typography</h2>
+<p>
+  This paragraph mixes <strong>bold weight</strong>, <em>italic emphasis</em>,
+  <s>strikethrough text</s>, <code>inline code tokens</code>, and an
+  <a href="https://example.com">external hyperlink</a> for contrast and underline behavior.
+</p>
+
+<h3>Heading level three</h3>
+<p>
+  Subsection copy under an H3. Used to check spacing between heading levels and paragraph rhythm
+  inside <code>.np-prose</code>.
+</p>
+
+<h4>Heading level four</h4>
+<p>H4 through H6 inherit base body styles — note whether hierarchy feels clear enough.</p>
+
+<h5>Heading level five</h5>
+<p>Compact heading level for nested documentation-style content.</p>
+
+<h6>Heading level six</h6>
+<p>Smallest heading tier; often used for labels or fine-grained sections.</p>
+
+<h3>Lists</h3>
+<ul>
+  <li>Unordered item alpha — bullet alignment and spacing</li>
+  <li>
+    Unordered item beta — nested list below
+    <ul>
+      <li>Nested bullet one</li>
+      <li>Nested bullet two</li>
+    </ul>
+  </li>
+  <li>Unordered item gamma — trailing list item</li>
+</ul>
+
+<ol>
+  <li>Ordered step one — decimal marker</li>
+  <li>Ordered step two — continuation</li>
+  <li>Ordered step three — final step</li>
+</ol>
+
+<h3>Table</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Token</th>
+      <th>Role</th>
+      <th>Sample</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>--np-neon-teal</code></td>
+      <td>Accent / links</td>
+      <td>#00f2ff</td>
+    </tr>
+    <tr>
+      <td><code>--np-cyber-magenta</code></td>
+      <td>Tags / quotes</td>
+      <td>#ff00ff</td>
+    </tr>
+    <tr>
+      <td><code>--np-charcoal</code></td>
+      <td>Code blocks</td>
+      <td>Dark panel</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="quotes-code">02 // Quotes &amp; Code</h2>
+<blockquote>
+  <p>
+    Markdown blockquote — magenta left bar, display font, italic. Used for pull quotes and
+    emphasized excerpts.
+  </p>
+</blockquote>
+
+<blockquote class="kg-blockquote-alt">
+  <p>
+    Koenig alternate blockquote card. Square corners per theme override on
+    <code>.kg-blockquote-alt</code>.
+  </p>
+</blockquote>
+
+<pre><code class="language-javascript">// Fenced code block (markdown)
+function decodePacket(payload) {
+  const checksum = payload.reduce((a, b) =&gt; a ^ b, 0);
+  return { checksum, status: checksum === 0 ? 'OK' : 'CORRUPT' };
+}
+</code></pre>
+
+{{CODE_CARD}}
+
+<h2 id="images">03 // Images</h2>
+<p>Image cards below exercise normal, wide, and full-bleed layouts plus a raw prose image.</p>
+
+{{IMAGE_NORMAL}} {{IMAGE_WIDE}} {{IMAGE_FULL}} {{IMAGE_GALLERY}}
+
+<p>Raw markdown-style image (not a card):</p>
+<p><img src="{{IMAGE_RAW}}" alt="Raw prose image with neon border styling" /></p>
+
+<h2 id="embeds-media">04 // Embeds &amp; Media</h2>
+<p>YouTube embed fetched via Ghost oembed at seed time:</p>
+
+{{EMBED_YOUTUBE}}
+
+<p>File download card for PDF upload:</p>
+
+{{FILE_CARD}}
+
+<h2 id="rich-cards">05 // Rich Cards</h2>
+
+<div class="kg-card kg-callout-card">
+  <div class="kg-callout-emoji">💡</div>
+  <div class="kg-callout-text">
+    Default callout card — neutral background, emoji column, body text for notes and warnings.
+  </div>
+</div>
+
+<div class="kg-card kg-callout-card kg-callout-card-accent">
+  <div class="kg-callout-emoji">⚠️</div>
+  <div class="kg-callout-text">
+    Accent callout — tests <code>.kg-callout-card-accent</code> styling from Ghost defaults with
+    square corners from theme.
+  </div>
+</div>
+
+{{TOGGLE_CARD}}
+
+<div class="kg-card kg-header-card kg-width-full kg-content-wide">
+  <h2 class="kg-header-card-header">Header card title</h2>
+  <h3 class="kg-header-card-subheader">Subheader line for section intros and chapter breaks</h3>
+</div>
+
+<div class="kg-card kg-button-card kg-align-center">
+  <a href="https://example.com" class="kg-btn kg-btn-accent">Primary button card</a>
+</div>
+
+<p>Bookmark card (oembed metadata):</p>
+
+{{BOOKMARK_CARD}}
+
+<h2 id="raw-blocks">06 // Raw Blocks</h2>
+
+<!--kg-card-begin: markdown-->
+| Card | Purpose | | --- | --- | | Markdown | Tables and lists inside a card | | HTML | Preserve
+custom markup | - Markdown card bullet - Second bullet item
+<!--kg-card-end: markdown-->
+
+<!--kg-card-begin: html-->
+<div
+  style="
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--np-border-bright, #444);
+    background: color-mix(in srgb, var(--np-surface-low, #111) 60%, transparent);
+  "
+>
+  <p
+    style="
+      margin: 0 0 0.5rem;
+      font-family: var(--np-font-mono, monospace);
+      color: var(--np-neon-teal, #0ff);
+    "
+  >
+    HTML card // custom block
+  </p>
+  <p style="margin: 0">
+    Preserves markup exactly — useful when HTML-to-Lexical conversion would flatten structure.
+  </p>
+</div>
+<!--kg-card-end: html-->
+
+<p><em>End of style review fixture. Review in dark and light themes.</em></p>
