@@ -38,6 +38,20 @@
     }, 400);
   }
 
+  function syncTabVisibility() {
+    root.classList.toggle('np-tab-hidden', document.hidden);
+  }
+
+  function syncNavAriaCurrent() {
+    document.querySelectorAll('.np-nav-links a, .np-dock a').forEach((link) => {
+      if (link.classList.contains('is-active')) {
+        link.setAttribute('aria-current', 'page');
+      } else {
+        link.removeAttribute('aria-current');
+      }
+    });
+  }
+
   function handleCopyLink(event) {
     const button = event.target.closest('[data-np-copy]');
     if (!button) {
@@ -96,6 +110,10 @@
 
   document.addEventListener('submit', handleMailto);
 
+  document.addEventListener('visibilitychange', syncTabVisibility);
+
   setTheme(currentTheme());
   runDataStream();
+  syncTabVisibility();
+  syncNavAriaCurrent();
 })();

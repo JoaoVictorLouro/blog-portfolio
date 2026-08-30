@@ -340,14 +340,21 @@ button {
 }
 
 .np-nav-links a:hover,
-.np-nav-links a.is-active {
+.np-nav-links a.is-active,
+.np-nav-links a.is-active-parent {
   color: var(--np-active);
 }
 
-.np-nav-links a.is-active {
+.np-nav-links a.is-active,
+.np-nav-links a.is-active-parent {
   font-weight: 700;
+  padding-bottom: 0.25rem;
   border-bottom: 2px solid var(--np-active);
-  animation: np-flicker 4s infinite;
+}
+
+.np-nav-links a.is-active {
+  transform: scale(0.95);
+  animation: np-pulse 2s ease-in-out infinite;
 }
 
 .np-nav-actions {
@@ -401,10 +408,14 @@ button {
   text-transform: uppercase;
 }
 
-.np-dock a.is-active {
+.np-dock a.is-active,
+.np-dock a.is-active-parent {
   color: var(--np-signal);
   border-bottom: 2px solid var(--np-signal);
-  animation: np-flicker 4s infinite;
+}
+
+.np-dock a.is-active {
+  animation: np-pulse 2s ease-in-out infinite;
 }
 
 .np-footer {
@@ -1504,6 +1515,12 @@ button {
   92% {
     transform: translate(1.1px, 1.1px);
   }
+}
+
+html.np-tab-hidden *,
+html.np-tab-hidden *::before,
+html.np-tab-hidden *::after {
+  animation-play-state: paused !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
