@@ -585,12 +585,18 @@ button {
   padding: 2rem;
   margin-bottom: 4rem;
   border-left: 4px solid var(--np-cyber-magenta);
+  overflow: hidden;
 }
 
 .np-hero-media {
   position: absolute;
   inset: 0;
-  background: var(--np-charcoal) center / cover no-repeat;
+  z-index: 0;
+  background-color: var(--np-charcoal);
+  background-image: var(--np-hero-image);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
   opacity: 0.4;
   mix-blend-mode: luminosity;
   transition:
@@ -602,22 +608,22 @@ button {
   mix-blend-mode: normal;
 }
 
-.np-hero::before {
-  content: '';
+.np-hero-shade {
   position: absolute;
   inset: 0;
+  z-index: 1;
+  pointer-events: none;
   background: linear-gradient(
     to top,
     var(--np-surface) 0%,
     color-mix(in srgb, var(--np-surface) 80%, transparent) 45%,
     transparent 100%
   );
-  z-index: 1;
 }
 
 .np-hero-body {
   position: relative;
-  z-index: 2;
+  z-index: 5;
   max-width: 48rem;
 }
 
@@ -895,14 +901,26 @@ button {
   position: absolute;
   inset: 0 var(--np-margin);
   overflow: hidden;
-  background: var(--np-charcoal) center / cover no-repeat;
+  background: var(--np-charcoal);
   border: 1px solid color-mix(in srgb, var(--np-outline-variant) 20%, transparent);
 }
 
-.np-article-hero-frame::after {
-  content: '';
+.np-article-hero-media {
   position: absolute;
   inset: 0;
+  z-index: 0;
+  background-color: var(--np-charcoal);
+  background-image: var(--np-hero-image);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.np-article-hero-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
   background: linear-gradient(
     to top,
     var(--np-background),
@@ -911,9 +929,103 @@ button {
   );
 }
 
+.np-glitch-effect {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.np-glitch-effect::before,
+.np-glitch-effect::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  mix-blend-mode: screen;
+}
+
+.np-glitch-effect::before {
+  transform: translateX(3px) translateY(-2px);
+  background-image:
+    linear-gradient(0deg, transparent 0%, rgba(0, 242, 255, 0.2) 50%, transparent 100%),
+    var(--np-hero-image);
+  background-size:
+    100% 4px,
+    cover;
+  background-position:
+    0 0,
+    center;
+  animation:
+    np-scanline 16s linear infinite,
+    np-glitch-anim 10s infinite linear alternate-reverse;
+}
+
+.np-glitch-effect::after {
+  transform: translateX(-3px) translateY(2px);
+  background-image: var(--np-hero-image);
+  background-position: center;
+  background-size: cover;
+  background-color: rgba(255, 0, 200, 0.1);
+  animation: np-glitch-anim2 12s infinite linear alternate-reverse;
+}
+
+.np-cover-stream {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 0.35rem;
+  padding: 1.5rem 2rem;
+  overflow: hidden;
+  pointer-events: none;
+  font-family: var(--np-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(0, 242, 255, 0.32);
+  mask-image: linear-gradient(to top, rgb(0 0 0 / 0.9) 0%, rgb(0 0 0 / 0.35) 45%, transparent 72%);
+}
+
+.np-cover-stream span {
+  display: block;
+  white-space: nowrap;
+  text-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
+  animation: np-stream-flicker 5s ease infinite;
+}
+
+.np-cover-stream span:nth-child(2) {
+  animation-delay: 0.75s;
+  opacity: 0.82;
+}
+
+.np-cover-stream span:nth-child(3) {
+  animation-delay: 1.5s;
+  opacity: 0.64;
+}
+
+.np-cover-scan {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0.32;
+  mix-blend-mode: overlay;
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.28) 50%),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.07), rgba(0, 255, 0, 0.025), rgba(0, 0, 255, 0.07));
+  background-size:
+    100% 4px,
+    3px 100%;
+}
+
 .np-article-hero-body {
   position: relative;
-  z-index: 2;
+  z-index: 5;
   min-height: 60vh;
   display: flex;
   flex-direction: column;
@@ -1276,6 +1388,89 @@ button {
 @keyframes np-pulse {
   50% {
     opacity: 0.45;
+  }
+}
+
+@keyframes np-scanline {
+  0% {
+    background-position:
+      0 0,
+      center;
+  }
+  100% {
+    background-position:
+      0 100%,
+      center;
+  }
+}
+
+@keyframes np-glitch-anim {
+  0% {
+    clip-path: inset(10% 0 80% 0);
+  }
+  20% {
+    clip-path: inset(80% 0 5% 0);
+  }
+  40% {
+    clip-path: inset(30% 0 50% 0);
+  }
+  60% {
+    clip-path: inset(5% 0 90% 0);
+  }
+  80% {
+    clip-path: inset(60% 0 20% 0);
+  }
+  100% {
+    clip-path: inset(40% 0 40% 0);
+  }
+}
+
+@keyframes np-glitch-anim2 {
+  0% {
+    clip-path: inset(20% 0 60% 0);
+  }
+  20% {
+    clip-path: inset(50% 0 30% 0);
+  }
+  40% {
+    clip-path: inset(10% 0 80% 0);
+  }
+  60% {
+    clip-path: inset(70% 0 10% 0);
+  }
+  80% {
+    clip-path: inset(30% 0 50% 0);
+  }
+  100% {
+    clip-path: inset(80% 0 5% 0);
+  }
+}
+
+@keyframes np-stream-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  48% {
+    opacity: 0.92;
+  }
+  50% {
+    opacity: 0.55;
+  }
+  52% {
+    opacity: 0.88;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .np-glitch-effect::before,
+  .np-glitch-effect::after {
+    animation: none;
+  }
+
+  .np-cover-stream span {
+    animation: none;
+    opacity: 0.72;
   }
 }
 

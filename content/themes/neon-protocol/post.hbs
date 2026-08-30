@@ -3,11 +3,14 @@
 {{#post}}
 <main class="np-main is-flush">
     <header class="np-article-hero">
-        {{#if feature_image}}
-            <div class="np-article-hero-frame" style="background-image: url('{{img_url feature_image size="xxl"}}');"></div>
-        {{else}}
-            <div class="np-article-hero-frame"></div>
-        {{/if}}
+        <div class="np-article-hero-frame"{{#if feature_image}} style="--np-hero-image: url('{{img_url feature_image size="xxl"}}');"{{/if}}>
+            <div class="np-article-hero-media"></div>
+            {{#if feature_image}}
+                <div class="np-article-hero-shade" aria-hidden="true"></div>
+                {{> "cover-scan-overlay" line1="LOG_DECRYPTED" line2="STREAM_BUFFER_ACTIVE" line3="READING_PACKET_DATA..."}}
+                <div class="np-glitch-effect" aria-hidden="true"></div>
+            {{/if}}
+        </div>
         <div class="np-article-hero-body">
             <div class="np-card-tags">
                 {{#foreach tags visibility="public"}}
