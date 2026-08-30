@@ -69,9 +69,39 @@
         "default": "Neo-Tokyo // Sector 4",
         "group": "homepage"
       },
-      "node_coordinates": {
+      "node_latitude": {
         "type": "text",
-        "default": "35.6528° N, 139.8394° E",
+        "default": "35.6528",
+        "description": "CURRENT_NODE map latitude (WGS84).",
+        "group": "homepage"
+      },
+      "node_longitude": {
+        "type": "text",
+        "default": "139.8394",
+        "description": "CURRENT_NODE map longitude (WGS84).",
+        "group": "homepage"
+      },
+      "node_zoom": {
+        "type": "select",
+        "options": [
+          "11",
+          "12",
+          "13",
+          "14",
+          "15"
+        ],
+        "default": "13",
+        "description": "OpenStreetMap zoom for the CURRENT_NODE snapshot. 13 is district-scale; 15 may watermark.",
+        "group": "homepage"
+      },
+      "node_map_style": {
+        "type": "select",
+        "options": [
+          "Dark",
+          "Light"
+        ],
+        "default": "Dark",
+        "description": "Dark is the inverted tactical look. Light is the standard OSM paper map.",
         "group": "homepage"
       }
     }

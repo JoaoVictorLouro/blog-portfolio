@@ -44,21 +44,7 @@
 
         <aside class="np-sidebar">
             {{#if @custom.show_node_widget}}
-                <div class="np-widget np-glass is-node">
-                    <h3 class="np-meta" style="color: var(--np-secondary-container);">
-                        <span class="material-symbols-outlined" style="color: var(--np-lantern-amber);">my_location</span>
-                        CURRENT_NODE
-                    </h3>
-                    <div class="np-map">
-                        {{#if @site.cover_image}}
-                            <div class="np-hero-media" style="opacity:0.6; mix-blend-mode:screen; background-image:url('{{img_url @site.cover_image size="l"}}');"></div>
-                        {{/if}}
-                        <div class="np-map-scan"></div>
-                        <div class="np-map-blip"></div>
-                    </div>
-                    <div class="np-kv"><span>LAT/LONG:</span><strong>{{@custom.node_coordinates}}</strong></div>
-                    <div class="np-kv"><span>UPLINK:</span><strong style="color: var(--np-lantern-amber);">SECURE</strong></div>
-                </div>
+                {{> "node-widget"}}
             {{/if}}
             {{> "subscribe"}}
         </aside>
