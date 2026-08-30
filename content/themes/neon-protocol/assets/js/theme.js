@@ -42,6 +42,38 @@
     root.classList.toggle('np-tab-hidden', document.hidden);
   }
 
+  function elementIsVisible(el) {
+    if (typeof el.checkVisibility !== 'function') {
+      return true;
+    }
+    return el.checkVisibility({
+      checkOpacity: true,
+      checkVisibilityCSS: true,
+      contentVisibilityAuto: true,
+    });
+  }
+
+  function handleFxIntersection(entries) {
+    entries.forEach((entry) => {
+      const visible = entry.isIntersecting && elementIsVisible(entry.target);
+      entry.target.classList.toggle('np-fx-paused', !visible);
+    });
+  }
+
+  function initFxVisibility() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+    const targets = document.querySelectorAll(
+      '.np-hero, .np-article-hero, .np-map, .np-live, .np-subscribe',
+    );
+    if (!targets.length) {
+      return;
+    }
+    const observer = new IntersectionObserver(handleFxIntersection, { threshold: 0 });
+    targets.forEach((el) => observer.observe(el));
+  }
+
   function syncNavAriaCurrent() {
     document.querySelectorAll('.np-nav-links a, .np-dock a').forEach((link) => {
       if (link.classList.contains('is-active')) {
@@ -219,4 +251,5 @@
   syncTabVisibility();
   syncNavAriaCurrent();
   initNodeMap();
+  initFxVisibility();
 })();

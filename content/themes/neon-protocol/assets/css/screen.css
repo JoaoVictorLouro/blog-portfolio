@@ -1583,6 +1583,13 @@ html.np-tab-hidden *::after {
   animation-play-state: paused !important;
 }
 
+.np-fx-paused,
+.np-fx-paused *,
+.np-fx-paused *::before,
+.np-fx-paused *::after {
+  animation-play-state: paused !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .np-hero-media,
   .np-article-hero-media {
