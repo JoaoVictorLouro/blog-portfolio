@@ -1395,6 +1395,43 @@ html.np-page-entering main {
   font-style: italic;
 }
 
+/* Prose tables */
+.np-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95em;
+  border: 1px solid color-mix(in srgb, var(--np-outline-variant) 30%, transparent);
+  border-top: 1px solid var(--np-border-bright);
+  border-left: 1px solid var(--np-border-bright);
+}
+
+.np-prose table th,
+.np-prose table td {
+  padding: 0.625rem 1rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--np-outline-variant) 30%, transparent);
+  text-align: left;
+  vertical-align: top;
+}
+
+.np-prose table th {
+  font-family: var(--np-font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--np-neon-teal);
+  background: color-mix(in srgb, var(--np-surface-low) 70%, transparent);
+}
+
+.np-prose table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.np-prose table th + th,
+.np-prose table td + td {
+  border-left: 1px solid color-mix(in srgb, var(--np-outline-variant) 20%, transparent);
+}
+
 .np-prose img,
 .np-prose .kg-image,
 .np-prose .kg-card img {
