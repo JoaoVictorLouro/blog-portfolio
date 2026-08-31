@@ -141,6 +141,76 @@
     observer.observe(document.body, { childList: true, subtree: true });
   }
 
+  function syncAnnouncementLayout() {
+    const nav = document.querySelector('.np-nav');
+    if (nav) {
+      root.style.setProperty('--np-nav-height', `${nav.getBoundingClientRect().height}px`);
+    }
+
+    const bar = document.querySelector('#announcement-bar-root .gh-announcement-bar');
+    if (bar) {
+      ensureAnnouncementStyleOverrides();
+      root.style.setProperty('--np-announcement-height', `${bar.getBoundingClientRect().height}px`);
+    } else {
+      root.style.removeProperty('--np-announcement-height');
+    }
+  }
+
+  function ensureAnnouncementStyleOverrides() {
+    let style = document.getElementById('np-announcement-styles');
+    if (!style) {
+      style = document.createElement('style');
+      style.id = 'np-announcement-styles';
+      style.textContent = [
+        '#announcement-bar-root .gh-announcement-bar-content,',
+        '#announcement-bar-root .gh-announcement-bar-content *:not(path) {',
+        '  color: var(--np-charcoal) !important;',
+        '}',
+        '#announcement-bar-root .gh-announcement-bar-content a {',
+        '  color: var(--np-charcoal) !important;',
+        '  text-decoration: underline;',
+        '}',
+        '#announcement-bar-root .gh-announcement-bar button {',
+        '  color: var(--np-charcoal) !important;',
+        '}',
+      ].join('\n');
+      document.head.appendChild(style);
+      return;
+    }
+
+    document.head.appendChild(style);
+  }
+
+  function initAnnouncementLayout() {
+    syncAnnouncementLayout();
+
+    const resizeObserver = new ResizeObserver(() => {
+      syncAnnouncementLayout();
+    });
+
+    const nav = document.querySelector('.np-nav');
+    if (nav) {
+      resizeObserver.observe(nav);
+    }
+
+    const mountObserver = new MutationObserver(() => {
+      const announcementRoot = document.getElementById('announcement-bar-root');
+      if (!announcementRoot) {
+        return;
+      }
+
+      const bar = announcementRoot.querySelector('.gh-announcement-bar');
+      if (bar && bar.dataset.npAnnouncementObserved !== '1') {
+        bar.dataset.npAnnouncementObserved = '1';
+        resizeObserver.observe(bar);
+      }
+
+      syncAnnouncementLayout();
+    });
+
+    mountObserver.observe(document.body, { childList: true, subtree: true });
+  }
+
   function handleThemeToggle() {
     setTheme(currentTheme() === 'dark' ? 'light' : 'dark');
   }
@@ -521,6 +591,7 @@
 
   setTheme(currentTheme());
   initGhostCommentsThemeSync();
+  initAnnouncementLayout();
   runDataStream();
   syncTabVisibility();
   syncNavAriaCurrent();

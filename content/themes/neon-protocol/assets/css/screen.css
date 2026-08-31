@@ -437,6 +437,52 @@ html.np-page-entering main {
   box-shadow: 0 0 15px var(--np-nav-glow);
 }
 
+body:has(#announcement-bar-root .gh-announcement-bar) {
+  --np-announcement-height: 48px;
+}
+
+#announcement-bar-root .gh-announcement-bar {
+  position: fixed !important;
+  top: var(--np-nav-height, 73px) !important;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 45;
+  background: var(--np-lantern-amber) !important;
+  color: var(--np-charcoal) !important;
+  font-family: var(--np-font-mono);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--np-lantern-amber) 60%, var(--np-outline-variant));
+}
+
+#announcement-bar-root .gh-announcement-bar-content,
+#announcement-bar-root .gh-announcement-bar-content p,
+#announcement-bar-root .gh-announcement-bar-content span,
+#announcement-bar-root .gh-announcement-bar-content a {
+  color: var(--np-charcoal) !important;
+}
+
+#announcement-bar-root .gh-announcement-bar-content a {
+  text-decoration: underline;
+}
+
+#announcement-bar-root .gh-announcement-bar button {
+  color: var(--np-charcoal) !important;
+  opacity: 0.75;
+  transition: opacity 0.2s ease;
+}
+
+#announcement-bar-root .gh-announcement-bar button:hover {
+  opacity: 1;
+}
+
+body:has(#announcement-bar-root .gh-announcement-bar) .np-main {
+  padding-top: calc(7.5rem + var(--np-announcement-height, 48px));
+}
+
 .np-brand {
   font-family: var(--np-font-display);
   font-size: 1.5rem;
