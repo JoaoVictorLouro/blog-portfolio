@@ -3,8 +3,9 @@ const ORIGIN = process.env.URL ?? 'http://localhost:2368';
 const ADMIN_EMAIL = process.env.GHOST_ADMIN_EMAIL?.trim() ?? '';
 const ADMIN_PASSWORD = process.env.GHOST_ADMIN_PASSWORD ?? '';
 const ADMIN_NAME = process.env.GHOST_ADMIN_NAME?.trim() || 'Admin';
-const SITE_TITLE = process.env.GHOST_SITE_TITLE?.trim() || 'Blog';
+const SITE_TITLE = process.env.GHOST_SITE_TITLE?.trim() || 'Kono Gaijin';
 
+const BRAND_TITLE_HTML = '<ruby>Kono<rt>この</rt> Gaijin<rt>外人</rt></ruby>';
 const ACCEPT_VERSION = 'v6.0';
 const READY_TIMEOUT_MS = 120_000;
 const READY_POLL_MS = 1_000;
@@ -204,6 +205,8 @@ async function applyFreeMemberSettings(cookie) {
     { key: 'members_signup_access', value: 'all' },
     { key: 'portal_plans', value: '["free"]' },
     { key: 'comments_enabled', value: 'all' },
+    { key: 'portal_button', value: 'false' },
+    { key: 'portal_button_signup_text', value: 'SUBSCRIBE_TO_FEED' },
   ]);
   console.log('Locked members to free newsletter sign-up with native comments (paid plans off)');
 }
@@ -321,6 +324,51 @@ function navMatches(actual, expected) {
   });
 }
 
+async function seedSiteTitle(cookie) {
+  const settings = await getSettings(cookie);
+  const current = settingValue(settings, 'title');
+  if (current === SITE_TITLE) {
+    return;
+  }
+
+  await putSettings(cookie, [{ key: 'title', value: SITE_TITLE }]);
+  console.log(`Set site title to ${SITE_TITLE}`);
+}
+
+async function seedBrandTitleHtml(cookie) {
+  const { response, data } = await request('/ghost/api/admin/custom_theme_settings/', { cookie });
+  if (!response.ok) {
+    fail(`Failed to read custom theme settings (${response.status}): ${describeError(data)}`);
+  }
+
+  const settings = Array.isArray(data?.custom_theme_settings) ? data.custom_theme_settings : [];
+  const brand = settings.find((item) => item.key === 'brand_title_html');
+  if (!brand) {
+    console.log('brand_title_html custom setting not present yet; skipping (activate theme first)');
+    return;
+  }
+
+  if (brand.value === BRAND_TITLE_HTML) {
+    return;
+  }
+
+  const updated = await request('/ghost/api/admin/custom_theme_settings/', {
+    method: 'PUT',
+    cookie,
+    body: {
+      custom_theme_settings: settings.map((item) =>
+        item.key === 'brand_title_html' ? { ...item, value: BRAND_TITLE_HTML } : item,
+      ),
+    },
+  });
+  if (!updated.response.ok) {
+    fail(
+      `Failed to set brand_title_html (${updated.response.status}): ${describeError(updated.data)}`,
+    );
+  }
+  console.log('Seeded brand_title_html with ruby/furigana markup');
+}
+
 async function seedNavigation(cookie) {
   const settings = await getSettings(cookie);
   const navigation = parseNav(settingValue(settings, 'navigation'));
@@ -376,6 +424,8 @@ if (setupStatus(setup)) {
 const cookie = await createSession();
 await applyFreeMemberSettings(cookie);
 await activateTheme(cookie);
+await seedSiteTitle(cookie);
+await seedBrandTitleHtml(cookie);
 await ensurePortfolioTag(cookie);
 await ensureAboutPage(cookie);
 await seedNavigation(cookie);

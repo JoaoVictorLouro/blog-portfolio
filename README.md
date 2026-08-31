@@ -75,7 +75,7 @@ task recreate
 | `URL`              | Public URL Ghost uses for links      |
 | `PORT`             | Host port mapped to Ghost            |
 | `GHOST_ADMIN_NAME` | Owner display name (default `Admin`) |
-| `GHOST_SITE_TITLE` | Site title (default `Blog`)          |
+| `GHOST_SITE_TITLE` | Site title (default `Kono Gaijin`)   |
 
 `.env.secrets` (from `.env.secrets.example`):
 

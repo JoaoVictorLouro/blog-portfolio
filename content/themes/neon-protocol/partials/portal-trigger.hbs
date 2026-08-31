@@ -1,0 +1,7 @@
+{{#if @site.members_enabled}}
+    {{#unless @member}}
+        <button class="np-portal-trigger np-btn np-btn-primary" type="button" data-portal="signup">
+            {{t "Subscribe"}}<span class="material-symbols-outlined" aria-hidden="true">send</span>
+        </button>
+    {{/unless}}
+{{/if}}

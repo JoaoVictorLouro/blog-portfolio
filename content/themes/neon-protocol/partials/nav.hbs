@@ -4,7 +4,7 @@
         {{#if @site.logo}}
             <img src="{{@site.logo}}" alt="{{@site.title}}">
         {{else}}
-            {{@site.title}}
+            {{> "brand-title"}}
         {{/if}}
     </a>
     <nav class="np-nav-menu" aria-label="{{t "Menu"}}">

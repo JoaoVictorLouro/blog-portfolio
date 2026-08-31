@@ -52,7 +52,7 @@ services:
     environment:
       URL: ${URL:-http://localhost:2368}
       GHOST_ADMIN_NAME: ${GHOST_ADMIN_NAME:-Admin}
-      GHOST_SITE_TITLE: ${GHOST_SITE_TITLE:-Blog}
+      GHOST_SITE_TITLE: ${GHOST_SITE_TITLE:-Kono Gaijin}
     volumes:
       - ./scripts/ghost-bootstrap.mjs:/ghost-bootstrap.mjs:ro
     entrypoint: ['node', '/ghost-bootstrap.mjs']

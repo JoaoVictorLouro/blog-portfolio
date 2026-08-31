@@ -589,6 +589,62 @@
 
   document.addEventListener('visibilitychange', syncTabVisibility);
 
+  function initPortalTriggerFold() {
+    const trigger = document.querySelector('.np-portal-trigger');
+    if (!trigger) {
+      return;
+    }
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function showPortalTrigger() {
+      if (trigger.classList.contains('is-visible') && !trigger.classList.contains('is-hiding')) {
+        return;
+      }
+      trigger.classList.remove('is-hiding');
+      trigger.classList.add('is-visible');
+    }
+
+    function hidePortalTrigger() {
+      if (!trigger.classList.contains('is-visible') || trigger.classList.contains('is-hiding')) {
+        return;
+      }
+      if (reducedMotion) {
+        trigger.classList.remove('is-visible');
+        return;
+      }
+      trigger.classList.add('is-hiding');
+    }
+
+    function handlePortalTriggerAnimationEnd(event) {
+      if (event.target !== trigger || event.animationName !== 'np-portal-glitch-out') {
+        return;
+      }
+      trigger.classList.remove('is-visible', 'is-hiding');
+    }
+
+    trigger.addEventListener('animationend', handlePortalTriggerAnimationEnd);
+
+    const heroCta = document.querySelector('[data-np-hero-cta]');
+    if (!heroCta) {
+      showPortalTrigger();
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const heroVisible = entries.some((entry) => entry.isIntersecting);
+        if (heroVisible) {
+          hidePortalTrigger();
+        } else {
+          showPortalTrigger();
+        }
+      },
+      { threshold: 0 },
+    );
+    observer.observe(heroCta);
+  }
+
   setTheme(currentTheme());
   initGhostCommentsThemeSync();
   initAnnouncementLayout();
@@ -597,5 +653,6 @@
   syncNavAriaCurrent();
   initNodeMap();
   initTilt();
+  initPortalTriggerFold();
   bootstrapFxVisibility();
 })();

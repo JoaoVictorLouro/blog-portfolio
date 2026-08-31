@@ -39,6 +39,11 @@
       }
     },
     "custom": {
+      "brand_title_html": {
+        "type": "text",
+        "default": "<ruby>Kono<rt>この</rt> Gaijin<rt>外人</rt></ruby>",
+        "description": "Nav/hero brand. HTML allowed (ruby/rt for furigana). Leave blank to use site title."
+      },
       "contact_form_action": {
         "type": "text",
         "description": "Form endpoint (Formspree, Web3Forms). Empty uses a mailto fallback."

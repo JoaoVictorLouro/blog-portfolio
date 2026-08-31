@@ -15,13 +15,25 @@
                     <span class="np-meta" style="color: var(--np-neon-teal);">Location: {{@custom.node_label}}</span>
                 {{/if}}
             </div>
-            <h1 class="np-display">{{@site.title}}</h1>
+            <h1 class="np-display">{{> "brand-title"}}</h1>
             {{#if @site.description}}
                 <p class="np-body">{{@site.description}}</p>
             {{/if}}
-            <a class="np-btn np-btn-primary" href="{{@site.url}}/articles/">
-                INITIATE_SEQUENCE<span class="material-symbols-outlined" aria-hidden="true">bolt</span>
-            </a>
+            {{#if @site.members_enabled}}
+                {{#unless @member}}
+                    <button class="np-btn np-btn-primary" type="button" data-portal="signup" data-np-hero-cta>
+                        INITIATE_SEQUENCE<span class="material-symbols-outlined" aria-hidden="true">bolt</span>
+                    </button>
+                {{else}}
+                    <a class="np-btn np-btn-primary" href="{{@site.url}}/articles/" data-np-hero-cta>
+                        INITIATE_SEQUENCE<span class="material-symbols-outlined" aria-hidden="true">bolt</span>
+                    </a>
+                {{/unless}}
+            {{else}}
+                <a class="np-btn np-btn-primary" href="{{@site.url}}/articles/" data-np-hero-cta>
+                    INITIATE_SEQUENCE<span class="material-symbols-outlined" aria-hidden="true">bolt</span>
+                </a>
+            {{/if}}
         </div>
     </section>
 
