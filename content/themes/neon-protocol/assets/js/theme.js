@@ -482,6 +482,15 @@
     bar.classList.add('is-loading');
   }
 
+  function resetPageGlitch() {
+    pageGlitchPending = false;
+    root.classList.remove('np-page-glitching', 'np-page-entering');
+    const bar = document.getElementById('np-data-stream');
+    if (bar) {
+      bar.classList.remove('is-loading', 'is-done');
+    }
+  }
+
   function handlePageGlitchNav(event) {
     if (pageGlitchPending) {
       event.preventDefault();
@@ -508,6 +517,14 @@
     window.setTimeout(() => {
       window.location.assign(nextUrl);
     }, PAGE_GLITCH_MS);
+  }
+
+  function handlePageShow(event) {
+    if (!event.persisted) {
+      return;
+    }
+    resetPageGlitch();
+    initFxVisibility();
   }
 
   function bootstrapFxVisibility() {
@@ -588,6 +605,8 @@
   document.addEventListener('submit', handleMailto);
 
   document.addEventListener('visibilitychange', syncTabVisibility);
+  window.addEventListener('pagehide', resetPageGlitch);
+  window.addEventListener('pageshow', handlePageShow);
 
   function initPortalTriggerFold() {
     const trigger = document.querySelector('.np-portal-trigger');
