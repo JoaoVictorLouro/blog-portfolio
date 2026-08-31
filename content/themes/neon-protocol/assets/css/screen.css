@@ -1488,6 +1488,51 @@ html.np-page-entering main {
   font-size: 0.875rem;
 }
 
+.np-bbs-body--comments {
+  font-family: var(--np-font-body);
+  font-size: 1rem;
+  color: var(--np-on-surface);
+  color-scheme: light dark;
+}
+
+.np-bbs-body--comments #ghost-comments-root {
+  color: var(--np-on-surface);
+  background: var(--np-surface-low);
+}
+
+.np-bbs-body--comments iframe[title='comments-frame'] {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: var(--np-surface-low);
+}
+
+[data-theme='dark'] .np-bbs-body--comments {
+  background: var(--np-surface-low);
+  color-scheme: dark;
+}
+
+[data-theme='dark'] .np-bbs-body--comments #ghost-comments-root {
+  background: var(--np-surface-low);
+}
+
+[data-theme='dark'] .np-bbs-body--comments iframe[title='comments-frame'] {
+  background: var(--np-surface-low);
+}
+
+[data-theme='light'] .np-bbs-body--comments {
+  background: var(--np-surface-bright);
+  color-scheme: light;
+}
+
+[data-theme='light'] .np-bbs-body--comments #ghost-comments-root {
+  background: var(--np-surface-bright);
+}
+
+[data-theme='light'] .np-bbs-body--comments iframe[title='comments-frame'] {
+  background: var(--np-surface-bright);
+}
+
 .np-about-banner {
   display: flex;
   flex-direction: column;

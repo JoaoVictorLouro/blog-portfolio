@@ -86,7 +86,7 @@ task recreate
 
 If you still have a combined `.env` from before this split, move `GHOST_ADMIN_EMAIL` and `GHOST_ADMIN_PASSWORD` into `.env.secrets`.
 
-Members can subscribe to the newsletter. Paid plans and Ghost native comments are turned off. Article pages can embed Discourse when a Discourse URL is set in **Settings → Design**. Ghost Admin still has **Settings → Staff → Invite**; bootstrap never creates a second staff user.
+Members can subscribe to the newsletter and comment on articles with a free account. Ghost native comments are enabled for all members; paid plans are turned off. Ghost Admin still has **Settings → Staff → Invite**; bootstrap never creates a second staff user.
 
 Tag portfolio posts with the internal `#portfolio` tag to show them on `/portfolio/`. Contact form endpoint, GitHub, and social URLs are theme design settings.
 

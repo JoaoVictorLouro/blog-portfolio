@@ -18,7 +18,7 @@ Tooling: Task, Deno 2.x, Prettier, gscan (via Node Docker), GitHub Actions, Reno
 | `data/`                       | **no**   | Runtime SQLite, uploads, logs — never commit                                    |
 | `.env`                        | **no**   | Local settings (`URL`, `PORT`, site title) — use `.env.example`                 |
 | `.env.secrets`                | **no**   | Local secrets (`GHOST_ADMIN_EMAIL` / `PASSWORD`) — use `.env.secrets.example`   |
-| `scripts/ghost-bootstrap.mjs` | yes      | First-boot owner, neon-protocol theme, nav, About page, newsletter-only members |
+| `scripts/ghost-bootstrap.mjs` | yes      | First-boot owner, neon-protocol theme, nav, About page, free members + comments |
 
 Compose bind-mounts versioned `content/*` over the runtime `data/content` volume. The `Dockerfile` copies `content/` into the GHCR image `ghcr.io/joaovictorlouro/blog-portfolio`.
 
@@ -51,7 +51,7 @@ Site: `http://localhost:2368` — Admin: `http://localhost:2368/ghost` (owner fr
 - Format `.hbs` with Prettier (excluded; Ghost helpers break the HTML parser — use gscan)
 - Add npm/`package.json` for repo tooling — use Deno (`deno.json`)
 - Read `.env` or other secret env files (blocked by `.cursorignore` and a `beforeReadFile` hook)
-- Invite extra staff users or enable paid memberships/comments; this stack is one owner + free newsletter sign-up only
+- Invite extra staff users or enable paid memberships; this stack is one owner + free newsletter sign-up and native comments for all members
 
 ## Cursor
 

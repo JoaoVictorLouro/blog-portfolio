@@ -47,10 +47,6 @@
         "type": "text",
         "description": "Mailto fallback address when no form endpoint is set."
       },
-      "discourse_url": {
-        "type": "text",
-        "description": "Discourse site URL ending with a slash, used for the article BBS embed."
-      },
       "github_url": {
         "type": "text",
         "description": "GitHub profile or repo URL for NETWORK_NODES."

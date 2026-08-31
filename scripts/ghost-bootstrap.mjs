@@ -199,13 +199,13 @@ async function putSettings(cookie, settings) {
   }
 }
 
-async function applyNewsletterOnlySettings(cookie) {
+async function applyFreeMemberSettings(cookie) {
   await putSettings(cookie, [
     { key: 'members_signup_access', value: 'all' },
     { key: 'portal_plans', value: '["free"]' },
-    { key: 'comments_enabled', value: 'off' },
+    { key: 'comments_enabled', value: 'all' },
   ]);
-  console.log('Locked members to free newsletter sign-up (comments and paid plans off)');
+  console.log('Locked members to free newsletter sign-up with native comments (paid plans off)');
 }
 
 async function activateTheme(cookie) {
@@ -374,7 +374,7 @@ if (setupStatus(setup)) {
 }
 
 const cookie = await createSession();
-await applyNewsletterOnlySettings(cookie);
+await applyFreeMemberSettings(cookie);
 await activateTheme(cookie);
 await ensurePortfolioTag(cookie);
 await ensureAboutPage(cookie);

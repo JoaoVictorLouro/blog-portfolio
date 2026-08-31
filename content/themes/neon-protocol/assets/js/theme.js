@@ -21,6 +21,124 @@
         next === 'light' ? 'Switch to dark theme' : 'Switch to light theme',
       );
     });
+    syncGhostCommentsTheme(next);
+  }
+
+  function commentsSurfaceBg(theme) {
+    const wrapper = document.querySelector('.np-bbs-body--comments');
+    if (wrapper) {
+      const bg = getComputedStyle(wrapper).backgroundColor;
+      if (bg && bg !== 'rgba(0, 0, 0, 0)') {
+        return bg;
+      }
+    }
+    return theme === 'light' ? '#ffffff' : '#1b1c1d';
+  }
+
+  function commentsThemeCss(mode, bg) {
+    const text = mode === 'dark' ? '#e3e2e3' : '#121315';
+    const muted = mode === 'dark' ? 'rgba(255,255,255,0.85)' : '#4b5560';
+    const faint = mode === 'dark' ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.4)';
+    return [
+      `html,body,section.ghost-display{background-color:${bg}!important;color:${text}!important}`,
+      `section.ghost-display.dark,[data-testid="cta-box"] h1,[data-testid="cta-box"] p{color:${muted}!important}`,
+      `[data-testid="cta-box"] p span{color:${muted}!important}`,
+      `[data-testid="cta-box"] p.text-center.font-sans.text-md{color:${faint}!important}`,
+    ].join('');
+  }
+
+  function observeCommentsIframe(iframe, applyMode) {
+    if (iframe.dataset.npCommentsObserved === '1') {
+      return;
+    }
+    iframe.dataset.npCommentsObserved = '1';
+    const start = () => {
+      const doc = iframe.contentDocument;
+      if (!doc?.body) {
+        return;
+      }
+      applyMode();
+      const observer = new MutationObserver(() => {
+        applyMode();
+      });
+      observer.observe(doc.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['class', 'data-loaded'],
+      });
+      let ticks = 0;
+      const interval = window.setInterval(() => {
+        applyMode();
+        ticks += 1;
+        if (ticks >= 24) {
+          window.clearInterval(interval);
+        }
+      }, 250);
+    };
+    if (iframe.contentDocument?.body) {
+      start();
+    } else {
+      iframe.addEventListener('load', start, { once: true });
+    }
+  }
+
+  function syncGhostCommentsTheme(theme) {
+    const mode = theme === 'light' ? 'light' : 'dark';
+    const bg = commentsSurfaceBg(mode);
+    document.querySelectorAll('script[data-ghost-comments]').forEach((script) => {
+      if (script.dataset.colorScheme !== mode) {
+        script.dataset.colorScheme = mode;
+      }
+    });
+    document
+      .querySelectorAll('#ghost-comments-root iframe[title="comments-frame"]')
+      .forEach((iframe) => {
+        iframe.style.backgroundColor = bg;
+        const applyMode = () => {
+          const doc = iframe.contentDocument;
+          if (!doc) {
+            return;
+          }
+          const section = doc.querySelector('section.ghost-display');
+          if (section) {
+            section.classList.toggle('dark', mode === 'dark');
+          }
+          doc.documentElement.style.colorScheme = mode;
+          doc.documentElement.style.backgroundColor = bg;
+          doc.body.style.backgroundColor = bg;
+          let style = doc.getElementById('np-comments-theme');
+          if (!style) {
+            style = doc.createElement('style');
+            style.id = 'np-comments-theme';
+            doc.head.appendChild(style);
+          }
+          style.textContent = commentsThemeCss(mode, bg);
+        };
+        if (iframe.contentDocument?.readyState === 'complete') {
+          applyMode();
+          observeCommentsIframe(iframe, applyMode);
+        } else {
+          iframe.addEventListener(
+            'load',
+            () => {
+              applyMode();
+              observeCommentsIframe(iframe, applyMode);
+            },
+            { once: true },
+          );
+        }
+      });
+  }
+
+  function initGhostCommentsThemeSync() {
+    syncGhostCommentsTheme(currentTheme());
+    const observer = new MutationObserver(() => {
+      if (document.getElementById('ghost-comments-root')) {
+        syncGhostCommentsTheme(currentTheme());
+      }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
   }
 
   function handleThemeToggle() {
@@ -402,6 +520,7 @@
   document.addEventListener('visibilitychange', syncTabVisibility);
 
   setTheme(currentTheme());
+  initGhostCommentsThemeSync();
   runDataStream();
   syncTabVisibility();
   syncNavAriaCurrent();

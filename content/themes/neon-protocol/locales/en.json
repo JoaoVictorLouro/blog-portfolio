@@ -10,7 +10,6 @@
   "Newer posts": "PREV_PAGE",
   "Next": "NEXT",
   "No posts": "NO_SIGNAL",
-  "No uplink": "NO_UPLINK // configure Discourse URL in theme settings",
   "Older posts": "NEXT_PAGE",
   "Page {page} of {pages}": "PAGE {page} / {pages}",
   "Previous": "PREV",
