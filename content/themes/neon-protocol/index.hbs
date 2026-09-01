@@ -2,19 +2,19 @@
 
 <main class="np-main">
     <header class="np-about-banner">
-        <h1 class="np-display"><span class="np-page-title"><span class="material-symbols-outlined" aria-hidden="true">database</span>ARTICLES</span></h1>
-        <p class="np-meta">STATUS: ONLINE // ARCHIVE INDEX</p>
+        <h1 class="np-display"><span class="np-page-title"><span class="material-symbols-outlined" aria-hidden="true">database</span>{{> "np-t" key="ARTICLES_TITLE"}}</span></h1>
+        <p class="np-meta">{{> "np-t" key="STATUS_ONLINE_ARCHIVE"}}</p>
     </header>
 
     <div class="np-toolbar">
         <div class="np-search">
             <span class="material-symbols-outlined" aria-hidden="true">search</span>
-            <button type="button" data-ghost-search>{{t "Search"}}</button>
+            <button type="button" data-ghost-search>{{> "np-t" key="Search"}}</button>
         </div>
         <div class="np-card-tags">
-            <span class="np-chip is-live">STATUS: ONLINE</span>
+            <span class="np-chip is-live">{{> "np-t" key="STATUS_ONLINE"}}</span>
             <a class="np-btn np-btn-ghost" href="#posts">
-                <span class="material-symbols-outlined">filter_list</span>FILTER
+                <span class="material-symbols-outlined">filter_list</span>{{> "np-t" key="FILTER"}}
             </a>
         </div>
     </div>
@@ -36,7 +36,7 @@
     </div>
 
     {{#unless posts}}
-        <p class="np-empty np-meta">{{t "No posts"}}</p>
+        <p class="np-empty np-meta">{{> "np-t" key="No posts"}}</p>
     {{/unless}}
 
     {{pagination}}

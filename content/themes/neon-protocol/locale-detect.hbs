@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting…</title>
+    <noscript>
+        <meta http-equiv="refresh" content="0; url={{@site.url}}/en-us/">
+    </noscript>
+    <script>
+    (function () {
+        var base = "{{@site.url}}";
+        var locales = [
+            { prefix: 'en', path: '/en-us/' },
+            { prefix: 'ja', path: '/ja-jp/' },
+            { prefix: 'pt', path: '/pt-br/' },
+            { prefix: 'es', path: '/es-la/' }
+        ];
+        var languages = navigator.languages && navigator.languages.length
+            ? navigator.languages
+            : [navigator.language || 'en-US'];
+        var target = '/en-us/';
+        for (var i = 0; i < languages.length; i += 1) {
+            var lang = String(languages[i] || '').toLowerCase();
+            for (var j = 0; j < locales.length; j += 1) {
+                if (lang.indexOf(locales[j].prefix) === 0) {
+                    target = locales[j].path;
+                    i = languages.length;
+                    break;
+                }
+            }
+        }
+        window.location.replace(base + target);
+    })();
+    </script>
+</head>
+<body></body>
+</html>

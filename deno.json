@@ -3,9 +3,12 @@
     "format": "deno run -A npm:prettier@3.9.6 --write .",
     "format:check": "deno run -A npm:prettier@3.9.6 --check .",
     "build:icons": "deno run -A scripts/build-material-symbols-subset.mjs",
+    "build:i18n": "deno run -A scripts/build-theme-i18n.mjs",
     "sync:ghost-assets": "deno run -A scripts/sync-ghost-cdn-assets.mjs",
     "lint": "docker run --rm -v \"$PWD:/work\" -w /work node:22-bookworm-slim npx --yes gscan@6.4.2 content/themes/neon-protocol --verbose",
-    "test": "deno task lint && docker compose config --quiet"
+    "test:i18n-map": "deno test -A scripts/i18n-map-sidecar/build-map_test.ts",
+    "i18n:build-map": "deno run -A scripts/i18n-map-sidecar/main.ts --once",
+    "test": "deno task build:i18n && deno task test:i18n-map && deno task lint && docker compose config --quiet"
   },
   "nodeModulesDir": "none",
   "exclude": ["data/", "node_modules/", "content/themes/*/node_modules/"]

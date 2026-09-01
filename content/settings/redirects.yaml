@@ -1,5 +1,10 @@
 301:
-  ^/logs/$: /articles/
-  ^/logs/(.+)$: /articles/$1
-  ^/archive/$: /portfolio/
-  ^/archive/(.+)$: /portfolio/$1
+  ^/articles/$: /en-us/articles/
+  ^/articles/(.+)$: /en-us/articles/$1
+  ^/portfolio/$: /en-us/portfolio/
+  ^/portfolio/(.+)$: /en-us/portfolio/$1
+  ^/about/$: /en-us/about/
+  ^/logs/$: /en-us/articles/
+  ^/logs/(.+)$: /en-us/articles/$1
+  ^/archive/$: /en-us/portfolio/
+  ^/archive/(.+)$: /en-us/portfolio/$1

@@ -27,15 +27,21 @@
                 </div>
                 <h1 class="np-display">{{title}}</h1>
                 <div class="np-meta" style="border-left: 2px solid var(--np-neon-teal); padding-left: 1rem;">
+                    <span>{{> "np-post-label" key="AUTHOR"}}:
                     {{#foreach authors}}
-                        <span>AUTHOR: <span style="color: var(--np-secondary-container);">{{name}}</span></span>
+                        <span style="color: var(--np-secondary-container);">{{name}}</span>
                     {{/foreach}}
+                    </span>
                     <span> /// </span>
-                    <time datetime="{{date format="YYYY-MM-DD"}}">UPLOADED: {{date format="YYYY.MM.DD"}}</time>
+                    <time datetime="{{date format="YYYY-MM-DD"}}">{{> "np-post-label" key="UPLOADED"}}: {{date format="YYYY.MM.DD"}}</time>
                 </div>
             </div>
         </div>
     </header>
+
+    <div class="np-article-translations">
+        {{> "translation-switcher"}}
+    </div>
 
     <article class="np-article-wrap {{post_class}}">
         {{> "share"}}

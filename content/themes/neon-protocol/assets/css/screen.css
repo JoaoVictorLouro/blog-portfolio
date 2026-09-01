@@ -587,21 +587,20 @@ body:has(#announcement-bar-root .gh-announcement-bar) .np-main {
 }
 
 .np-nav-links a:hover,
-.np-nav-links a.is-active,
-.np-nav-links a.is-active-parent {
+.np-nav-links a.is-active {
   color: var(--np-active);
 }
 
-.np-nav-links a.is-active,
-.np-nav-links a.is-active-parent {
+.np-nav-links a.is-active {
   font-weight: 700;
   padding-bottom: 0.25rem;
   border-bottom: 2px solid var(--np-active);
-}
-
-.np-nav-links a.is-active {
   transform: scale(0.95);
   animation: np-pulse 2s ease-in-out infinite;
+}
+
+.np-nav-links a.is-active-parent {
+  color: var(--np-on-surface-variant);
 }
 
 .np-nav-actions {
@@ -609,6 +608,73 @@ body:has(#announcement-bar-root .gh-announcement-bar) .np-main {
   align-items: center;
   gap: 0.25rem;
   color: var(--np-signal);
+}
+
+.np-lang-picker {
+  display: flex;
+  align-items: center;
+}
+
+.np-lang-select {
+  appearance: none;
+  border: 1px solid color-mix(in srgb, var(--np-primary) 35%, transparent);
+  background: color-mix(in srgb, var(--np-surface) 80%, transparent);
+  color: var(--np-signal);
+  font-family: var(--np-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.35rem 1.75rem 0.35rem 0.65rem;
+  min-width: 6.5rem;
+  cursor: pointer;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--np-primary-container) 50%),
+    linear-gradient(135deg, var(--np-primary-container) 50%, transparent 50%);
+  background-position:
+    calc(100% - 12px) calc(50% - 2px),
+    calc(100% - 8px) calc(50% - 2px);
+  background-size:
+    4px 4px,
+    4px 4px;
+  background-repeat: no-repeat;
+}
+
+.np-lang-select:focus-visible {
+  outline: 2px solid var(--np-neon-teal);
+  outline-offset: 2px;
+}
+
+.np-translation-switcher {
+  margin-top: 0;
+  padding: 0.85rem 1rem;
+  border-left: 2px solid var(--np-neon-teal);
+}
+
+.np-article-translations {
+  max-width: 48rem;
+  margin: -2em auto 4rem auto;
+  padding: 0 2rem;
+}
+
+.np-translation-switcher-title {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+}
+
+.np-translation-switcher-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+}
+
+.np-translation-switcher-links a {
+  font-size: 0.75rem;
+  padding: 0.6em;
 }
 
 .np-icon-btn {
@@ -655,13 +721,9 @@ body:has(#announcement-bar-root .gh-announcement-bar) .np-main {
   text-transform: uppercase;
 }
 
-.np-dock a.is-active,
-.np-dock a.is-active-parent {
+.np-dock a.is-active {
   color: var(--np-signal);
   border-bottom: 2px solid var(--np-signal);
-}
-
-.np-dock a.is-active {
   animation: np-pulse 2s ease-in-out infinite;
 }
 

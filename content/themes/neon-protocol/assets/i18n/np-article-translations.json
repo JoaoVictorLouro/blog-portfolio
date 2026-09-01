@@ -1,0 +1,73 @@
+{
+  "updated_at": "2026-09-01T13:50:02.069Z",
+  "by_url": {
+    "http://localhost:2368/es-la/articles/translation-tagging-es/": "translation-tagging",
+    "http://localhost:2368/pt-br/articles/translation-tagging-pt/": "translation-tagging",
+    "http://localhost:2368/ja-jp/articles/translation-tagging-ja/": "translation-tagging",
+    "http://localhost:2368/en-us/articles/translation-tagging/": "translation-tagging",
+    "http://localhost:2368/es-la/articles/locale-routing-guide-es/": "locale-routing-guide",
+    "http://localhost:2368/pt-br/articles/locale-routing-guide-pt/": "locale-routing-guide",
+    "http://localhost:2368/ja-jp/articles/locale-routing-guide-ja/": "locale-routing-guide",
+    "http://localhost:2368/en-us/articles/locale-routing-guide/": "locale-routing-guide",
+    "http://localhost:2368/es-la/articles/neon-protocol-overview-es/": "neon-protocol-overview",
+    "http://localhost:2368/pt-br/articles/neon-protocol-overview-pt/": "neon-protocol-overview",
+    "http://localhost:2368/ja-jp/articles/neon-protocol-overview-ja/": "neon-protocol-overview",
+    "http://localhost:2368/en-us/articles/neon-protocol-overview/": "neon-protocol-overview"
+  },
+  "groups": {
+    "translation-tagging": {
+      "es-la": {
+        "url": "/es-la/articles/translation-tagging-es/",
+        "title": "TRANSLATION_TAGS // PROTOCOLO_EDITORIAL"
+      },
+      "pt-br": {
+        "url": "/pt-br/articles/translation-tagging-pt/",
+        "title": "TRANSLATION_TAGS // PROTOCOLO_EDITORIAL"
+      },
+      "ja-jp": {
+        "url": "/ja-jp/articles/translation-tagging-ja/",
+        "title": "TRANSLATION_TAGS // 編集プロトコル"
+      },
+      "en-us": {
+        "url": "/en-us/articles/translation-tagging/",
+        "title": "TRANSLATION_TAGS // EDITOR_PROTOCOL"
+      }
+    },
+    "locale-routing-guide": {
+      "es-la": {
+        "url": "/es-la/articles/locale-routing-guide-es/",
+        "title": "LOCALE_ROUTING // MATRIZ_DE_RUTAS"
+      },
+      "pt-br": {
+        "url": "/pt-br/articles/locale-routing-guide-pt/",
+        "title": "LOCALE_ROUTING // MATRIZ_DE_ROTAS"
+      },
+      "ja-jp": {
+        "url": "/ja-jp/articles/locale-routing-guide-ja/",
+        "title": "LOCALE_ROUTING // パスマトリクス"
+      },
+      "en-us": {
+        "url": "/en-us/articles/locale-routing-guide/",
+        "title": "LOCALE_ROUTING // PATH_MATRIX"
+      }
+    },
+    "neon-protocol-overview": {
+      "es-la": {
+        "url": "/es-la/articles/neon-protocol-overview-es/",
+        "title": "NEON_PROTOCOL // RESUMEN_DEL_SISTEMA"
+      },
+      "pt-br": {
+        "url": "/pt-br/articles/neon-protocol-overview-pt/",
+        "title": "NEON_PROTOCOL // VISÃO_DO_SISTEMA"
+      },
+      "ja-jp": {
+        "url": "/ja-jp/articles/neon-protocol-overview-ja/",
+        "title": "NEON_PROTOCOL // システム概要"
+      },
+      "en-us": {
+        "url": "/en-us/articles/neon-protocol-overview/",
+        "title": "NEON_PROTOCOL // SYSTEM_OVERVIEW"
+      }
+    }
+  }
+}

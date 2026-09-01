@@ -16,7 +16,7 @@
         {{/if}}
         <div class="np-hero-body">
             <div class="np-hero-kicker">
-                <span class="np-chip is-live">SYSTEM.READY</span>
+                <span class="np-chip is-live">{{> "np-t" key="SYSTEM_READY"}}</span>
                 {{#if @custom.node_label}}
                     <span class="np-meta" style="color: var(--np-neon-teal);">Location: {{@custom.node_label}}</span>
                 {{/if}}
@@ -28,16 +28,16 @@
             {{#if @site.members_enabled}}
                 {{#unless @member}}
                     <button class="np-btn np-btn-primary" type="button" data-np-members="subscribe" data-np-hero-cta>
-                        INITIATE_SEQUENCE<span class="material-symbols-outlined" aria-hidden="true">bolt</span>
+                        {{> "np-t" key="INITIATE_SEQUENCE"}}<span class="material-symbols-outlined" aria-hidden="true">bolt</span>
                     </button>
                 {{else}}
-                    <a class="np-btn np-btn-primary" href="{{@site.url}}/articles/" data-np-hero-cta>
-                        INITIATE_SEQUENCE<span class="material-symbols-outlined" aria-hidden="true">bolt</span>
+                    <a class="np-btn np-btn-primary" href="{{@site.url}}/{{block "np_lang"}}/articles/" data-np-hero-cta>
+                        {{> "np-t" key="INITIATE_SEQUENCE"}}<span class="material-symbols-outlined" aria-hidden="true">bolt</span>
                     </a>
                 {{/unless}}
             {{else}}
-                <a class="np-btn np-btn-primary" href="{{@site.url}}/articles/" data-np-hero-cta>
-                    INITIATE_SEQUENCE<span class="material-symbols-outlined" aria-hidden="true">bolt</span>
+                <a class="np-btn np-btn-primary" href="{{@site.url}}/{{block "np_lang"}}/articles/" data-np-hero-cta>
+                    {{> "np-t" key="INITIATE_SEQUENCE"}}<span class="material-symbols-outlined" aria-hidden="true">bolt</span>
                 </a>
             {{/if}}
         </div>
@@ -47,19 +47,53 @@
         <section>
             <header class="np-about-banner np-about-banner--row">
                 <div>
-                    <h2 class="np-title" style="color: var(--np-secondary-container);"><span class="np-page-title"><span class="material-symbols-outlined" aria-hidden="true">cell_tower</span>RECENT_ARTICLES</span></h2>
-                    <p class="np-meta">LATEST TRANSMISSIONS // FEED SYNC</p>
+                    <h2 class="np-title" style="color: var(--np-secondary-container);"><span class="np-page-title"><span class="material-symbols-outlined" aria-hidden="true">cell_tower</span>{{> "np-t" key="RECENT_ARTICLES"}}</span></h2>
+                    <p class="np-meta">{{> "np-t" key="LATEST_TRANSMISSIONS"}}</p>
                 </div>
-                <div class="np-live"><i class="np-fx-layer"></i><span class="np-label">LIVE FEED</span></div>
+                <div class="np-live"><i class="np-fx-layer"></i><span class="np-label">{{> "np-t" key="LIVE_FEED"}}</span></div>
             </header>
             <div class="np-home-feed">
-                {{#get "posts" filter="tag:-hash-portfolio" include="tags,authors" limit="4" as |recent|}}
-                    {{#foreach recent}}
-                        {{> "log-card"}}
-                    {{else}}
-                        <p class="np-empty np-meta">{{t "No posts"}}</p>
-                    {{/foreach}}
-                {{/get}}
+                {{#match (block "np_lang") "en-us"}}
+                    {{#get "posts" filter="tag:-hash-lang-ja-jp+tag:-hash-lang-pt-br+tag:-hash-lang-es-la+tag:-hash-portfolio" include="tags,authors" limit="4" as |recent|}}
+                        {{#foreach recent}}
+                            {{> "log-card"}}
+                        {{else}}
+                            <p class="np-empty np-meta">{{> "np-t" key="No posts"}}</p>
+                        {{/foreach}}
+                    {{/get}}
+                {{else match (block "np_lang") "ja-jp"}}
+                    {{#get "posts" filter="tag:hash-lang-ja-jp+tag:-hash-portfolio" include="tags,authors" limit="4" as |recent|}}
+                        {{#foreach recent}}
+                            {{> "log-card"}}
+                        {{else}}
+                            <p class="np-empty np-meta">{{> "np-t" key="No posts"}}</p>
+                        {{/foreach}}
+                    {{/get}}
+                {{else match (block "np_lang") "pt-br"}}
+                    {{#get "posts" filter="tag:hash-lang-pt-br+tag:-hash-portfolio" include="tags,authors" limit="4" as |recent|}}
+                        {{#foreach recent}}
+                            {{> "log-card"}}
+                        {{else}}
+                            <p class="np-empty np-meta">{{> "np-t" key="No posts"}}</p>
+                        {{/foreach}}
+                    {{/get}}
+                {{else match (block "np_lang") "es-la"}}
+                    {{#get "posts" filter="tag:hash-lang-es-la+tag:-hash-portfolio" include="tags,authors" limit="4" as |recent|}}
+                        {{#foreach recent}}
+                            {{> "log-card"}}
+                        {{else}}
+                            <p class="np-empty np-meta">{{> "np-t" key="No posts"}}</p>
+                        {{/foreach}}
+                    {{/get}}
+                {{else}}
+                    {{#get "posts" filter="tag:-hash-lang-ja-jp+tag:-hash-lang-pt-br+tag:-hash-lang-es-la+tag:-hash-portfolio" include="tags,authors" limit="4" as |recent|}}
+                        {{#foreach recent}}
+                            {{> "log-card"}}
+                        {{else}}
+                            <p class="np-empty np-meta">{{> "np-t" key="No posts"}}</p>
+                        {{/foreach}}
+                    {{/get}}
+                {{/match}}
             </div>
         </section>
 

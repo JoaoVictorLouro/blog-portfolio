@@ -1,13 +1,7 @@
-<nav class="np-dock" aria-label="{{t "Menu"}}">
-    {{#foreach navigation}}
-        <a class="{{link_class for=url activeClass="is-active"}}" href="{{url}}">
-            <span class="material-symbols-outlined" aria-hidden="true">{{#match @index 1}}home_max{{else match @index 2}}explore{{else match @index 3}}photo_library{{else}}account_tree{{/match}}</span>
-            <span>{{label}}</span>
-        </a>
-    {{else}}
-        <a class="{{link_class for="/" activeClass="is-active"}}" href="{{@site.url}}/"><span class="material-symbols-outlined" aria-hidden="true">home_max</span><span>HOME</span></a>
-        <a class="{{link_class for="/articles/" activeClass="is-active"}}" href="{{@site.url}}/articles/"><span class="material-symbols-outlined" aria-hidden="true">explore</span><span>ARTICLES</span></a>
-        <a class="{{link_class for="/portfolio/" activeClass="is-active"}}" href="{{@site.url}}/portfolio/"><span class="material-symbols-outlined" aria-hidden="true">photo_library</span><span>PORTFOLIO</span></a>
-        <a class="{{link_class for="/about/" activeClass="is-active"}}" href="{{@site.url}}/about/"><span class="material-symbols-outlined" aria-hidden="true">account_tree</span><span>ABOUT</span></a>
-    {{/foreach}}
-</nav>
+{{#is "post"}}
+{{#post}}
+{{> "nav-mobile-post"}}
+{{/post}}
+{{else}}
+{{> "nav-mobile-site"}}
+{{/is}}

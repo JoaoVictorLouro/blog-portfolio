@@ -295,9 +295,38 @@
     observeFxTargets(initFxVisibility._observer);
   }
 
-  function syncNavAriaCurrent() {
+  function normalizeNavPath(pathname) {
+    if (!pathname || pathname === '/') {
+      return '/';
+    }
+    return pathname.endsWith('/') ? pathname : `${pathname}/`;
+  }
+
+  function isNavLinkActive(linkPath, currentPath) {
+    if (linkPath === currentPath) {
+      return true;
+    }
+    if (linkPath.endsWith('/articles/') && currentPath.startsWith(linkPath)) {
+      return true;
+    }
+    return false;
+  }
+
+  function syncNavActiveState() {
+    const currentPath = normalizeNavPath(window.location.pathname);
+
     document.querySelectorAll('.np-nav-links a, .np-dock a').forEach((link) => {
-      if (link.classList.contains('is-active')) {
+      let linkPath = '/';
+      try {
+        linkPath = normalizeNavPath(new URL(link.href, window.location.origin).pathname);
+      } catch {
+        linkPath = '/';
+      }
+
+      const isActive = isNavLinkActive(linkPath, currentPath);
+      link.classList.toggle('is-active', isActive);
+      link.classList.remove('is-active-parent');
+      if (isActive) {
         link.setAttribute('aria-current', 'page');
       } else {
         link.removeAttribute('aria-current');
@@ -1008,6 +1037,122 @@
     );
   }
 
+  function initLanguagePicker() {
+    const select = document.querySelector('[data-np-lang-select]');
+    if (!select) {
+      return;
+    }
+
+    const localePattern = /^\/(en-us|ja-jp|pt-br|es-la)(\/|$)/;
+    const pathname = window.location.pathname;
+    const match = pathname.match(localePattern);
+    const currentLocale = match?.[1] ?? window.__npLocale ?? 'en-us';
+    select.value = currentLocale;
+
+    select.addEventListener('change', () => {
+      const nextLocale = select.value;
+      if (!nextLocale || nextLocale === currentLocale) {
+        return;
+      }
+      const nextPath = match
+        ? pathname.replace(localePattern, `/${nextLocale}$2`)
+        : `/${nextLocale}/`;
+      window.location.href = `${window.__npSiteUrl || ''}${nextPath}${window.location.search}${window.location.hash}`;
+    });
+  }
+
+  function initTranslationSwitcher() {
+    const widget = document.querySelector('[data-np-translation-switcher]');
+    if (!widget) {
+      return;
+    }
+
+    const postUrl = widget.getAttribute('data-np-post-url');
+    const linksRoot = widget.querySelector('[data-np-translation-links]');
+    const emptyState = widget.querySelector('[data-np-translation-empty]');
+    const base = window.__npI18nBase || `${window.__npSiteUrl || ''}/i18n/`;
+    const localeLabels = {
+      'en-us': 'English',
+      'ja-jp': '日本語',
+      'pt-br': 'Português',
+      'es-la': 'Español',
+    };
+
+    fetch(`${base}np-article-translations.json`, { cache: 'no-store' })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Translation map HTTP ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((map) => {
+        if (!postUrl || !linksRoot) {
+          return;
+        }
+        const groupId = map?.by_url?.[postUrl];
+        const group = groupId ? map?.groups?.[groupId] : null;
+        if (!group) {
+          return;
+        }
+
+        const currentPath = new URL(postUrl).pathname;
+        const entries = Object.entries(group).filter(([, entry]) => entry.url !== currentPath);
+        if (entries.length === 0) {
+          return;
+        }
+
+        widget.hidden = false;
+        linksRoot.replaceChildren(
+          ...entries.map(([locale, entry]) => {
+            const item = document.createElement('li');
+            const link = document.createElement('a');
+            link.className = 'np-btn np-btn-ghost';
+            link.href = `${window.__npSiteUrl || ''}${entry.url}`;
+            link.textContent = localeLabels[locale] ?? locale;
+            link.setAttribute('lang', locale);
+            link.title = entry.title;
+            item.appendChild(link);
+            return item;
+          }),
+        );
+      })
+      .catch(() => {
+        if (emptyState) {
+          emptyState.hidden = false;
+        }
+      });
+  }
+
+  function initNewsletterLocale() {
+    const forms = document.querySelectorAll('[data-np-newsletter-form]');
+    if (forms.length === 0) {
+      return;
+    }
+
+    const base = window.__npI18nBase || `${window.__npSiteUrl || ''}/i18n/`;
+    const locale = window.__npLocale || 'en-us';
+
+    fetch(`${base}np-newsletters.json`, { cache: 'no-store' })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Newsletter map HTTP ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((payload) => {
+        const newsletterId = payload?.newsletters?.[locale];
+        if (!newsletterId) {
+          return;
+        }
+        forms.forEach((form) => {
+          form.setAttribute('data-members-newsletter', newsletterId);
+        });
+      })
+      .catch(() => {
+        // Newsletter map is optional until bootstrap runs.
+      });
+  }
+
   function boot() {
     setTheme(currentTheme());
     initDeferredGhostScripts();
@@ -1015,12 +1160,15 @@
     initAnnouncementLayout();
     runDataStream();
     syncTabVisibility();
-    syncNavAriaCurrent();
+    syncNavActiveState();
     initNodeMap();
     initTilt();
     initPortalTriggerFold();
     initMembersDialog();
     bootstrapFxVisibility();
+    initLanguagePicker();
+    initTranslationSwitcher();
+    initNewsletterLocale();
   }
 
   if (document.readyState === 'loading') {

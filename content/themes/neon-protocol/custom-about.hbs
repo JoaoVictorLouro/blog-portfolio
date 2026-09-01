@@ -4,13 +4,13 @@
 <main class="np-main">
     <header class="np-about-banner">
         <h1 class="np-display"><span class="np-page-title"><span class="material-symbols-outlined" aria-hidden="true">fingerprint</span>{{title}}</span></h1>
-        <p class="np-meta">{{#if custom_excerpt}}{{custom_excerpt}}{{else}}STATUS: ONLINE // LOCATION: UNDEFINED{{/if}}</p>
+        <p class="np-meta">{{#if custom_excerpt}}{{custom_excerpt}}{{else}}{{> "np-t" key="ABOUT_STATUS"}}{{/if}}</p>
     </header>
 
     <div class="np-about-grid">
         <article class="np-glass np-card np-about-bio" style="border-left: 2px solid var(--np-cyber-magenta);">
             <div class="np-section-head" style="margin-bottom: 1rem;">
-                <h2 class="np-heading"><span class="material-symbols-outlined" style="color: var(--np-neon-teal);">account_circle</span>USER_PROFILE</h2>
+                <h2 class="np-heading"><span class="material-symbols-outlined" style="color: var(--np-neon-teal);">account_circle</span>{{> "np-t" key="USER_PROFILE"}}</h2>
             </div>
             <div class="np-prose">
                 {{content}}
@@ -40,61 +40,61 @@
             {{/if}}
             <div class="np-kv">
                 <span>ID: {{slug}}</span>
-                <span class="np-label" style="color: var(--np-lantern-amber);">ENCRYPTED</span>
+                <span class="np-label" style="color: var(--np-lantern-amber);">{{> "np-t" key="ENCRYPTED"}}</span>
             </div>
         </aside>
 
         <section class="np-glass np-card np-about-form" data-np-tilt style="border-left: 4px solid var(--np-lantern-amber);">
             <div class="np-section-head" style="margin-bottom: 1rem;">
-                <h2 class="np-heading" style="color: var(--np-secondary);"><span class="material-symbols-outlined" style="color: var(--np-lantern-amber);">mail</span>ESTABLISH_CONNECTION</h2>
+                <h2 class="np-heading" style="color: var(--np-secondary);"><span class="material-symbols-outlined" style="color: var(--np-lantern-amber);">mail</span>{{> "np-t" key="ESTABLISH_CONNECTION"}}</h2>
             </div>
             {{#if @custom.contact_form_action}}
                 <form class="np-form" action="{{@custom.contact_form_action}}" method="POST">
-                    <label class="np-label">Comm_Link_ID [Email]
-                        <input class="np-field" type="email" name="email" required placeholder="user@network.node">
+                    <label class="np-label">{{> "np-t" key="EMAIL_LABEL"}}
+                        <input class="np-field" type="email" name="email" required placeholder="{{> "np-t" key="EMAIL_PLACEHOLDER"}}">
                     </label>
-                    <label class="np-label">Data_Payload [Message]
-                        <textarea class="np-field" name="message" rows="4" required placeholder="Enter transmission..."></textarea>
+                    <label class="np-label">{{> "np-t" key="MESSAGE_LABEL"}}
+                        <textarea class="np-field" name="message" rows="4" required placeholder="{{> "np-t" key="MESSAGE_PLACEHOLDER"}}"></textarea>
                     </label>
-                    <button class="np-btn np-btn-primary" type="submit">{{t "Transmit"}}<span class="material-symbols-outlined">send</span></button>
+                    <button class="np-btn np-btn-primary" type="submit">{{> "np-t" key="Transmit"}}<span class="material-symbols-outlined">send</span></button>
                 </form>
             {{else}}
                 <form class="np-form" data-np-mailto="{{@custom.contact_email}}" {{#unless @custom.contact_email}}onsubmit="return false;"{{/unless}}>
-                    <label class="np-label">Comm_Link_ID [Email]
-                        <input class="np-field" type="email" name="email" required placeholder="user@network.node">
+                    <label class="np-label">{{> "np-t" key="EMAIL_LABEL"}}
+                        <input class="np-field" type="email" name="email" required placeholder="{{> "np-t" key="EMAIL_PLACEHOLDER"}}">
                     </label>
-                    <label class="np-label">Data_Payload [Message]
-                        <textarea class="np-field" name="message" rows="4" required placeholder="Enter transmission..."></textarea>
+                    <label class="np-label">{{> "np-t" key="MESSAGE_LABEL"}}
+                        <textarea class="np-field" name="message" rows="4" required placeholder="{{> "np-t" key="MESSAGE_PLACEHOLDER"}}"></textarea>
                     </label>
-                    <button class="np-btn np-btn-primary" type="submit">{{t "Transmit"}}<span class="material-symbols-outlined">send</span></button>
+                    <button class="np-btn np-btn-primary" type="submit">{{> "np-t" key="Transmit"}}<span class="material-symbols-outlined">send</span></button>
                 </form>
             {{/if}}
         </section>
 
         <section class="np-glass np-card np-about-nodes" data-np-tilt>
             <div class="np-section-head" style="margin-bottom: 1rem;">
-                <h2 class="np-heading" style="color: var(--np-tertiary-dim);"><span class="material-symbols-outlined" style="color: var(--np-cyber-magenta);">hub</span>NETWORK_NODES</h2>
+                <h2 class="np-heading" style="color: var(--np-tertiary-dim);"><span class="material-symbols-outlined" style="color: var(--np-cyber-magenta);">hub</span>{{> "np-t" key="NETWORK_NODES"}}</h2>
             </div>
             <div class="np-nodes">
                 {{#if @custom.github_url}}
                     <a class="np-node" href="{{@custom.github_url}}" target="_blank" rel="noopener noreferrer">
-                        <span class="material-symbols-outlined">code</span>GitHub_Repo
+                        <span class="material-symbols-outlined">code</span>{{> "np-t" key="GITHUB_REPO"}}
                     </a>
                 {{/if}}
-                <a class="np-node" href="{{@site.url}}/articles/">
-                    <span class="material-symbols-outlined">terminal</span>Articles
+                <a class="np-node" href="{{@site.url}}/{{block "np_lang"}}/articles/">
+                    <span class="material-symbols-outlined">terminal</span>{{> "np-t" key="ARTICLES"}}
                 </a>
-                <a class="np-node" href="{{@site.url}}/portfolio/">
-                    <span class="material-symbols-outlined">language</span>Portfolio
+                <a class="np-node" href="{{@site.url}}/{{block "np_lang"}}/portfolio/">
+                    <span class="material-symbols-outlined">language</span>{{> "np-t" key="PORTFOLIO"}}
                 </a>
                 {{#if @custom.social_url}}
                     <a class="np-node" href="{{@custom.social_url}}" target="_blank" rel="noopener noreferrer">
-                        <span class="material-symbols-outlined">share</span>Social_Net
+                        <span class="material-symbols-outlined">share</span>{{> "np-t" key="SOCIAL_NET"}}
                     </a>
                 {{else}}
                     {{#if @site.facebook}}
                         <a class="np-node" href="https://www.facebook.com/{{@site.facebook}}" target="_blank" rel="noopener noreferrer">
-                            <span class="material-symbols-outlined">share</span>Social_Net
+                            <span class="material-symbols-outlined">share</span>{{> "np-t" key="SOCIAL_NET"}}
                         </a>
                     {{/if}}
                 {{/if}}

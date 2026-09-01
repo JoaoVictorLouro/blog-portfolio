@@ -2,11 +2,11 @@
 
 <main class="np-main is-wide">
     <header class="np-about-banner">
-        <h1 class="np-display"><span class="np-page-title"><span class="material-symbols-outlined" aria-hidden="true">layers</span>PORTFOLIO</span></h1>
-        <p class="np-meta">{{#if @site.description}}{{@site.description}}{{else}}Encrypted visual logs. Access level: Alpha.{{/if}}</p>
+        <h1 class="np-display"><span class="np-page-title"><span class="material-symbols-outlined" aria-hidden="true">layers</span>{{> "np-t" key="PORTFOLIO_TITLE"}}</span></h1>
+        <p class="np-meta">{{#if @site.description}}{{@site.description}}{{else}}{{> "np-t" key="PORTFOLIO_SUBTITLE"}}{{/if}}</p>
     </header>
     <div class="np-filters">
-        <button class="np-btn np-btn-ghost is-active" type="button" data-np-filter="all">ALL</button>
+        <button class="np-btn np-btn-ghost is-active" type="button" data-np-filter="all">{{> "np-t" key="ALL"}}</button>
         {{#get "tags" limit="12" include="count.posts" filter="visibility:public" as |archive_tags|}}
             {{#foreach archive_tags}}
                 <button class="np-chip" type="button" data-np-filter="{{slug}}">{{name}}</button>
@@ -18,7 +18,7 @@
         {{#foreach posts}}
             {{> "masonry-item"}}
         {{else}}
-            <p class="np-empty np-meta">{{t "No posts"}}</p>
+            <p class="np-empty np-meta">{{> "np-t" key="No posts"}}</p>
         {{/foreach}}
     </div>
 

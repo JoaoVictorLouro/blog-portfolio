@@ -55,4 +55,31 @@ services:
       GHOST_SITE_TITLE: ${GHOST_SITE_TITLE:-Kono Gaijin}
     volumes:
       - ./scripts/ghost-bootstrap.mjs:/ghost-bootstrap.mjs:ro
+      - ./scripts/i18n:/i18n:ro
+      - ./content/themes/neon-protocol/assets/i18n:/var/lib/ghost/content/themes/neon-protocol/assets/i18n
     entrypoint: ['node', '/ghost-bootstrap.mjs']
+
+  i18n-map:
+    image: denoland/deno:alpine
+    restart: unless-stopped
+    network_mode: service:ghost
+    depends_on:
+      ghost:
+        condition: service_healthy
+      bootstrap:
+        condition: service_completed_successfully
+    env_file:
+      - path: .env
+        required: false
+      - path: .env.secrets
+        required: false
+    environment:
+      URL: ${URL:-http://localhost:2368}
+      GHOST_API_URL: http://127.0.0.1:2368
+      GHOST_I18N_OUTPUT: /var/lib/ghost/content/themes/neon-protocol/assets/i18n/np-article-translations.json
+      I18N_MAP_POLL_MS: '60000'
+    volumes:
+      - ./content/themes/neon-protocol/assets/i18n:/var/lib/ghost/content/themes/neon-protocol/assets/i18n
+      - ./scripts:/app/scripts:ro
+    working_dir: /app
+    command: ['deno', 'run', '-A', 'scripts/i18n-map-sidecar/main.ts']

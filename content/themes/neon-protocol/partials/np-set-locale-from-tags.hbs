@@ -1,0 +1,18 @@
+{{#foreach tags}}
+    {{#match slug "hash-lang-en-us"}}
+        {{#contentFor "np_lang"}}en-us{{/contentFor}}
+        {{#contentFor "np_bcp47"}}en-US{{/contentFor}}
+    {{/match}}
+    {{#match slug "hash-lang-ja-jp"}}
+        {{#contentFor "np_lang"}}ja-jp{{/contentFor}}
+        {{#contentFor "np_bcp47"}}ja-JP{{/contentFor}}
+    {{/match}}
+    {{#match slug "hash-lang-pt-br"}}
+        {{#contentFor "np_lang"}}pt-br{{/contentFor}}
+        {{#contentFor "np_bcp47"}}pt-BR{{/contentFor}}
+    {{/match}}
+    {{#match slug "hash-lang-es-la"}}
+        {{#contentFor "np_lang"}}es-la{{/contentFor}}
+        {{#contentFor "np_bcp47"}}es-419{{/contentFor}}
+    {{/match}}
+{{/foreach}}

@@ -1,17 +1,61 @@
 routes:
   /:
-    template: home
+    template: locale-detect
+  /en-us/:
+    template: home-en-us
+  /ja-jp/:
+    template: home-ja-jp
+  /pt-br/:
+    template: home-pt-br
+  /es-la/:
+    template: home-es-la
+  /en-us/about/:
+    template: custom-about-en-us
+    data: page.about-en-us
+  /ja-jp/about/:
+    template: custom-about-ja-jp
+    data: page.about-ja-jp
+  /pt-br/about/:
+    template: custom-about-pt-br
+    data: page.about-pt-br
+  /es-la/about/:
+    template: custom-about-es-la
+    data: page.about-es-la
 
 collections:
-  /articles/:
-    permalink: /articles/{slug}/
-    template: index
-    filter: tag:-hash-portfolio
-  /portfolio/:
-    permalink: /portfolio/{slug}/
-    template: portfolio
-    filter: tag:hash-portfolio
+  /en-us/articles/:
+    permalink: /en-us/articles/{slug}/
+    template: index-en-us
+    filter: tag:-hash-lang-ja-jp+tag:-hash-lang-pt-br+tag:-hash-lang-es-la+tag:-hash-portfolio
+  /en-us/portfolio/:
+    permalink: /en-us/portfolio/{slug}/
+    template: portfolio-en-us
+    filter: tag:-hash-lang-ja-jp+tag:-hash-lang-pt-br+tag:-hash-lang-es-la+tag:hash-portfolio
+  /ja-jp/articles/:
+    permalink: /ja-jp/articles/{slug}/
+    template: index-ja-jp
+    filter: tag:hash-lang-ja-jp+tag:-hash-portfolio
+  /ja-jp/portfolio/:
+    permalink: /ja-jp/portfolio/{slug}/
+    template: portfolio-ja-jp
+    filter: tag:hash-lang-ja-jp+tag:hash-portfolio
+  /pt-br/articles/:
+    permalink: /pt-br/articles/{slug}/
+    template: index-pt-br
+    filter: tag:hash-lang-pt-br+tag:-hash-portfolio
+  /pt-br/portfolio/:
+    permalink: /pt-br/portfolio/{slug}/
+    template: portfolio-pt-br
+    filter: tag:hash-lang-pt-br+tag:hash-portfolio
+  /es-la/articles/:
+    permalink: /es-la/articles/{slug}/
+    template: index-es-la
+    filter: tag:hash-lang-es-la+tag:-hash-portfolio
+  /es-la/portfolio/:
+    permalink: /es-la/portfolio/{slug}/
+    template: portfolio-es-la
+    filter: tag:hash-lang-es-la+tag:hash-portfolio
 
 taxonomies:
-  tag: /tag/{slug}/
+  tag: /en-us/tag/{slug}/
   author: /author/{slug}/

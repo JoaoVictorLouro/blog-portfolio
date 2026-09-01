@@ -1,30 +1,30 @@
-<div class="np-widget np-glass is-feed" data-np-tilt>
-    <h3 class="np-meta"><span class="material-symbols-outlined">terminal</span>{{t "Subscribe"}}</h3>
-    <p>{{t "Receive encrypted drops directly to your local node."}}</p>
+<div class="np-widget np-glass is-feed" data-np-tilt data-np-subscribe-widget>
+    <h3 class="np-meta"><span class="material-symbols-outlined">terminal</span>{{> "np-t" key="Subscribe"}}</h3>
+    <p>{{> "np-t" key="Receive encrypted drops directly to your local node."}}</p>
     {{#if @site.members_enabled}}
         {{#if @member}}
-            <p class="np-chip is-live">{{t "STATUS: AUTHENTICATED"}}</p>
+            <p class="np-chip is-live">{{> "np-t" key="STATUS: AUTHENTICATED"}}</p>
             <button class="np-btn np-btn-ghost" type="button" data-np-members="account">
-                {{t "NODE_SESSION"}}<span class="material-symbols-outlined" aria-hidden="true">person</span>
+                {{> "np-t" key="NODE_SESSION"}}<span class="material-symbols-outlined" aria-hidden="true">person</span>
             </button>
         {{else}}
-            <form class="np-subscribe np-members-form" data-members-form="subscribe">
-                <label class="np-label" for="np-subscribe-email">{{t "Comm_Link_ID [Email]"}}</label>
+            <form class="np-subscribe np-members-form" data-members-form="subscribe" data-np-newsletter-form>
+                <label class="np-label" for="np-subscribe-email">{{> "np-t" key="Comm_Link_ID [Email]"}}</label>
                 <div class="np-subscribe-row">
                     <span class="np-prompt" aria-hidden="true">&gt;</span>
-                    <input id="np-subscribe-email" class="np-field" data-members-email type="email" required autocomplete="email" placeholder="{{t "ENTER_ADDRESS"}}" aria-label="{{t "Subscribe"}}">
+                    <input id="np-subscribe-email" class="np-field" data-members-email type="email" required autocomplete="email" placeholder="{{> "np-t" key="ENTER_ADDRESS"}}" aria-label="{{> "np-t" key="Subscribe"}}">
                     <button class="np-btn np-btn-primary np-subscribe-submit" type="submit">
                         <span class="material-symbols-outlined" aria-hidden="true">send</span>
-                        <span class="np-sr-only">{{t "OPEN_CHANNEL"}}</span>
+                        <span class="np-sr-only">{{> "np-t" key="OPEN_CHANNEL"}}</span>
                     </button>
                 </div>
-                <p class="np-members-status np-members-status--loading">{{t "TRANSMITTING..."}}</p>
-                <p class="np-members-status np-members-status--success">{{t "CHANNEL_OPEN // CHECK_COMM_LINK"}}</p>
+                <p class="np-members-status np-members-status--loading">{{> "np-t" key="TRANSMITTING..."}}</p>
+                <p class="np-members-status np-members-status--success">{{> "np-t" key="CHANNEL_OPEN // CHECK_COMM_LINK"}}</p>
                 <p class="np-members-status np-members-status--error" data-members-error></p>
             </form>
             <p class="np-meta np-members-switch">
-                {{t "ALREADY_LINKED?"}}
-                <button class="np-members-link" type="button" data-np-members="signin">{{t "AUTHENTICATE"}}</button>
+                {{> "np-t" key="ALREADY_LINKED?"}}
+                <button class="np-members-link" type="button" data-np-members="signin">{{> "np-t" key="AUTHENTICATE"}}</button>
             </p>
         {{/if}}
     {{else}}
