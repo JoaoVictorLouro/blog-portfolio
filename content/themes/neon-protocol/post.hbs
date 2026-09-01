@@ -1,10 +1,17 @@
 {{!< default}}
 
 {{#post}}
+    {{#if feature_image}}
+        {{#contentFor "head"}}
+            <link rel="preload" as="image" href="{{img_url feature_image size="xl"}}" fetchpriority="high">
+        {{/contentFor}}
+    {{/if}}
 <main class="np-main is-flush">
     <header class="np-article-hero">
-        <div class="np-article-hero-frame"{{#if feature_image}} style="--np-hero-image: url('{{img_url feature_image size="xxl"}}');"{{/if}}>
-            <div class="np-article-hero-media"></div>
+        <div class="np-article-hero-frame"{{#if feature_image}} style="--np-hero-image: url('{{img_url feature_image size="xl"}}');"{{/if}}>
+            {{#if feature_image}}
+                <img class="np-article-hero-media" src="{{img_url feature_image size="xl"}}" fetchpriority="high" alt="" aria-hidden="true" decoding="async" width="1200" height="675">
+            {{/if}}
             {{#if feature_image}}
                 <div class="np-article-hero-shade" aria-hidden="true"></div>
                 {{> "cover-scan-overlay" line1="LOG_DECRYPTED" line2="STREAM_BUFFER_ACTIVE" line3="READING_PACKET_DATA..."}}

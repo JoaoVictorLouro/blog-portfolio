@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'Material Symbols Outlined';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/material-symbols-subset.woff2') format('woff2');
+}
+
 :root,
 [data-theme='dark'] {
   color-scheme: dark;
@@ -300,17 +308,28 @@ iframe.gh-portal-triggerbtn-iframe {
 }
 
 .material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 1.15em;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
   font-variation-settings:
     'FILL' 0,
     'wght' 400,
     'GRAD' 0,
     'opsz' 24;
-  font-size: 1.15em;
-  line-height: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  -webkit-font-smoothing: antialiased;
 }
 
 .np-meta:has(.material-symbols-outlined),
@@ -841,11 +860,11 @@ body:has(#announcement-bar-root .gh-announcement-bar) .np-main {
   position: absolute;
   inset: 0;
   z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
   background-color: var(--np-charcoal);
-  background-image: var(--np-hero-image);
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
   opacity: 0.4;
   mix-blend-mode: luminosity;
   animation: np-hero-twitch 4.5s steps(1, end) infinite;
@@ -1131,46 +1150,269 @@ body:has(#announcement-bar-root .gh-announcement-bar) .np-main {
 }
 
 .np-subscribe {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.np-subscribe-row {
   position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
 }
 
 .np-subscribe .np-prompt {
   position: absolute;
-  left: 0;
+  left: 0.25rem;
   top: 50%;
   transform: translateY(-50%);
+  z-index: 1;
   color: var(--np-neon-teal);
   font-family: var(--np-font-mono);
+  pointer-events: none;
 }
 
-.np-subscribe input {
-  width: 100%;
-  background: transparent;
-  border: 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--np-outline-variant) 50%, transparent);
-  padding: 0.5rem 0.5rem 0.5rem 1.5rem;
-  font-family: var(--np-font-mono);
-  font-size: 0.875rem;
+.np-subscribe .np-field {
+  flex: 1;
+  min-width: 0;
+  padding-left: 1.5rem;
 }
 
-.np-subscribe input:focus {
-  outline: none;
-  border-bottom-color: var(--np-neon-teal);
-  background: color-mix(in srgb, var(--np-neon-teal) 8%, transparent);
+.np-subscribe-submit {
+  flex-shrink: 0;
+  padding: 0.65rem 0.85rem;
+  min-width: 3rem;
 }
 
-.np-subscribe button {
+.np-subscribe-submit .material-symbols-outlined {
+  font-size: 1.25rem;
+}
+
+.np-sr-only {
   position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 0.5rem;
-  height: 1rem;
+  width: 1px;
+  height: 1px;
   padding: 0;
+  margin: -1px;
   overflow: hidden;
-  text-indent: -999px;
-  background: var(--np-neon-teal);
-  animation: np-pulse 1.2s ease infinite;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.np-members-form .np-members-status {
+  display: none;
+  margin: 0;
+  font-family: var(--np-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.np-members-form.loading .np-members-status--loading,
+.np-members-form.success .np-members-status--success,
+.np-members-form.error .np-members-status--error {
+  display: block;
+}
+
+.np-members-form.loading .np-members-status--loading {
+  color: var(--np-neon-teal);
+  animation: np-flicker 1.2s ease infinite;
+}
+
+.np-members-form.success .np-members-status--success {
+  color: var(--np-neon-teal);
+}
+
+.np-members-form.error .np-members-status--error {
+  color: var(--np-error);
+}
+
+.np-members-form.loading .np-btn,
+.np-members-form.success .np-btn {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.np-members-switch {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  color: var(--np-on-surface-variant);
+}
+
+.np-members-link {
+  font-family: var(--np-font-mono);
+  font-size: inherit;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--np-neon-teal);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  padding: 0;
+}
+
+.np-members-link:hover {
+  color: var(--np-primary-container);
+  text-shadow: 0 0 10px var(--np-glow-cyan);
+}
+
+.np-members {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: var(--np-margin);
+  border: 0;
+  background: transparent;
+  color: var(--np-on-surface);
+  overflow: auto;
+}
+
+.np-members[open] {
+  display: grid;
+  place-items: center;
+}
+
+.np-members::backdrop {
+  background:
+    radial-gradient(ellipse 80% 50% at 10% 20%, var(--np-leak-2), transparent 55%),
+    radial-gradient(ellipse 70% 45% at 90% 80%, var(--np-leak-1), transparent 50%),
+    color-mix(in srgb, var(--np-void) 78%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.np-members-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.np-members-panel {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 28rem);
+  padding: 1.5rem;
+  border-left: 2px solid var(--np-neon-teal);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--np-border-bright) 45%, transparent),
+    0 0 40px color-mix(in srgb, var(--np-neon-teal) 12%, transparent);
+}
+
+.np-members-bracket {
+  position: absolute;
+  width: 0.85rem;
+  height: 0.85rem;
+  pointer-events: none;
+}
+
+.np-members-bracket--tl {
+  top: 0.35rem;
+  left: 0.35rem;
+  border-top: 2px solid var(--np-neon-teal);
+  border-left: 2px solid var(--np-neon-teal);
+}
+
+.np-members-bracket--tr {
+  top: 0.35rem;
+  right: 0.35rem;
+  border-top: 2px solid var(--np-lantern-amber);
+  border-right: 2px solid var(--np-lantern-amber);
+}
+
+.np-members-bracket--bl {
+  bottom: 0.35rem;
+  left: 0.35rem;
+  border-bottom: 2px solid var(--np-lantern-amber);
+  border-left: 2px solid var(--np-lantern-amber);
+}
+
+.np-members-bracket--br {
+  bottom: 0.35rem;
+  right: 0.35rem;
+  border-bottom: 2px solid var(--np-neon-teal);
+  border-right: 2px solid var(--np-neon-teal);
+}
+
+.np-members-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.np-members-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0 0 0.35rem;
+  color: var(--np-neon-teal);
+}
+
+.np-members-head .np-heading {
+  margin: 0;
+}
+
+.np-members-close {
+  flex-shrink: 0;
+}
+
+.np-members-lead {
+  margin: 0 0 1.25rem;
+  font-size: 1rem;
+  color: var(--np-on-surface-variant);
+}
+
+.np-members-view .np-chip {
+  margin-bottom: 1.25rem;
+}
+
+.np-members-kv {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0 0 1.5rem;
+}
+
+.np-members-kv .np-kv {
+  margin: 0;
+}
+
+.np-members-kv dt,
+.np-members-kv dd {
+  margin: 0;
+}
+
+.np-members-panel .np-btn {
+  width: 100%;
+}
+
+.np-members-form.loading button[type='submit'] .material-symbols-outlined,
+.np-members-form.success button[type='submit'] .material-symbols-outlined {
+  animation: np-pulse 1s ease infinite;
+}
+
+html.np-members-open {
+  overflow: hidden;
+}
+
+.np-widget.is-feed > .np-btn,
+.np-widget.is-feed .np-members-switch + .np-btn {
+  width: 100%;
+  margin-top: 0.75rem;
+}
+
+.np-widget.is-feed > .np-chip {
+  margin-top: 0.75rem;
 }
 
 .np-toolbar {
@@ -1214,8 +1456,17 @@ body:has(#announcement-bar-root .gh-announcement-bar) .np-main {
 }
 
 .np-hero-log-media {
+  display: block;
   min-height: 16rem;
-  background: center / cover no-repeat;
+  overflow: hidden;
+}
+
+.np-hero-log-media img {
+  display: block;
+  width: 100%;
+  min-height: 16rem;
+  object-fit: cover;
+  object-position: center;
 }
 
 .np-hero-log-body {
@@ -1264,11 +1515,11 @@ body:has(#announcement-bar-root .gh-announcement-bar) .np-main {
   position: absolute;
   inset: 0;
   z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
   background-color: var(--np-charcoal);
-  background-image: var(--np-hero-image);
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
   animation: np-hero-twitch 4.5s steps(1, end) infinite;
 }
 

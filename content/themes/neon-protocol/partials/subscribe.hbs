@@ -2,11 +2,31 @@
     <h3 class="np-meta"><span class="material-symbols-outlined">terminal</span>{{t "Subscribe"}}</h3>
     <p>{{t "Receive encrypted drops directly to your local node."}}</p>
     {{#if @site.members_enabled}}
-        <form class="np-subscribe" data-members-form="subscribe">
-            <span class="np-prompt" aria-hidden="true">&gt;</span>
-            <input data-members-email type="email" required placeholder="ENTER_ADDRESS" aria-label="{{t "Subscribe"}}">
-            <button type="submit">{{t "Subscribe"}}</button>
-        </form>
+        {{#if @member}}
+            <p class="np-chip is-live">{{t "STATUS: AUTHENTICATED"}}</p>
+            <button class="np-btn np-btn-ghost" type="button" data-np-members="account">
+                {{t "NODE_SESSION"}}<span class="material-symbols-outlined" aria-hidden="true">person</span>
+            </button>
+        {{else}}
+            <form class="np-subscribe np-members-form" data-members-form="subscribe">
+                <label class="np-label" for="np-subscribe-email">{{t "Comm_Link_ID [Email]"}}</label>
+                <div class="np-subscribe-row">
+                    <span class="np-prompt" aria-hidden="true">&gt;</span>
+                    <input id="np-subscribe-email" class="np-field" data-members-email type="email" required autocomplete="email" placeholder="{{t "ENTER_ADDRESS"}}" aria-label="{{t "Subscribe"}}">
+                    <button class="np-btn np-btn-primary np-subscribe-submit" type="submit">
+                        <span class="material-symbols-outlined" aria-hidden="true">send</span>
+                        <span class="np-sr-only">{{t "OPEN_CHANNEL"}}</span>
+                    </button>
+                </div>
+                <p class="np-members-status np-members-status--loading">{{t "TRANSMITTING..."}}</p>
+                <p class="np-members-status np-members-status--success">{{t "CHANNEL_OPEN // CHECK_COMM_LINK"}}</p>
+                <p class="np-members-status np-members-status--error" data-members-error></p>
+            </form>
+            <p class="np-meta np-members-switch">
+                {{t "ALREADY_LINKED?"}}
+                <button class="np-members-link" type="button" data-np-members="signin">{{t "AUTHENTICATE"}}</button>
+            </p>
+        {{/if}}
     {{else}}
         <a class="np-btn np-btn-ghost" href="{{@site.url}}/rss/">RSS</a>
     {{/if}}

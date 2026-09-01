@@ -1,9 +1,15 @@
 {{!< default}}
 
+{{#if @site.cover_image}}
+    {{#contentFor "head"}}
+        <link rel="preload" as="image" href="{{img_url @site.cover_image size="xl"}}" fetchpriority="high">
+    {{/contentFor}}
+{{/if}}
+
 <main class="np-main np-home">
-    <section class="np-glass np-hero" data-np-tilt="subtle"{{#if @site.cover_image}} style="--np-hero-image: url('{{img_url @site.cover_image size="xxl"}}');"{{/if}}>
+    <section class="np-glass np-hero" data-np-tilt="subtle"{{#if @site.cover_image}} style="--np-hero-image: url('{{img_url @site.cover_image size="xl"}}');"{{/if}}>
         {{#if @site.cover_image}}
-            <div class="np-hero-media"></div>
+            <img class="np-hero-media" src="{{img_url @site.cover_image size="xl"}}" fetchpriority="high" alt="" aria-hidden="true" decoding="async" width="1200" height="675">
             <div class="np-hero-shade" aria-hidden="true"></div>
             {{> "cover-scan-overlay" line1="NODE_SYNC_COMPLETE" line2="BANDWIDTH: OPTIMAL" line3="AWAITING_TRANSMISSION..."}}
             <div class="np-glitch-effect" aria-hidden="true"></div>
@@ -21,7 +27,7 @@
             {{/if}}
             {{#if @site.members_enabled}}
                 {{#unless @member}}
-                    <button class="np-btn np-btn-primary" type="button" data-portal="signup" data-np-hero-cta>
+                    <button class="np-btn np-btn-primary" type="button" data-np-members="subscribe" data-np-hero-cta>
                         INITIATE_SEQUENCE<span class="material-symbols-outlined" aria-hidden="true">bolt</span>
                     </button>
                 {{else}}

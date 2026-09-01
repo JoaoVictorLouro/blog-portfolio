@@ -2,6 +2,8 @@
   "tasks": {
     "format": "deno run -A npm:prettier@3.9.6 --write .",
     "format:check": "deno run -A npm:prettier@3.9.6 --check .",
+    "build:icons": "deno run -A scripts/build-material-symbols-subset.mjs",
+    "sync:ghost-assets": "deno run -A scripts/sync-ghost-cdn-assets.mjs",
     "lint": "docker run --rm -v \"$PWD:/work\" -w /work node:22-bookworm-slim npx --yes gscan@6.4.2 content/themes/neon-protocol --verbose",
     "test": "deno task lint && docker compose config --quiet"
   },

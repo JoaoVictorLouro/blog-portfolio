@@ -1,6 +1,8 @@
 <article class="np-glass np-hero-log {{post_class}}" data-np-tilt>
     {{#if feature_image}}
-        <a class="np-hero-log-media" href="{{url}}" style="background-image: url('{{img_url feature_image size="xxl"}}');" aria-hidden="true"></a>
+        <a class="np-hero-log-media" href="{{url}}" aria-hidden="true">
+            <img src="{{img_url feature_image size="xl"}}" alt="" loading="eager" decoding="async" width="1200" height="750">
+        </a>
     {{/if}}
     <div class="np-hero-log-body">
         <div class="np-card-tags">

@@ -3,6 +3,146 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {{{block "head"}}}
+    <script>
+    window.__npGhostAssetUrls = {
+        portal: "{{asset 'js/vendor/ghost-portal.min.js'}}",
+        search: "{{asset 'js/vendor/ghost-sodo-search.min.js'}}",
+        announcement: "{{asset 'js/vendor/ghost-announcement-bar.min.js'}}",
+        searchStyles: "{{asset 'css/vendor/ghost-sodo-search.min.css'}}"
+    };
+    </script>
+    <script>
+    (function () {
+        window.__npGhostDeferred = window.__npGhostDeferred || [];
+
+        function scriptAttributes(script) {
+            var attrs = {};
+            for (var i = 0; i < script.attributes.length; i += 1) {
+                var attr = script.attributes[i];
+                attrs[attr.name] = attr.value;
+            }
+            return attrs;
+        }
+
+        function rewriteGhostAssetAttrs(attrs) {
+            var urls = window.__npGhostAssetUrls || {};
+            var src = attrs.src || '';
+            if (src.indexOf('portal.min.js') !== -1 && urls.portal) {
+                attrs.src = urls.portal;
+            } else if (src.indexOf('sodo-search.min.js') !== -1 && urls.search) {
+                attrs.src = urls.search;
+            } else if (src.indexOf('announcement-bar') !== -1 && urls.announcement) {
+                attrs.src = urls.announcement;
+            }
+            if (attrs['data-styles'] && attrs['data-styles'].indexOf('sodo-search') !== -1 && urls.searchStyles) {
+                attrs['data-styles'] = urls.searchStyles;
+            }
+            delete attrs.crossorigin;
+            return attrs;
+        }
+
+        function stashGhostScript(script) {
+            var src = script.getAttribute('src');
+            if (!src) {
+                return false;
+            }
+            var kind = null;
+            if (src.indexOf('portal.min.js') !== -1) {
+                kind = 'portal';
+            } else if (src.indexOf('sodo-search') !== -1) {
+                kind = 'search';
+            } else if (src.indexOf('announcement-bar') !== -1) {
+                kind = 'announcement';
+            }
+            if (!kind) {
+                return false;
+            }
+            window.__npGhostDeferred.push({
+                kind: kind,
+                attrs: rewriteGhostAssetAttrs(scriptAttributes(script)),
+            });
+            script.remove();
+            return true;
+        }
+
+        window.__npGhostObserver = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+                mutation.addedNodes.forEach(function (node) {
+                    if (node.nodeType === 1 && node.tagName === 'SCRIPT') {
+                        stashGhostScript(node);
+                    }
+                });
+            });
+        });
+        window.__npGhostObserver.observe(document.documentElement, {
+            childList: true,
+            subtree: true,
+        });
+    })();
+    </script>
+    {{ghost_head}}
+    <script>
+    (function () {
+        function scriptAttributes(script) {
+            var attrs = {};
+            for (var i = 0; i < script.attributes.length; i += 1) {
+                var attr = script.attributes[i];
+                attrs[attr.name] = attr.value;
+            }
+            return attrs;
+        }
+
+        function rewriteGhostAssetAttrs(attrs) {
+            var urls = window.__npGhostAssetUrls || {};
+            var src = attrs.src || '';
+            if (src.indexOf('portal.min.js') !== -1 && urls.portal) {
+                attrs.src = urls.portal;
+            } else if (src.indexOf('sodo-search.min.js') !== -1 && urls.search) {
+                attrs.src = urls.search;
+            } else if (src.indexOf('announcement-bar') !== -1 && urls.announcement) {
+                attrs.src = urls.announcement;
+            }
+            if (attrs['data-styles'] && attrs['data-styles'].indexOf('sodo-search') !== -1 && urls.searchStyles) {
+                attrs['data-styles'] = urls.searchStyles;
+            }
+            delete attrs.crossorigin;
+            return attrs;
+        }
+
+        document.querySelectorAll('script[src]').forEach(function (script) {
+            var src = script.getAttribute('src');
+            if (!src) {
+                return;
+            }
+            var kind = null;
+            if (src.indexOf('portal.min.js') !== -1) {
+                kind = 'portal';
+            } else if (src.indexOf('sodo-search') !== -1) {
+                kind = 'search';
+            } else if (src.indexOf('announcement-bar') !== -1) {
+                kind = 'announcement';
+            }
+            if (!kind) {
+                return;
+            }
+            var exists = window.__npGhostDeferred.some(function (entry) {
+                return entry.kind === kind;
+            });
+            if (!exists) {
+                window.__npGhostDeferred.push({
+                    kind: kind,
+                    attrs: rewriteGhostAssetAttrs(scriptAttributes(script)),
+                });
+            }
+            script.remove();
+        });
+        if (window.__npGhostObserver) {
+            window.__npGhostObserver.disconnect();
+            window.__npGhostObserver = null;
+        }
+    })();
+    </script>
     <title>{{meta_title page=(t " (Page %)")}}</title>
     <script>
         (function () {
@@ -20,13 +160,11 @@
             } catch (e) {}
         })();
     </script>
-    <link rel="preconnect" href="https://ows.terrestris.de">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="{{asset "css/screen.css"}}" as="style">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
     <link rel="stylesheet" type="text/css" href="{{asset "css/screen.css"}}">
-    {{ghost_head}}
 </head>
 <body class="{{body_class}}">
 <div class="np-shell">
@@ -35,9 +173,10 @@
     {{> "footer"}}
     {{> "nav-mobile"}}
     {{> "portal-trigger"}}
+    {{> "members-dialog"}}
     <div class="np-page-glitch" id="np-page-glitch" aria-hidden="true"></div>
 </div>
-<script src="{{asset "js/theme.js"}}"></script>
 {{ghost_foot}}
+<script src="{{asset "js/theme.js"}}" defer></script>
 </body>
 </html>

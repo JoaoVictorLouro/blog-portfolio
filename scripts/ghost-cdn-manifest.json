@@ -1,0 +1,18 @@
+{
+  "portal": {
+    "cdn": "https://cdn.jsdelivr.net/ghost/portal@~2.71/umd/portal.min.js",
+    "local": "js/vendor/ghost-portal.min.js"
+  },
+  "sodo-search": {
+    "cdn": "https://cdn.jsdelivr.net/ghost/sodo-search@~1.8/umd/sodo-search.min.js",
+    "local": "js/vendor/ghost-sodo-search.min.js"
+  },
+  "sodo-search-styles": {
+    "cdn": "https://cdn.jsdelivr.net/ghost/sodo-search@~1.8/umd/main.css",
+    "local": "css/vendor/ghost-sodo-search.min.css"
+  },
+  "announcement-bar": {
+    "cdn": "https://cdn.jsdelivr.net/ghost/announcement-bar@~1.1/umd/announcement-bar.min.js",
+    "local": "js/vendor/ghost-announcement-bar.min.js"
+  }
+}

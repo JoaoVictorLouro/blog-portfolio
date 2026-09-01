@@ -10,6 +10,9 @@ data/
 # Theme build artifacts
 content/themes/*/node_modules/
 content/themes/*/assets/built/
+content/themes/neon-protocol/assets/js/vendor/
+content/themes/neon-protocol/assets/css/vendor/
+content/themes/neon-protocol/assets/fonts/
 
 # OS
 .DS_Store

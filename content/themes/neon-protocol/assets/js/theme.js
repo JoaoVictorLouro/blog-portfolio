@@ -142,18 +142,24 @@
   }
 
   function syncAnnouncementLayout() {
-    const nav = document.querySelector('.np-nav');
-    if (nav) {
-      root.style.setProperty('--np-nav-height', `${nav.getBoundingClientRect().height}px`);
-    }
+    window.cancelAnimationFrame(syncAnnouncementLayout._frame);
+    syncAnnouncementLayout._frame = window.requestAnimationFrame(() => {
+      const nav = document.querySelector('.np-nav');
+      if (nav) {
+        root.style.setProperty('--np-nav-height', `${nav.getBoundingClientRect().height}px`);
+      }
 
-    const bar = document.querySelector('#announcement-bar-root .gh-announcement-bar');
-    if (bar) {
-      ensureAnnouncementStyleOverrides();
-      root.style.setProperty('--np-announcement-height', `${bar.getBoundingClientRect().height}px`);
-    } else {
-      root.style.removeProperty('--np-announcement-height');
-    }
+      const bar = document.querySelector('#announcement-bar-root .gh-announcement-bar');
+      if (bar) {
+        ensureAnnouncementStyleOverrides();
+        root.style.setProperty(
+          '--np-announcement-height',
+          `${bar.getBoundingClientRect().height}px`,
+        );
+      } else {
+        root.style.removeProperty('--np-announcement-height');
+      }
+    });
   }
 
   function ensureAnnouncementStyleOverrides() {
@@ -410,15 +416,46 @@
       if (coordsEl) {
         coordsEl.textContent = formatNodeCoords(config.lat, config.lng);
       }
-      renderNodeMap(container);
+
+      let started = false;
       let frame = 0;
-      const observer = new ResizeObserver(() => {
-        window.cancelAnimationFrame(frame);
-        frame = window.requestAnimationFrame(() => {
-          renderNodeMap(container);
+
+      const startMap = () => {
+        if (started) {
+          return;
+        }
+        started = true;
+        if (!document.querySelector('link[data-np-map-preconnect]')) {
+          const link = document.createElement('link');
+          link.rel = 'preconnect';
+          link.href = 'https://ows.terrestris.de';
+          link.dataset.npMapPreconnect = '1';
+          document.head.appendChild(link);
+        }
+        renderNodeMap(container);
+        const observer = new ResizeObserver(() => {
+          window.cancelAnimationFrame(frame);
+          frame = window.requestAnimationFrame(() => {
+            renderNodeMap(container);
+          });
         });
-      });
-      observer.observe(container);
+        observer.observe(container);
+      };
+
+      if ('IntersectionObserver' in window) {
+        const visibilityObserver = new IntersectionObserver(
+          (entries) => {
+            if (entries.some((entry) => entry.isIntersecting)) {
+              startMap();
+              visibilityObserver.disconnect();
+            }
+          },
+          { rootMargin: '200px 0px' },
+        );
+        visibilityObserver.observe(container);
+      } else {
+        startMap();
+      }
     });
   }
 
@@ -664,14 +701,304 @@
     observer.observe(heroCta);
   }
 
-  setTheme(currentTheme());
-  initGhostCommentsThemeSync();
-  initAnnouncementLayout();
-  runDataStream();
-  syncTabVisibility();
-  syncNavAriaCurrent();
-  initNodeMap();
-  initTilt();
-  initPortalTriggerFold();
-  bootstrapFxVisibility();
+  function initMembersDialog() {
+    const dialog = document.querySelector('[data-np-members-dialog]');
+    if (!dialog) {
+      return;
+    }
+
+    const titleEl = dialog.querySelector('#np-members-title');
+    const panels = Array.from(dialog.querySelectorAll('[data-np-members-panel]'));
+    const hashPrefix = '#/np-members/';
+    let lastFocus = null;
+
+    function panelNames() {
+      return panels.map((panel) => panel.getAttribute('data-np-members-panel')).filter(Boolean);
+    }
+
+    function resolvePanel(name) {
+      const available = panelNames();
+      if (name && available.includes(name)) {
+        return name;
+      }
+      if (available.includes('account')) {
+        return 'account';
+      }
+      return available.includes('subscribe') ? 'subscribe' : available[0];
+    }
+
+    function setPanel(name) {
+      const next = resolvePanel(name);
+      panels.forEach((panel) => {
+        const active = panel.getAttribute('data-np-members-panel') === next;
+        panel.hidden = !active;
+      });
+      const activePanel = panels.find(
+        (panel) => panel.getAttribute('data-np-members-panel') === next,
+      );
+      if (titleEl && activePanel) {
+        const title = activePanel.getAttribute('data-np-members-title');
+        if (title) {
+          titleEl.textContent = title;
+        }
+      }
+      return next;
+    }
+
+    function focusPanelField(name) {
+      const panel = panels.find((el) => el.getAttribute('data-np-members-panel') === name);
+      if (!panel) {
+        return;
+      }
+      const focusable = panel.querySelector(
+        'input, button:not([disabled]), [href], textarea, select, [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusable && typeof focusable.focus === 'function') {
+        focusable.focus();
+      }
+    }
+
+    function syncHash(name, open) {
+      try {
+        if (!open) {
+          if (window.location.hash.startsWith(hashPrefix)) {
+            history.replaceState(null, '', window.location.pathname + window.location.search);
+          }
+          return;
+        }
+        const nextHash = `${hashPrefix}${name}`;
+        if (window.location.hash !== nextHash) {
+          history.replaceState(null, '', nextHash);
+        }
+      } catch {
+        // Ignore history failures.
+      }
+    }
+
+    function openMembers(name) {
+      const panel = setPanel(name);
+      lastFocus = document.activeElement;
+      if (typeof dialog.showModal === 'function') {
+        if (!dialog.open) {
+          dialog.showModal();
+        }
+      } else {
+        dialog.setAttribute('open', '');
+      }
+      document.documentElement.classList.add('np-members-open');
+      syncHash(panel, true);
+      window.requestAnimationFrame(() => focusPanelField(panel));
+    }
+
+    function closeMembers() {
+      if (typeof dialog.close === 'function') {
+        if (dialog.open) {
+          dialog.close();
+        }
+      } else {
+        dialog.removeAttribute('open');
+      }
+      document.documentElement.classList.remove('np-members-open');
+      syncHash('', false);
+      if (lastFocus && typeof lastFocus.focus === 'function') {
+        lastFocus.focus();
+      }
+      lastFocus = null;
+    }
+
+    function panelFromHash() {
+      const hash = window.location.hash || '';
+      if (!hash.startsWith(hashPrefix)) {
+        return null;
+      }
+      return resolvePanel(hash.slice(hashPrefix.length));
+    }
+
+    document.addEventListener('click', (event) => {
+      const openTrigger = event.target.closest('[data-np-members]');
+      if (openTrigger) {
+        event.preventDefault();
+        openMembers(openTrigger.getAttribute('data-np-members'));
+        return;
+      }
+      if (event.target.closest('[data-np-members-close]')) {
+        event.preventDefault();
+        closeMembers();
+      }
+    });
+
+    dialog.addEventListener('cancel', (event) => {
+      event.preventDefault();
+      closeMembers();
+    });
+
+    dialog.addEventListener('close', () => {
+      document.documentElement.classList.remove('np-members-open');
+      syncHash('', false);
+    });
+
+    window.addEventListener('hashchange', () => {
+      const panel = panelFromHash();
+      if (panel) {
+        openMembers(panel);
+      } else if (dialog.open) {
+        closeMembers();
+      }
+    });
+
+    const initial = panelFromHash();
+    if (initial) {
+      openMembers(initial);
+    }
+  }
+
+  function applyScriptAttributes(script, attrs) {
+    Object.entries(attrs).forEach(([name, value]) => {
+      if (name === 'defer') {
+        script.defer = true;
+        return;
+      }
+      if (name === 'async') {
+        script.async = true;
+        return;
+      }
+      if (name === 'src') {
+        script.src = value;
+        return;
+      }
+      script.setAttribute(name, value);
+    });
+  }
+
+  function loadGhostScript(kind) {
+    const deferred = window.__npGhostDeferred || [];
+    const entry = deferred.find((item) => item.kind === kind);
+    if (!entry) {
+      return Promise.resolve();
+    }
+
+    window.__npGhostLoaders = window.__npGhostLoaders || {};
+    if (window.__npGhostLoaders[kind]) {
+      return window.__npGhostLoaders[kind];
+    }
+
+    window.__npGhostLoaders[kind] = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      const attrs = entry.attrs || (entry.src ? { src: entry.src } : null);
+      if (!attrs?.src) {
+        reject(new Error(`Missing Ghost ${kind} script src`));
+        return;
+      }
+      applyScriptAttributes(script, attrs);
+      script.onload = () => {
+        window.__npGhostLoaded = window.__npGhostLoaded || {};
+        window.__npGhostLoaded[kind] = true;
+        resolve();
+      };
+      script.onerror = () => reject(new Error(`Failed to load Ghost ${kind} script`));
+      document.head.appendChild(script);
+    });
+
+    return window.__npGhostLoaders[kind];
+  }
+
+  function initDeferredGhostScripts() {
+    loadGhostScript('announcement')
+      .then(() => {
+        syncAnnouncementLayout();
+      })
+      .catch(() => {
+        // Ignore announcement prefetch failures.
+      });
+
+    loadGhostScript('search').catch(() => {
+      // Ignore search prefetch failures; first click retries.
+    });
+
+    document.addEventListener(
+      'click',
+      (event) => {
+        const searchTrigger = event.target.closest('[data-ghost-search]');
+        if (!searchTrigger || window.__npGhostLoaded?.search) {
+          return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        loadGhostScript('search').then(() => {
+          searchTrigger.click();
+        });
+      },
+      true,
+    );
+
+    document.addEventListener(
+      'click',
+      (event) => {
+        if (event.target.closest('[data-np-members], [data-members-signout]')) {
+          loadGhostScript('portal').catch(() => {
+            // Portal opens on next attempt if the first load fails.
+          });
+        }
+      },
+      true,
+    );
+
+    document.addEventListener(
+      'focusin',
+      (event) => {
+        if (event.target.closest('[data-members-form], [data-members-email]')) {
+          loadGhostScript('portal').catch(() => {
+            // Ignore prefetch failures; submit handler retries.
+          });
+        }
+      },
+      true,
+    );
+
+    document.addEventListener(
+      'submit',
+      (event) => {
+        const form = event.target.closest('[data-members-form]');
+        if (!form || window.__npGhostLoaders?.portal) {
+          return;
+        }
+        event.preventDefault();
+        form.classList.add('loading');
+        loadGhostScript('portal')
+          .then(() => {
+            form.classList.remove('loading');
+            if (typeof form.requestSubmit === 'function') {
+              form.requestSubmit();
+            } else {
+              form.submit();
+            }
+          })
+          .catch(() => {
+            form.classList.remove('loading');
+          });
+      },
+      true,
+    );
+  }
+
+  function boot() {
+    setTheme(currentTheme());
+    initDeferredGhostScripts();
+    initGhostCommentsThemeSync();
+    initAnnouncementLayout();
+    runDataStream();
+    syncTabVisibility();
+    syncNavAriaCurrent();
+    initNodeMap();
+    initTilt();
+    initPortalTriggerFold();
+    initMembersDialog();
+    bootstrapFxVisibility();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
 })();
