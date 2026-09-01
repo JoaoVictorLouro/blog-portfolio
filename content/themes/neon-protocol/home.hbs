@@ -9,10 +9,10 @@
 <main class="np-main np-home">
     <section class="np-glass np-hero" data-np-tilt="subtle"{{#if @site.cover_image}} style="--np-hero-image: url('{{img_url @site.cover_image size="xl"}}');"{{/if}}>
         {{#if @site.cover_image}}
-            <img class="np-hero-media" src="{{img_url @site.cover_image size="xl"}}" fetchpriority="high" alt="" aria-hidden="true" decoding="async" width="1200" height="675">
-            <div class="np-hero-shade" aria-hidden="true"></div>
+            <img class="np-hero-media np-fx-layer" src="{{img_url @site.cover_image size="xl"}}" fetchpriority="high" alt="" aria-hidden="true" decoding="async" width="1200" height="675">
+            <div class="np-hero-shade np-fx-layer" aria-hidden="true"></div>
             {{> "cover-scan-overlay" line1="NODE_SYNC_COMPLETE" line2="BANDWIDTH: OPTIMAL" line3="AWAITING_TRANSMISSION..."}}
-            <div class="np-glitch-effect" aria-hidden="true"></div>
+            <div class="np-glitch-effect np-fx-layer" aria-hidden="true"></div>
         {{/if}}
         <div class="np-hero-body">
             <div class="np-hero-kicker">
@@ -50,7 +50,7 @@
                     <h2 class="np-title" style="color: var(--np-secondary-container);"><span class="np-page-title"><span class="material-symbols-outlined" aria-hidden="true">cell_tower</span>RECENT_ARTICLES</span></h2>
                     <p class="np-meta">LATEST TRANSMISSIONS // FEED SYNC</p>
                 </div>
-                <div class="np-live"><i></i><span class="np-label">LIVE FEED</span></div>
+                <div class="np-live"><i class="np-fx-layer"></i><span class="np-label">LIVE FEED</span></div>
             </header>
             <div class="np-home-feed">
                 {{#get "posts" filter="tag:-hash-portfolio" include="tags,authors" limit="4" as |recent|}}

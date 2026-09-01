@@ -254,18 +254,45 @@
     });
   }
 
+  function markFxLayers() {
+    document.getElementById('ghost-comments-root')?.classList.add('np-fx-layer');
+    document.querySelectorAll('.kg-embed-card iframe').forEach((iframe) => {
+      iframe.classList.add('np-fx-layer');
+    });
+  }
+
+  const FX_VISIBILITY_SELECTOR =
+    '.np-hero, .np-article-hero, .np-map, .np-live, .np-subscribe, .np-bbs, .kg-embed-card';
+
+  function observeFxTargets(observer) {
+    document.querySelectorAll(FX_VISIBILITY_SELECTOR).forEach((el) => {
+      if (el.dataset.npFxObserved === '1') {
+        return;
+      }
+      el.dataset.npFxObserved = '1';
+      observer.observe(el);
+    });
+  }
+
   function initFxVisibility() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       return;
     }
-    const targets = document.querySelectorAll(
-      '.np-hero, .np-article-hero, .np-map, .np-live, .np-subscribe',
-    );
-    if (!targets.length) {
-      return;
+    markFxLayers();
+
+    if (!initFxVisibility._observer) {
+      initFxVisibility._observer = new IntersectionObserver(handleFxIntersection, {
+        threshold: 0,
+        rootMargin: '0px 0px -20% 0px',
+      });
+      initFxVisibility._layerObserver = new MutationObserver(() => {
+        markFxLayers();
+        observeFxTargets(initFxVisibility._observer);
+      });
+      initFxVisibility._layerObserver.observe(document.body, { childList: true, subtree: true });
     }
-    const observer = new IntersectionObserver(handleFxIntersection, { threshold: 0 });
-    targets.forEach((el) => observer.observe(el));
+
+    observeFxTargets(initFxVisibility._observer);
   }
 
   function syncNavAriaCurrent() {

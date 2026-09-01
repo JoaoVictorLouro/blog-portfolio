@@ -10,12 +10,12 @@
     <header class="np-article-hero">
         <div class="np-article-hero-frame"{{#if feature_image}} style="--np-hero-image: url('{{img_url feature_image size="xl"}}');"{{/if}}>
             {{#if feature_image}}
-                <img class="np-article-hero-media" src="{{img_url feature_image size="xl"}}" fetchpriority="high" alt="" aria-hidden="true" decoding="async" width="1200" height="675">
+                <img class="np-article-hero-media np-fx-layer" src="{{img_url feature_image size="xl"}}" fetchpriority="high" alt="" aria-hidden="true" decoding="async" width="1200" height="675">
             {{/if}}
             {{#if feature_image}}
-                <div class="np-article-hero-shade" aria-hidden="true"></div>
+                <div class="np-article-hero-shade np-fx-layer" aria-hidden="true"></div>
                 {{> "cover-scan-overlay" line1="LOG_DECRYPTED" line2="STREAM_BUFFER_ACTIVE" line3="READING_PACKET_DATA..."}}
-                <div class="np-glitch-effect" aria-hidden="true"></div>
+                <div class="np-glitch-effect np-fx-layer" aria-hidden="true"></div>
             {{/if}}
         </div>
         <div class="np-article-hero-body">

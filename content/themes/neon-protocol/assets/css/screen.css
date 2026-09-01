@@ -202,6 +202,7 @@ iframe.gh-portal-triggerbtn-iframe {
 }
 
 .np-portal-trigger.is-visible {
+  opacity: 1;
   visibility: visible;
   pointer-events: auto;
   animation: np-portal-glitch-in 0.42s steps(5, end) forwards;
@@ -772,6 +773,11 @@ body:has(#announcement-bar-root .gh-announcement-bar) .np-main {
   background: var(--np-primary-container);
   filter: brightness(1.1);
   animation: np-flicker 0.4s ease;
+}
+
+.np-portal-trigger.np-btn-primary:hover {
+  background: var(--np-primary-container);
+  filter: brightness(1.1);
 }
 
 .np-btn-ghost {
@@ -2451,6 +2457,23 @@ html.np-tab-hidden *::after {
 .np-fx-paused *::before,
 .np-fx-paused *::after {
   animation-play-state: paused !important;
+}
+
+.np-fx-paused .np-fx-layer,
+html.np-tab-hidden .np-fx-layer,
+.np-bbs.np-fx-paused #ghost-comments-root,
+html.np-tab-hidden #ghost-comments-root,
+.kg-embed-card.np-fx-paused iframe,
+html.np-tab-hidden .kg-embed-card iframe {
+  display: none !important;
+  animation: none !important;
+}
+
+.np-fx-paused .np-fx-layer::before,
+.np-fx-paused .np-fx-layer::after,
+html.np-tab-hidden .np-fx-layer::before,
+html.np-tab-hidden .np-fx-layer::after {
+  animation: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

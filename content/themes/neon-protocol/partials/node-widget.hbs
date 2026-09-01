@@ -13,10 +13,10 @@
         {{#if @custom.node_label}}
             <span class="np-chip is-live np-map-location">{{@custom.node_label}}</span>
         {{/if}}
-        <div class="np-map-scan" aria-hidden="true">
+        <div class="np-map-scan np-fx-layer" aria-hidden="true">
             <div class="np-map-scan-beam"></div>
         </div>
-        <div class="np-map-blip"></div>
+        <div class="np-map-blip np-fx-layer"></div>
         <a class="np-map-attrib" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© OpenStreetMap</a>
     </div>
     <div class="np-kv"><span>LAT/LONG:</span><strong data-np-map-coords>{{#if @custom.node_latitude}}{{@custom.node_latitude}}{{else}}35.6528{{/if}}, {{#if @custom.node_longitude}}{{@custom.node_longitude}}{{else}}139.8394{{/if}}</strong></div>
