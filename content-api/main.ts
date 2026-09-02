@@ -1,5 +1,6 @@
 import { handleRequest } from './routes.ts';
 import { refreshTranslationMapSingleFlight } from './refresh.ts';
+import { refreshYouTubeVideosSingleFlight } from './youtube-refresh.ts';
 
 const API_BASE = Deno.env.get('GHOST_API_URL') ?? 'http://127.0.0.1:2368';
 const ORIGIN = Deno.env.get('URL') ?? 'http://localhost:2368';
@@ -8,6 +9,8 @@ const ADMIN_PASSWORD = Deno.env.get('GHOST_ADMIN_PASSWORD') ?? '';
 const WEBHOOK_SECRET = Deno.env.get('CONTENT_API_WEBHOOK_SECRET') ?? '';
 const PORT = Number(Deno.env.get('CONTENT_API_PORT') ?? '8080');
 const REFRESH_MS = Number(Deno.env.get('I18N_REFRESH_MS') ?? '3600000');
+const YOUTUBE_CHANNEL_ID = Deno.env.get('YOUTUBE_CHANNEL_ID')?.trim() || 'UCV3h2_srSVaiEmjrZ8v7Qsw';
+const YOUTUBE_REFRESH_MS = Number(Deno.env.get('YOUTUBE_REFRESH_MS') ?? '3600000');
 
 const refreshConfig = {
   apiBase: API_BASE,
@@ -16,12 +19,25 @@ const refreshConfig = {
   adminPassword: ADMIN_PASSWORD,
 };
 
+const youtubeRefreshConfig = {
+  channelId: YOUTUBE_CHANNEL_ID,
+  limit: 4,
+};
+
 const routeContext = {
   refreshConfig,
   webhookSecret: WEBHOOK_SECRET,
 };
 
-async function startRefreshLoop() {
+async function refreshYouTubeSafe(): Promise<void> {
+  try {
+    await refreshYouTubeVideosSingleFlight(youtubeRefreshConfig);
+  } catch (error) {
+    console.error('YouTube refresh failed:', error instanceof Error ? error.message : error);
+  }
+}
+
+async function startTranslationRefreshLoop() {
   while (true) {
     await new Promise((resolve) => setTimeout(resolve, REFRESH_MS));
     try {
@@ -29,6 +45,13 @@ async function startRefreshLoop() {
     } catch (error) {
       console.error(error instanceof Error ? error.message : error);
     }
+  }
+}
+
+async function startYouTubeRefreshLoop() {
+  while (true) {
+    await new Promise((resolve) => setTimeout(resolve, YOUTUBE_REFRESH_MS));
+    await refreshYouTubeSafe();
   }
 }
 
@@ -40,6 +63,7 @@ if (import.meta.main) {
       console.error(error instanceof Error ? error.message : error);
       Deno.exit(1);
     }
+    await refreshYouTubeSafe();
     Deno.exit(0);
   }
 
@@ -50,7 +74,10 @@ if (import.meta.main) {
     Deno.exit(1);
   }
 
-  startRefreshLoop();
+  await refreshYouTubeSafe();
+
+  startTranslationRefreshLoop();
+  startYouTubeRefreshLoop();
 
   Deno.serve({ port: PORT, hostname: '0.0.0.0' }, (request) =>
     handleRequest(request, routeContext),

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ICONS="home_max,explore,photo_library,account_tree,terminal,download,share,work,link,arrow_forward,bolt,cell_tower,my_location,layers,sensors,schedule,person,send,close,key,logout,fingerprint,account_circle,mail,hub,code,language,database,search,filter_list,translate"
+ICONS="home_max,explore,photo_library,account_tree,terminal,download,share,work,link,arrow_forward,bolt,cell_tower,my_location,layers,sensors,schedule,person,send,close,key,logout,fingerprint,account_circle,mail,hub,code,language,database,search,filter_list,translate,play_circle"
 USER_AGENT="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 OUT_DIR="$ROOT/content/themes/neon-protocol/assets/fonts"

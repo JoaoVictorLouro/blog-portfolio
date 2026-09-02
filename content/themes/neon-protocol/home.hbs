@@ -95,6 +95,15 @@
                     {{/get}}
                 {{/match}}
             </div>
+
+            <header class="np-about-banner np-about-banner--row np-youtube-banner">
+                <div>
+                    <h2 class="np-title" style="color: var(--np-secondary-container);"><span class="np-page-title"><span class="material-symbols-outlined" aria-hidden="true">play_circle</span>{{> "np-t" key="YOUTUBE_VIDEOS"}}</span></h2>
+                    <p class="np-meta">{{> "np-t" key="YOUTUBE_SUBTITLE"}}</p>
+                </div>
+                <div class="np-live"><i class="np-fx-layer"></i><span class="np-label">{{> "np-t" key="YOUTUBE_LIVE"}}</span></div>
+            </header>
+            <div class="np-youtube-feed" data-np-youtube-feed hidden></div>
         </section>
 
         <aside class="np-sidebar">

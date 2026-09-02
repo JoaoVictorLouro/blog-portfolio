@@ -755,3 +755,30 @@
     {{#match (block "np_lang") "en-us"}}USER_PROFILE{{else match (block "np_lang") "ja-jp"}}ユーザープロフィール{{else match (block "np_lang") "pt-br"}}PERFIL_DO_USUÁRIO{{else match (block "np_lang") "es-la"}}PERFIL_DE_USUARIO{{else}}USER_PROFILE{{/match}}
   {{/is}}
 {{/match}}
+{{#match key "YOUTUBE_LIVE"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}ストリームリンク{{else has tag="#lang-pt-br"}}LINK DO STREAM{{else has tag="#lang-es-la"}}ENLACE DEL STREAM{{else}}STREAM LINK{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}STREAM LINK{{else match (block "np_lang") "ja-jp"}}ストリームリンク{{else match (block "np_lang") "pt-br"}}LINK DO STREAM{{else match (block "np_lang") "es-la"}}ENLACE DEL STREAM{{else}}STREAM LINK{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "YOUTUBE_SUBTITLE"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}チャンネル接続 // 最新4本{{else has tag="#lang-pt-br"}}UPLINK DO CANAL // ÚLTIMOS 4 PACOTES{{else has tag="#lang-es-la"}}ENLACE DEL CANAL // ÚLTIMOS 4 PAQUETES{{else}}CHANNEL UPLINK // LAST 4 PACKETS{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}CHANNEL UPLINK // LAST 4 PACKETS{{else match (block "np_lang") "ja-jp"}}チャンネル接続 // 最新4本{{else match (block "np_lang") "pt-br"}}UPLINK DO CANAL // ÚLTIMOS 4 PACOTES{{else match (block "np_lang") "es-la"}}ENLACE DEL CANAL // ÚLTIMOS 4 PAQUETES{{else}}CHANNEL UPLINK // LAST 4 PACKETS{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "YOUTUBE_VIDEOS"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}YouTubeシグナル{{else has tag="#lang-pt-br"}}SINAL_YOUTUBE{{else has tag="#lang-es-la"}}SEÑAL_YOUTUBE{{else}}YOUTUBE_SIGNAL{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}YOUTUBE_SIGNAL{{else match (block "np_lang") "ja-jp"}}YouTubeシグナル{{else match (block "np_lang") "pt-br"}}SINAL_YOUTUBE{{else match (block "np_lang") "es-la"}}SEÑAL_YOUTUBE{{else}}YOUTUBE_SIGNAL{{/match}}
+  {{/is}}
+{{/match}}

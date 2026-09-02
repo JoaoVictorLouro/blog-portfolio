@@ -1164,6 +1164,41 @@
     );
   }
 
+  let articleTranslationsMapPromise = null;
+
+  function loadArticleTranslationsMap() {
+    if (!articleTranslationsMapPromise) {
+      const translationsUrl =
+        window.__npArticleTranslationsUrl ||
+        `${window.__npSiteUrl || ''}/contentapi/i18n/article-translations.json`;
+      articleTranslationsMapPromise = fetch(translationsUrl, { cache: 'no-store' }).then(
+        (response) => {
+          if (!response.ok) {
+            throw new Error(`Translation map HTTP ${response.status}`);
+          }
+          return response.json();
+        },
+      );
+    }
+    return articleTranslationsMapPromise;
+  }
+
+  function resolveTranslatedPostPath(map, postUrl, nextLocale) {
+    if (!map || !postUrl || !nextLocale) {
+      return null;
+    }
+    const groupId = map.by_url?.[postUrl];
+    const entry = groupId ? map.groups?.[groupId]?.[nextLocale] : null;
+    return entry?.url ?? null;
+  }
+
+  function fallbackLocalePath(pathname, nextLocale) {
+    if (/\/articles(?:\/|$)/.test(pathname)) {
+      return `/${nextLocale}/articles/`;
+    }
+    return `/${nextLocale}/`;
+  }
+
   function initLanguagePicker() {
     const select = document.querySelector('[data-np-lang-select]');
     if (!select) {
@@ -1175,16 +1210,37 @@
     const match = pathname.match(localePattern);
     const currentLocale = match?.[1] ?? window.__npLocale ?? 'en-us';
     select.value = currentLocale;
+    const postUrl = document
+      .querySelector('[data-np-translation-switcher][data-np-post-url]')
+      ?.getAttribute('data-np-post-url');
 
     select.addEventListener('change', () => {
       const nextLocale = select.value;
       if (!nextLocale || nextLocale === currentLocale) {
         return;
       }
-      const nextPath = match
+
+      const navigate = (nextPath) => {
+        window.location.href = `${window.__npSiteUrl || ''}${nextPath}${window.location.search}${window.location.hash}`;
+      };
+
+      const prefixSwapPath = match
         ? pathname.replace(localePattern, `/${nextLocale}$2`)
         : `/${nextLocale}/`;
-      window.location.href = `${window.__npSiteUrl || ''}${nextPath}${window.location.search}${window.location.hash}`;
+
+      if (!postUrl) {
+        navigate(prefixSwapPath);
+        return;
+      }
+
+      loadArticleTranslationsMap()
+        .then((map) => {
+          const translatedPath = resolveTranslatedPostPath(map, postUrl, nextLocale);
+          navigate(translatedPath || fallbackLocalePath(pathname, nextLocale));
+        })
+        .catch(() => {
+          navigate(fallbackLocalePath(pathname, nextLocale));
+        });
     });
   }
 
@@ -1197,9 +1253,6 @@
     const postUrl = widget.getAttribute('data-np-post-url');
     const linksRoot = widget.querySelector('[data-np-translation-links]');
     const emptyState = widget.querySelector('[data-np-translation-empty]');
-    const translationsUrl =
-      window.__npArticleTranslationsUrl ||
-      `${window.__npSiteUrl || ''}/contentapi/i18n/article-translations.json`;
     const localeLabels = {
       'en-us': 'English',
       'ja-jp': '日本語',
@@ -1207,13 +1260,7 @@
       'es-la': 'Español',
     };
 
-    fetch(translationsUrl, { cache: 'no-store' })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Translation map HTTP ${response.status}`);
-        }
-        return response.json();
-      })
+    loadArticleTranslationsMap()
       .then((map) => {
         if (!postUrl || !linksRoot) {
           return;
@@ -1282,6 +1329,57 @@
       });
   }
 
+  function escapeHtml(value) {
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function initYouTubeFeed() {
+    const mount = document.querySelector('[data-np-youtube-feed]');
+    if (!mount) {
+      return;
+    }
+
+    const videosUrl =
+      window.__npYouTubeVideosUrl || `${window.__npSiteUrl || ''}/contentapi/youtube/videos.json`;
+
+    fetch(videosUrl, { cache: 'no-store' })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`YouTube videos HTTP ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((payload) => {
+        const videos = Array.isArray(payload?.videos) ? payload.videos.slice(0, 4) : [];
+        if (videos.length === 0) {
+          return;
+        }
+
+        mount.innerHTML = videos
+          .map((video) => {
+            const href = escapeHtml(video.url || '#');
+            const title = escapeHtml(video.title || '');
+            const thumb = escapeHtml(video.thumbnail_url || '');
+            return (
+              `<a class="np-glass np-card np-youtube-item" href="${href}" target="_blank" rel="noopener noreferrer">` +
+              `<img class="np-youtube-thumb" src="${thumb}" alt="" loading="lazy" width="96" height="54" />` +
+              `<h3 class="np-heading np-youtube-item-title">${title}</h3>` +
+              `</a>`
+            );
+          })
+          .join('');
+        mount.hidden = false;
+      })
+      .catch(() => {
+        // YouTube strip is optional when content-api cache is cold.
+      });
+  }
+
   function boot() {
     setTheme(currentTheme());
     initDeferredGhostScripts();
@@ -1298,6 +1396,7 @@
     initLanguagePicker();
     initTranslationSwitcher();
     initNewsletterLocale();
+    initYouTubeFeed();
     initServiceWorker();
   }
 

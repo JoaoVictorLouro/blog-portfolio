@@ -92,6 +92,8 @@ services:
       GHOST_API_URL: http://ghost:2368
       CONTENT_API_PORT: '8080'
       I18N_REFRESH_MS: '3600000'
+      YOUTUBE_CHANNEL_ID: ${YOUTUBE_CHANNEL_ID:-UCV3h2_srSVaiEmjrZ8v7Qsw}
+      YOUTUBE_REFRESH_MS: ${YOUTUBE_REFRESH_MS:-3600000}
     volumes:
       - ./content-api:/app/content-api:ro
       - ./scripts/i18n:/app/scripts/i18n:ro
