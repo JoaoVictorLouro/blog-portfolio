@@ -1296,6 +1296,16 @@
     initLanguagePicker();
     initTranslationSwitcher();
     initNewsletterLocale();
+    initServiceWorker();
+  }
+
+  function initServiceWorker() {
+    if (!('serviceWorker' in navigator)) {
+      return;
+    }
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    });
   }
 
   if (document.readyState === 'loading') {

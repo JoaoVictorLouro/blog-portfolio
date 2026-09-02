@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-3 -3 30 30" role="img" aria-label="Neon Protocol">
+  <defs>
+    <linearGradient
+      id="np-icon-stroke"
+      gradientUnits="userSpaceOnUse"
+      x1="0"
+      y1="0"
+      x2="24"
+      y2="24"
+      gradientTransform="rotate(-30 12 12)"
+    >
+      <stop offset="0%" stop-color="#00f2ff" />
+      <stop offset="100%" stop-color="#ff00c8" />
+    </linearGradient>
+  </defs>
+  <g transform="rotate(-30 12 12)">
+    <path
+      fill="#ffffff"
+      stroke="url(#np-icon-stroke)"
+      stroke-width="1.25"
+      stroke-linejoin="round"
+      stroke-linecap="round"
+      paint-order="stroke fill"
+      d="M17,17H7V7H17M21,11V9H19V7C19,5.89 18.1,5 17,5H15V3H13V5H11V3H9V5H7C5.89,5 5,5.89 5,7V9H3V11H5V13H3V15H5V17A2,2 0 0,0 7,19H9V21H11V19H13V21H15V19H17A2,2 0 0,0 19,17V15H21V13H19V11M13,13H11V11H13M15,9H9V15H15V9Z"
+    />
+  </g>
+</svg>

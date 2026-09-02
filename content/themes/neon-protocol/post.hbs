@@ -1,6 +1,7 @@
 {{!< default}}
 
 {{#post}}
+    {{> "np-set-locale-from-tags"}}
     {{#if feature_image}}
         {{#contentFor "head"}}
             <link rel="preload" as="image" href="{{img_url feature_image size="xl"}}" fetchpriority="high">
