@@ -1,11 +1,11 @@
 {{#if @site.members_enabled}}
     {{#if @member}}
         <button class="np-portal-trigger np-btn np-btn-ghost" type="button" data-np-members="account">
-            {{t "NODE_SESSION"}}<span class="material-symbols-outlined" aria-hidden="true">person</span>
+            {{> "np-t" key="NODE_SESSION"}}<span class="material-symbols-outlined" aria-hidden="true">person</span>
         </button>
     {{else}}
         <button class="np-portal-trigger np-btn np-btn-primary" type="button" data-np-members="subscribe">
-            {{t "Subscribe"}}<span class="material-symbols-outlined" aria-hidden="true">send</span>
+            {{> "np-t" key="Subscribe"}}<span class="material-symbols-outlined" aria-hidden="true">send</span>
         </button>
     {{/if}}
 {{/if}}

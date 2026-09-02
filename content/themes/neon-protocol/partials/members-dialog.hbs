@@ -9,74 +9,74 @@
 
         <header class="np-members-head">
             <div class="np-members-head-text">
-                <p class="np-meta np-members-kicker"><span class="material-symbols-outlined" aria-hidden="true">terminal</span>{{t "SECURE_CHANNEL"}}</p>
-                <h2 class="np-heading" id="np-members-title">{{t "Subscribe"}}</h2>
+                <p class="np-meta np-members-kicker"><span class="material-symbols-outlined" aria-hidden="true">terminal</span>{{> "np-t" key="SECURE_CHANNEL"}}</p>
+                <h2 class="np-heading" id="np-members-title">{{> "np-t" key="Subscribe"}}</h2>
             </div>
-            <button class="np-icon-btn np-members-close" type="button" data-np-members-close aria-label="{{t "Close"}}">
+            <button class="np-icon-btn np-members-close" type="button" data-np-members-close aria-label="{{> "np-t" key="Close"}}">
                 <span class="material-symbols-outlined" aria-hidden="true">close</span>
             </button>
         </header>
 
         <div class="np-members-body">
-            <section class="np-members-view" data-np-members-panel="subscribe" data-np-members-title="{{t "Subscribe"}}" hidden>
-                <p class="np-body np-members-lead">{{t "Receive encrypted drops directly to your local node."}}</p>
+            <section class="np-members-view" data-np-members-panel="subscribe" data-np-members-title="{{> "np-t" key="Subscribe"}}" hidden>
+                <p class="np-body np-members-lead">{{> "np-t" key="Receive encrypted drops directly to your local node."}}</p>
                 <form class="np-form np-members-form" data-members-form="subscribe">
-                    <label class="np-label">{{t "Comm_Link_ID [Email]"}}
-                        <input class="np-field" data-members-email type="email" required autocomplete="email" placeholder="{{t "ENTER_ADDRESS"}}" aria-label="{{t "Subscribe"}}">
+                    <label class="np-label">{{> "np-t" key="Comm_Link_ID [Email]"}}
+                        <input class="np-field" data-members-email type="email" required autocomplete="email" placeholder="{{> "np-t" key="ENTER_ADDRESS"}}" aria-label="{{> "np-t" key="Subscribe"}}">
                     </label>
                     <button class="np-btn np-btn-primary" type="submit">
-                        {{t "OPEN_CHANNEL"}}<span class="material-symbols-outlined" aria-hidden="true">bolt</span>
+                        {{> "np-t" key="OPEN_CHANNEL"}}<span class="material-symbols-outlined" aria-hidden="true">bolt</span>
                     </button>
-                    <p class="np-members-status np-members-status--loading">{{t "TRANSMITTING..."}}</p>
-                    <p class="np-members-status np-members-status--success">{{t "CHANNEL_OPEN // CHECK_COMM_LINK"}}</p>
+                    <p class="np-members-status np-members-status--loading">{{> "np-t" key="TRANSMITTING..."}}</p>
+                    <p class="np-members-status np-members-status--success">{{> "np-t" key="CHANNEL_OPEN // CHECK_COMM_LINK"}}</p>
                     <p class="np-members-status np-members-status--error" data-members-error></p>
                 </form>
                 <p class="np-meta np-members-switch">
-                    {{t "ALREADY_LINKED?"}}
-                    <button class="np-members-link" type="button" data-np-members="signin">{{t "AUTHENTICATE"}}</button>
+                    {{> "np-t" key="ALREADY_LINKED?"}}
+                    <button class="np-members-link" type="button" data-np-members="signin">{{> "np-t" key="AUTHENTICATE"}}</button>
                 </p>
             </section>
 
-            <section class="np-members-view" data-np-members-panel="signin" data-np-members-title="{{t "AUTHENTICATE_NODE"}}" hidden>
-                <p class="np-body np-members-lead">{{t "Request a one-time access token for this node."}}</p>
+            <section class="np-members-view" data-np-members-panel="signin" data-np-members-title="{{> "np-t" key="AUTHENTICATE_NODE"}}" hidden>
+                <p class="np-body np-members-lead">{{> "np-t" key="Request a one-time access token for this node."}}</p>
                 <form class="np-form np-members-form" data-members-form="signin">
-                    <label class="np-label">{{t "Comm_Link_ID [Email]"}}
-                        <input class="np-field" data-members-email type="email" required autocomplete="email" placeholder="{{t "ENTER_ADDRESS"}}" aria-label="{{t "Sign in"}}">
+                    <label class="np-label">{{> "np-t" key="Comm_Link_ID [Email]"}}
+                        <input class="np-field" data-members-email type="email" required autocomplete="email" placeholder="{{> "np-t" key="ENTER_ADDRESS"}}" aria-label="{{> "np-t" key="Sign in"}}">
                     </label>
                     <button class="np-btn np-btn-primary" type="submit">
-                        {{t "REQUEST_TOKEN"}}<span class="material-symbols-outlined" aria-hidden="true">key</span>
+                        {{> "np-t" key="REQUEST_TOKEN"}}<span class="material-symbols-outlined" aria-hidden="true">key</span>
                     </button>
-                    <p class="np-members-status np-members-status--loading">{{t "TRANSMITTING..."}}</p>
-                    <p class="np-members-status np-members-status--success">{{t "TOKEN_DISPATCHED_TO_COMM_LINK"}}</p>
+                    <p class="np-members-status np-members-status--loading">{{> "np-t" key="TRANSMITTING..."}}</p>
+                    <p class="np-members-status np-members-status--success">{{> "np-t" key="TOKEN_DISPATCHED_TO_COMM_LINK"}}</p>
                     <p class="np-members-status np-members-status--error" data-members-error></p>
                 </form>
                 <p class="np-meta np-members-switch">
-                    {{t "NEW_NODE?"}}
-                    <button class="np-members-link" type="button" data-np-members="subscribe">{{t "Subscribe"}}</button>
+                    {{> "np-t" key="NEW_NODE?"}}
+                    <button class="np-members-link" type="button" data-np-members="subscribe">{{> "np-t" key="Subscribe"}}</button>
                 </p>
             </section>
 
             {{#if @member}}
-                <section class="np-members-view" data-np-members-panel="account" data-np-members-title="{{t "NODE_SESSION"}}" hidden>
-                    <p class="np-chip is-live">{{t "STATUS: AUTHENTICATED"}}</p>
+                <section class="np-members-view" data-np-members-panel="account" data-np-members-title="{{> "np-t" key="NODE_SESSION"}}" hidden>
+                    <p class="np-chip is-live">{{> "np-t" key="STATUS: AUTHENTICATED"}}</p>
                     <dl class="np-members-kv">
                         {{#if @member.name}}
                             <div class="np-kv">
-                                <dt>{{t "HANDLE"}}</dt>
+                                <dt>{{> "np-t" key="HANDLE"}}</dt>
                                 <dd><strong>{{@member.name}}</strong></dd>
                             </div>
                         {{/if}}
                         <div class="np-kv">
-                            <dt>{{t "COMM_LINK"}}</dt>
+                            <dt>{{> "np-t" key="COMM_LINK"}}</dt>
                             <dd><strong>{{@member.email}}</strong></dd>
                         </div>
                         <div class="np-kv">
-                            <dt>{{t "CLEARANCE"}}</dt>
-                            <dd><strong>{{t "FREE_FEED"}}</strong></dd>
+                            <dt>{{> "np-t" key="CLEARANCE"}}</dt>
+                            <dd><strong>{{> "np-t" key="FREE_FEED"}}</strong></dd>
                         </div>
                     </dl>
                     <button class="np-btn np-btn-ghost" type="button" data-members-signout>
-                        {{t "DISCONNECT"}}<span class="material-symbols-outlined" aria-hidden="true">logout</span>
+                        {{> "np-t" key="DISCONNECT"}}<span class="material-symbols-outlined" aria-hidden="true">logout</span>
                     </button>
                 </section>
             {{/if}}

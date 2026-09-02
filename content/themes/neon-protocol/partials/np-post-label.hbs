@@ -8,6 +8,9 @@
 {{#match key "READ_IN_ANOTHER_LANGUAGE"}}
   {{#has tag="#lang-ja-jp"}}他の言語で読む{{else has tag="#lang-pt-br"}}LER EM OUTRO IDIOMA{{else has tag="#lang-es-la"}}LEER EN OTRO IDIOMA{{else}}READ IN ANOTHER LANGUAGE{{/has}}
 {{/match}}
+{{#match key "AVAILABLE_IN"}}
+  {{#has tag="#lang-ja-jp"}}利用可能な言語{{else has tag="#lang-pt-br"}}Disponível em{{else has tag="#lang-es-la"}}Disponible en{{else}}AVAILABLE_IN{{/has}}
+{{/match}}
 {{#match key "NO_TRANSLATIONS"}}
   {{#has tag="#lang-ja-jp"}}他の言語版はありません。{{else has tag="#lang-pt-br"}}Nenhuma outra versão de idioma disponível.{{else has tag="#lang-es-la"}}No hay otras versiones de idioma disponibles.{{else}}No other language versions available.{{/has}}
 {{/match}}
