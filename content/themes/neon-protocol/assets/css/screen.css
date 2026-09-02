@@ -2529,8 +2529,6 @@ html.np-tab-hidden *::after {
 
 .np-fx-paused .np-fx-layer,
 html.np-tab-hidden .np-fx-layer,
-.np-bbs.np-fx-paused #ghost-comments-root,
-html.np-tab-hidden #ghost-comments-root,
 .kg-embed-card.np-fx-paused iframe,
 html.np-tab-hidden .kg-embed-card iframe {
   display: none !important;

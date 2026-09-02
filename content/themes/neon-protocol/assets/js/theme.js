@@ -383,14 +383,13 @@
   }
 
   function markFxLayers() {
-    document.getElementById('ghost-comments-root')?.classList.add('np-fx-layer');
     document.querySelectorAll('.kg-embed-card iframe').forEach((iframe) => {
       iframe.classList.add('np-fx-layer');
     });
   }
 
   const FX_VISIBILITY_SELECTOR =
-    '.np-hero, .np-article-hero, .np-map, .np-live, .np-subscribe, .np-bbs, .kg-embed-card';
+    '.np-hero, .np-article-hero, .np-map, .np-live, .np-subscribe, .kg-embed-card';
 
   function observeFxTargets(observer) {
     document.querySelectorAll(FX_VISIBILITY_SELECTOR).forEach((el) => {
