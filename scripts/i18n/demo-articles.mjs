@@ -110,7 +110,7 @@ export const DEMO_ARTICLE_GROUPS = [
         slug: 'translation-tagging',
         html: `<p>To link translations, assign the same internal tag on each locale version:</p>
 <pre><code>#translation-neon-protocol-overview</code></pre>
-<p>The i18n-map sidecar scans published posts and writes <code>np-article-translations.json</code> for the theme widget.</p>
+<p>The content API scans published posts and pages and serves the translation map at <code>/contentapi/i18n/article-translations.json</code> for the theme widget.</p>
 <p>Assign each version to the matching locale newsletter when publishing.</p>`,
       },
       'ja-jp': {
@@ -119,7 +119,7 @@ export const DEMO_ARTICLE_GROUPS = [
         slug: 'translation-tagging-ja',
         html: `<p>翻訳をリンクするには、各ロケール版に同じ内部タグを付けます:</p>
 <pre><code>#translation-neon-protocol-overview</code></pre>
-<p>i18n-map サイドカーが公開投稿をスキャンし、テーマウィジェット用の <code>np-article-translations.json</code> を書き出します。</p>
+<p>コンテンツ API が公開投稿とページをスキャンし、テーマウィジェット用の翻訳マップを <code>/contentapi/i18n/article-translations.json</code> で提供します。</p>
 <p>公開時に各版を該当ロケールのニュースレターに割り当ててください。</p>`,
       },
       'pt-br': {
@@ -128,7 +128,7 @@ export const DEMO_ARTICLE_GROUPS = [
         slug: 'translation-tagging-pt',
         html: `<p>Para vincular traduções, use a mesma tag interna em cada versão:</p>
 <pre><code>#translation-neon-protocol-overview</code></pre>
-<p>O sidecar i18n-map varre posts publicados e grava <code>np-article-translations.json</code> para o widget do tema.</p>
+<p>A content API varre posts e páginas publicados e serve o mapa de traduções em <code>/contentapi/i18n/article-translations.json</code> para o widget do tema.</p>
 <p>Atribua cada versão ao newsletter do locale correspondente ao publicar.</p>`,
       },
       'es-la': {
@@ -137,7 +137,7 @@ export const DEMO_ARTICLE_GROUPS = [
         slug: 'translation-tagging-es',
         html: `<p>Para enlazar traducciones, asigna la misma etiqueta interna en cada versión:</p>
 <pre><code>#translation-neon-protocol-overview</code></pre>
-<p>El sidecar i18n-map escanea posts publicados y escribe <code>np-article-translations.json</code> para el widget del tema.</p>
+<p>La content API escanea posts y páginas publicados y sirve el mapa de traducciones en <code>/contentapi/i18n/article-translations.json</code> para el widget del tema.</p>
 <p>Asigna cada versión al newsletter del locale al publicar.</p>`,
       },
     },

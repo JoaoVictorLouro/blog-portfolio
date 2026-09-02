@@ -1,7 +1,6 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { DEFAULT_LOCALE, isLanguageTagSlug, LOCALES } from './i18n/locales.mjs';
-import { buildTranslationMap } from './i18n/build-translation-map.mjs';
 import { seedDemoArticles } from './i18n/seed-demo-articles.mjs';
 
 const API_BASE = process.env.GHOST_API_URL ?? 'http://127.0.0.1:2368';
@@ -12,6 +11,20 @@ const ADMIN_NAME = process.env.GHOST_ADMIN_NAME?.trim() || 'Admin';
 const SITE_TITLE = process.env.GHOST_SITE_TITLE?.trim() || 'Kono Gaijin';
 const I18N_PUBLIC_DIR =
   process.env.GHOST_I18N_PUBLIC_DIR ?? '/var/lib/ghost/content/themes/neon-protocol/assets/i18n';
+const CONTENT_API_WEBHOOK_SECRET = process.env.CONTENT_API_WEBHOOK_SECRET?.trim() ?? '';
+const CONTENT_API_WEBHOOK_TARGET_URL =
+  process.env.CONTENT_API_WEBHOOK_TARGET_URL?.trim() || 'http://content-api:8080/webhooks/ghost';
+const CONTENT_API_INTEGRATION_NAME = 'Neon Protocol Content API';
+const CONTENT_API_WEBHOOK_EVENTS = [
+  'post.added',
+  'post.edited',
+  'post.deleted',
+  'post.published',
+  'page.added',
+  'page.edited',
+  'page.deleted',
+  'page.published',
+];
 
 const BRAND_TITLE_HTML = '<ruby>Kono<rt>この</rt> Gaijin<rt>外人</rt></ruby>';
 const ACCEPT_VERSION = 'v6.0';
@@ -451,36 +464,119 @@ async function ensureNewsletters(cookie) {
   return map;
 }
 
-async function fetchPublishedPosts(cookie) {
-  const posts = [];
-  let page = 1;
-  let pages = 1;
-
-  while (page <= pages) {
-    const { response, data } = await request(
-      `/ghost/api/admin/posts/?filter=status:published&include=tags&limit=100&page=${page}`,
-      { cookie },
-    );
-    if (!response.ok) {
-      fail(`Failed to query posts (${response.status}): ${describeError(data)}`);
-    }
-
-    const batch = Array.isArray(data?.posts) ? data.posts : [];
-    posts.push(...batch);
-    pages = Number(data?.meta?.pagination?.pages ?? 1);
-    page += 1;
+async function findContentApiIntegration(cookie) {
+  const { response, data } = await request(
+    '/ghost/api/admin/integrations/?include=webhooks&limit=all',
+    { cookie },
+  );
+  if (!response.ok) {
+    fail(`Failed to query integrations (${response.status}): ${describeError(data)}`);
   }
 
-  return posts;
+  const integrations = Array.isArray(data?.integrations) ? data.integrations : [];
+  return integrations.find((item) => item.name === CONTENT_API_INTEGRATION_NAME) ?? null;
 }
 
-async function refreshTranslationMap(cookie) {
-  const posts = await fetchPublishedPosts(cookie);
-  const map = buildTranslationMap(posts, ORIGIN);
-  mkdirSync(I18N_PUBLIC_DIR, { recursive: true });
-  const path = join(I18N_PUBLIC_DIR, 'np-article-translations.json');
-  writeFileSync(path, `${JSON.stringify(map, null, 2)}\n`);
-  console.log(`Wrote translation map (${Object.keys(map.groups).length} groups) to ${path}`);
+async function ensureContentApiWebhooks(cookie) {
+  if (!CONTENT_API_WEBHOOK_SECRET) {
+    fail('CONTENT_API_WEBHOOK_SECRET is required');
+  }
+
+  const targetUrl = CONTENT_API_WEBHOOK_TARGET_URL;
+  let integration = await findContentApiIntegration(cookie);
+
+  if (!integration) {
+    const created = await request('/ghost/api/admin/integrations/', {
+      method: 'POST',
+      cookie,
+      body: {
+        integrations: [
+          {
+            name: CONTENT_API_INTEGRATION_NAME,
+            description: 'Webhook integration for the Neon Protocol content API',
+          },
+        ],
+      },
+    });
+    if (!created.response.ok) {
+      fail(
+        `Failed to create content API integration (${created.response.status}): ${describeError(created.data)}`,
+      );
+    }
+    console.log(`Created integration ${CONTENT_API_INTEGRATION_NAME}`);
+    integration = await findContentApiIntegration(cookie);
+  }
+
+  if (!integration?.id) {
+    fail('Content API integration is missing an id');
+  }
+
+  const existingByEvent = new Map(
+    (Array.isArray(integration.webhooks) ? integration.webhooks : []).map((webhook) => [
+      webhook.event,
+      webhook,
+    ]),
+  );
+
+  let createdCount = 0;
+  let updatedCount = 0;
+
+  for (const event of CONTENT_API_WEBHOOK_EVENTS) {
+    const name = `Content API ${event}`;
+    const existing = existingByEvent.get(event);
+
+    if (!existing) {
+      const created = await request('/ghost/api/admin/webhooks/', {
+        method: 'POST',
+        cookie,
+        body: {
+          webhooks: [
+            {
+              event,
+              target_url: targetUrl,
+              secret: CONTENT_API_WEBHOOK_SECRET,
+              integration_id: integration.id,
+              name,
+            },
+          ],
+        },
+      });
+      if (!created.response.ok) {
+        fail(
+          `Failed to create webhook ${event} (${created.response.status}): ${describeError(created.data)}`,
+        );
+      }
+      createdCount += 1;
+      console.log(`Registered webhook ${event} -> ${targetUrl}`);
+      continue;
+    }
+
+    const updated = await request(`/ghost/api/admin/webhooks/${existing.id}/`, {
+      method: 'PUT',
+      cookie,
+      body: {
+        webhooks: [
+          {
+            id: existing.id,
+            event,
+            target_url: targetUrl,
+            secret: CONTENT_API_WEBHOOK_SECRET,
+            name,
+          },
+        ],
+      },
+    });
+    if (!updated.response.ok) {
+      fail(
+        `Failed to update webhook ${event} (${updated.response.status}): ${describeError(updated.data)}`,
+      );
+    }
+    updatedCount += 1;
+  }
+
+  console.log(
+    `Content API webhooks ready (${CONTENT_API_WEBHOOK_EVENTS.length} events; +${createdCount} created, ~${updatedCount} synced) -> ${targetUrl}`,
+  );
 }
 
 async function ensureDefaultLanguageOnPosts(cookie) {
@@ -667,6 +763,6 @@ await ensureDefaultLanguageOnPosts(cookie);
 await ensureAboutPages(cookie);
 const newsletterMap = await ensureNewsletters(cookie);
 await seedDemoArticles(request, describeError, fail, ensureInternalTag, cookie, newsletterMap);
-await refreshTranslationMap(cookie);
+await ensureContentApiWebhooks(cookie);
 await seedNavigation(cookie);
 console.log('Bootstrap complete');

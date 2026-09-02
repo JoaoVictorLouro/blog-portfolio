@@ -1,5 +1,5 @@
-import { DEFAULT_LOCALE, LOCALES, TRANSLATION_TAG_PREFIX } from '../i18n/locales.mjs';
-import { buildTranslationMap as buildMapCore } from '../i18n/build-translation-map.mjs';
+import { DEFAULT_LOCALE, LOCALES, TRANSLATION_TAG_PREFIX } from '../scripts/i18n/locales.mjs';
+import { buildTranslationMap as buildMapCore } from '../scripts/i18n/build-translation-map.mjs';
 
 export type GhostTag = { slug: string };
 

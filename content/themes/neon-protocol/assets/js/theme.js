@@ -1197,7 +1197,9 @@
     const postUrl = widget.getAttribute('data-np-post-url');
     const linksRoot = widget.querySelector('[data-np-translation-links]');
     const emptyState = widget.querySelector('[data-np-translation-empty]');
-    const base = window.__npI18nBase || `${window.__npSiteUrl || ''}/i18n/`;
+    const translationsUrl =
+      window.__npArticleTranslationsUrl ||
+      `${window.__npSiteUrl || ''}/contentapi/i18n/article-translations.json`;
     const localeLabels = {
       'en-us': 'English',
       'ja-jp': '日本語',
@@ -1205,7 +1207,7 @@
       'es-la': 'Español',
     };
 
-    fetch(`${base}np-article-translations.json`, { cache: 'no-store' })
+    fetch(translationsUrl, { cache: 'no-store' })
       .then((response) => {
         if (!response.ok) {
           throw new Error(`Translation map HTTP ${response.status}`);

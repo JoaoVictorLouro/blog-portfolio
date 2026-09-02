@@ -8,9 +8,10 @@
     "build:i18n": "deno run -A scripts/build-theme-i18n.mjs",
     "sync:ghost-assets": "deno run -A scripts/sync-ghost-cdn-assets.mjs",
     "lint": "docker run --rm -v \"$PWD:/work\" -w /work node:22-bookworm-slim npx --yes gscan@6.4.2 content/themes/neon-protocol --verbose",
-    "test:i18n-map": "deno test -A scripts/i18n-map-sidecar/build-map_test.ts",
-    "i18n:build-map": "deno run -A scripts/i18n-map-sidecar/main.ts --once",
-    "test": "deno task build:i18n && deno task test:i18n-map && deno task lint && docker compose config --quiet"
+    "test:content-api": "deno test -A content-api/",
+    "content-api:run": "deno run -A content-api/main.ts",
+    "content-api:refresh-once": "deno run -A content-api/main.ts --once",
+    "test": "deno task build:i18n && deno task test:content-api && deno task lint && docker compose config --quiet"
   },
   "nodeModulesDir": "none",
   "exclude": ["data/", "node_modules/", "content/themes/*/node_modules/"]

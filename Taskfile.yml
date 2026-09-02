@@ -21,7 +21,7 @@ tasks:
           cp .env.secrets.example .env.secrets
           echo "Created .env.secrets from .env.secrets.example"
           if [ -f .env ]; then
-            for key in GHOST_ADMIN_EMAIL GHOST_ADMIN_PASSWORD mail__options__auth__user mail__options__auth__pass; do
+            for key in GHOST_ADMIN_EMAIL GHOST_ADMIN_PASSWORD mail__options__auth__user mail__options__auth__pass CONTENT_API_WEBHOOK_SECRET; do
               line=$(grep -E "^${key}=" .env | tail -n1 || true)
               [ -n "$line" ] || continue
               grep -vE "^${key}=" .env.secrets > .env.secrets.tmp
@@ -31,6 +31,13 @@ tasks:
           fi
         else
           echo ".env.secrets already exists"
+          if ! grep -qE '^CONTENT_API_WEBHOOK_SECRET=' .env.secrets; then
+            line=$(grep -E '^CONTENT_API_WEBHOOK_SECRET=' .env.secrets.example | tail -n1 || true)
+            if [ -n "$line" ]; then
+              printf '%s\n' "$line" >> .env.secrets
+              echo "Appended CONTENT_API_WEBHOOK_SECRET to .env.secrets"
+            fi
+          fi
         fi
       - mkdir -p data/content content/themes content/settings content/public
 
@@ -46,9 +53,19 @@ tasks:
       - docker compose down
 
   logs:
-    desc: Follow Ghost container logs
+    desc: Follow nginx and Ghost container logs
     cmds:
-      - docker compose logs -f ghost
+      - docker compose logs -f nginx ghost
+
+  logs:api:
+    desc: Follow content-api container logs
+    cmds:
+      - docker compose logs -f content-api
+
+  logs:nginx:
+    desc: Follow nginx container logs
+    cmds:
+      - docker compose logs -f nginx
 
   status:
     desc: Show Compose service status

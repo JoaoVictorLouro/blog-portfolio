@@ -1,10 +1,23 @@
 services:
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - '${PORT:-2368}:80'
+    depends_on:
+      ghost:
+        condition: service_healthy
+      content-api:
+        condition: service_healthy
+    volumes:
+      - ./config/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+
   ghost:
     build: .
     image: ghcr.io/joaovictorlouro/blog-portfolio:latest
     restart: unless-stopped
-    ports:
-      - '${PORT:-2368}:2368'
+    expose:
+      - '2368'
     env_file:
       - path: .env
         required: false
@@ -53,16 +66,17 @@ services:
       URL: ${URL:-http://localhost:2368}
       GHOST_ADMIN_NAME: ${GHOST_ADMIN_NAME:-Admin}
       GHOST_SITE_TITLE: ${GHOST_SITE_TITLE:-Kono Gaijin}
+      CONTENT_API_WEBHOOK_SECRET: ${CONTENT_API_WEBHOOK_SECRET:-}
+      CONTENT_API_WEBHOOK_TARGET_URL: ${CONTENT_API_WEBHOOK_TARGET_URL:-http://content-api:8080/webhooks/ghost}
     volumes:
       - ./scripts/ghost-bootstrap.mjs:/ghost-bootstrap.mjs:ro
       - ./scripts/i18n:/i18n:ro
       - ./content/themes/neon-protocol/assets/i18n:/var/lib/ghost/content/themes/neon-protocol/assets/i18n
     entrypoint: ['node', '/ghost-bootstrap.mjs']
 
-  i18n-map:
+  content-api:
     image: denoland/deno:alpine
     restart: unless-stopped
-    network_mode: service:ghost
     depends_on:
       ghost:
         condition: service_healthy
@@ -75,11 +89,23 @@ services:
         required: false
     environment:
       URL: ${URL:-http://localhost:2368}
-      GHOST_API_URL: http://127.0.0.1:2368
-      GHOST_I18N_OUTPUT: /var/lib/ghost/content/themes/neon-protocol/assets/i18n/np-article-translations.json
-      I18N_MAP_POLL_MS: '60000'
+      GHOST_API_URL: http://ghost:2368
+      CONTENT_API_PORT: '8080'
+      I18N_REFRESH_MS: '3600000'
     volumes:
-      - ./content/themes/neon-protocol/assets/i18n:/var/lib/ghost/content/themes/neon-protocol/assets/i18n
-      - ./scripts:/app/scripts:ro
+      - ./content-api:/app/content-api:ro
+      - ./scripts/i18n:/app/scripts/i18n:ro
     working_dir: /app
-    command: ['deno', 'run', '-A', 'scripts/i18n-map-sidecar/main.ts']
+    command: ['deno', 'run', '-A', 'content-api/main.ts']
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'deno',
+          'eval',
+          "const r=await fetch('http://127.0.0.1:8080/health');process.exit(r.ok?0:1)",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
