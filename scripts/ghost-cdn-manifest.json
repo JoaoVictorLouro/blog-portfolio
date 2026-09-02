@@ -14,5 +14,9 @@
   "announcement-bar": {
     "cdn": "https://cdn.jsdelivr.net/ghost/announcement-bar@~1.1/umd/announcement-bar.min.js",
     "local": "js/vendor/ghost-announcement-bar.min.js"
+  },
+  "comments-ui": {
+    "cdn": "https://cdn.jsdelivr.net/ghost/comments-ui@~1.6/umd/comments-ui.min.js",
+    "local": "js/vendor/ghost-comments-ui.min.js"
   }
 }

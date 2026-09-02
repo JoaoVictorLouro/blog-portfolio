@@ -24,7 +24,65 @@
     syncGhostCommentsTheme(next);
   }
 
+  const COMMENTS_TOKENS = {
+    dark: {
+      surface: '#1b1c1d',
+      surfaceLow: '#1b1c1d',
+      surfaceHigh: '#292a2b',
+      onSurface: '#e3e2e3',
+      onSurfaceVariant: '#b9cacb',
+      outline: '#849495',
+      outlineVariant: '#3a494b',
+      charcoal: '#0d0e10',
+      neonTeal: '#00f2ff',
+      lanternAmber: '#ffb800',
+      cyberMagenta: '#ff00c8',
+      error: '#ffb4ab',
+      glowCyan: 'rgba(0, 242, 255, 0.4)',
+    },
+    light: {
+      surface: '#ffffff',
+      surfaceLow: '#f7f8fa',
+      surfaceHigh: '#eceef1',
+      onSurface: '#121315',
+      onSurfaceVariant: '#4b5560',
+      outline: '#8a9399',
+      outlineVariant: '#d5d8dc',
+      charcoal: '#ffffff',
+      neonTeal: '#00f2ff',
+      lanternAmber: '#ffb800',
+      cyberMagenta: '#ff00c8',
+      error: '#ffb4ab',
+      glowCyan: 'rgba(0, 242, 255, 0.35)',
+    },
+  };
+
+  let commentsOverridesCss = '';
+  let commentsOverridesPromise = null;
+
+  function loadCommentsOverrides() {
+    if (commentsOverridesCss) {
+      return Promise.resolve(commentsOverridesCss);
+    }
+    if (commentsOverridesPromise) {
+      return commentsOverridesPromise;
+    }
+    const url = window.__npGhostAssetUrls?.commentsOverrides;
+    if (!url) {
+      return Promise.resolve('');
+    }
+    commentsOverridesPromise = fetch(url)
+      .then((response) => (response.ok ? response.text() : ''))
+      .then((text) => {
+        commentsOverridesCss = text;
+        return text;
+      })
+      .catch(() => '');
+    return commentsOverridesPromise;
+  }
+
   function commentsSurfaceBg(theme) {
+    const tokens = COMMENTS_TOKENS[theme === 'light' ? 'light' : 'dark'];
     const wrapper = document.querySelector('.np-bbs-body--comments');
     if (wrapper) {
       const bg = getComputedStyle(wrapper).backgroundColor;
@@ -32,19 +90,64 @@
         return bg;
       }
     }
-    return theme === 'light' ? '#ffffff' : '#1b1c1d';
+    return tokens.surface;
   }
 
-  function commentsThemeCss(mode, bg) {
-    const text = mode === 'dark' ? '#e3e2e3' : '#121315';
-    const muted = mode === 'dark' ? 'rgba(255,255,255,0.85)' : '#4b5560';
-    const faint = mode === 'dark' ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.4)';
+  function commentsTokenCss(mode, bg) {
+    const t = COMMENTS_TOKENS[mode === 'light' ? 'light' : 'dark'];
     return [
-      `html,body,section.ghost-display{background-color:${bg}!important;color:${text}!important}`,
-      `section.ghost-display.dark,[data-testid="cta-box"] h1,[data-testid="cta-box"] p{color:${muted}!important}`,
-      `[data-testid="cta-box"] p span{color:${muted}!important}`,
-      `[data-testid="cta-box"] p.text-center.font-sans.text-md{color:${faint}!important}`,
+      ':root {',
+      `--np-surface:${bg};`,
+      `--np-surface-low:${t.surfaceLow};`,
+      `--np-surface-high:${t.surfaceHigh};`,
+      `--np-on-surface:${t.onSurface};`,
+      `--np-on-surface-variant:${t.onSurfaceVariant};`,
+      `--np-outline:${t.outline};`,
+      `--np-outline-variant:${t.outlineVariant};`,
+      `--np-charcoal:${t.charcoal};`,
+      `--np-neon-teal:${t.neonTeal};`,
+      `--np-lantern-amber:${t.lanternAmber};`,
+      `--np-cyber-magenta:${t.cyberMagenta};`,
+      `--np-error:${t.error};`,
+      `--np-glow-cyan:${t.glowCyan};`,
+      '}',
     ].join('');
+  }
+
+  function commentsThemeCss(mode, bg, overrides) {
+    return [commentsTokenCss(mode, bg), overrides || ''].join('\n');
+  }
+
+  function openParentMembersPanel(action) {
+    const panel = action === 'signin' ? 'signin' : 'subscribe';
+    const parentDoc = window.parent.document;
+    const trigger =
+      parentDoc.querySelector(`.np-portal-trigger[data-np-members="${panel}"]`) ||
+      parentDoc.querySelector(`[data-np-members="${panel}"]`);
+    trigger?.click();
+  }
+
+  function ensureCommentsAuthBridge(doc) {
+    const root = doc.documentElement;
+    if (root.dataset.npAuthBridge === '1') {
+      return;
+    }
+    root.dataset.npAuthBridge = '1';
+
+    doc.addEventListener(
+      'click',
+      (event) => {
+        const signinBtn = event.target.closest('[data-testid="signin-button"]');
+        const signupBtn = event.target.closest('[data-testid="signup-button"]');
+        if (!signinBtn && !signupBtn) {
+          return;
+        }
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        openParentMembersPanel(signinBtn ? 'signin' : 'subscribe');
+      },
+      true,
+    );
   }
 
   function observeCommentsIframe(iframe, applyMode) {
@@ -90,50 +193,75 @@
       if (script.dataset.colorScheme !== mode) {
         script.dataset.colorScheme = mode;
       }
+      if (script.dataset.accentColor !== '#00f2ff') {
+        script.dataset.accentColor = '#00f2ff';
+      }
     });
-    document
-      .querySelectorAll('#ghost-comments-root iframe[title="comments-frame"]')
-      .forEach((iframe) => {
-        iframe.style.backgroundColor = bg;
-        const applyMode = () => {
-          const doc = iframe.contentDocument;
-          if (!doc) {
-            return;
+    loadCommentsOverrides().then((overrides) => {
+      document
+        .querySelectorAll('#ghost-comments-root iframe[title="comments-frame"]')
+        .forEach((iframe) => {
+          iframe.style.backgroundColor = bg;
+          const applyMode = () => {
+            const doc = iframe.contentDocument;
+            if (!doc) {
+              return;
+            }
+            const section = doc.querySelector('section.ghost-display');
+            if (section) {
+              section.classList.toggle('dark', mode === 'dark');
+            }
+            doc.documentElement.style.colorScheme = mode;
+            doc.documentElement.style.backgroundColor = bg;
+            doc.body.style.backgroundColor = bg;
+            let style = doc.getElementById('np-comments-theme');
+            if (!style) {
+              style = doc.createElement('style');
+              style.id = 'np-comments-theme';
+              doc.head.appendChild(style);
+            }
+            style.textContent = commentsThemeCss(mode, bg, overrides);
+            ensureCommentsAuthBridge(doc);
+          };
+          if (iframe.contentDocument?.readyState === 'complete') {
+            applyMode();
+            observeCommentsIframe(iframe, applyMode);
+          } else {
+            iframe.addEventListener(
+              'load',
+              () => {
+                applyMode();
+                observeCommentsIframe(iframe, applyMode);
+              },
+              { once: true },
+            );
           }
-          const section = doc.querySelector('section.ghost-display');
-          if (section) {
-            section.classList.toggle('dark', mode === 'dark');
-          }
-          doc.documentElement.style.colorScheme = mode;
-          doc.documentElement.style.backgroundColor = bg;
-          doc.body.style.backgroundColor = bg;
-          let style = doc.getElementById('np-comments-theme');
-          if (!style) {
-            style = doc.createElement('style');
-            style.id = 'np-comments-theme';
-            doc.head.appendChild(style);
-          }
-          style.textContent = commentsThemeCss(mode, bg);
-        };
-        if (iframe.contentDocument?.readyState === 'complete') {
-          applyMode();
-          observeCommentsIframe(iframe, applyMode);
-        } else {
-          iframe.addEventListener(
-            'load',
-            () => {
-              applyMode();
-              observeCommentsIframe(iframe, applyMode);
-            },
-            { once: true },
-          );
-        }
-      });
+        });
+    });
+  }
+
+  function rewriteCommentsScript(script) {
+    const urls = window.__npGhostAssetUrls || {};
+    if (!script?.dataset?.ghostComments) {
+      return;
+    }
+    if (urls.comments && script.src && script.src.indexOf('comments-ui') !== -1) {
+      if (script.src !== urls.comments) {
+        script.src = urls.comments;
+      }
+    }
+    script.dataset.accentColor = '#00f2ff';
+    const mode = currentTheme();
+    if (script.dataset.colorScheme !== mode) {
+      script.dataset.colorScheme = mode;
+    }
   }
 
   function initGhostCommentsThemeSync() {
+    document.querySelectorAll('script[data-ghost-comments]').forEach(rewriteCommentsScript);
     syncGhostCommentsTheme(currentTheme());
     const observer = new MutationObserver(() => {
+      document.querySelectorAll('script[data-ghost-comments]').forEach(rewriteCommentsScript);
       if (document.getElementById('ghost-comments-root')) {
         syncGhostCommentsTheme(currentTheme());
       }

@@ -6,7 +6,7 @@
             <span>ENC: AES-256</span>
         </div>
         <div class="np-bbs-body np-bbs-body--comments">
-            {{comments title="" count=false mode="dark"}}
+            {{comments title="" count=false mode="auto" saturation=45}}
             <script>
                 (function () {
                     try {
@@ -17,6 +17,17 @@
                         var embed = document.currentScript.previousElementSibling;
                         if (embed && embed.dataset) {
                             embed.dataset.colorScheme = mode;
+                            embed.dataset.accentColor = '#00f2ff';
+                            var urls = window.__npGhostAssetUrls;
+                            if (
+                                urls &&
+                                urls.comments &&
+                                embed.src &&
+                                embed.src.indexOf('comments-ui') !== -1 &&
+                                embed.src !== urls.comments
+                            ) {
+                                embed.src = urls.comments;
+                            }
                         }
                     } catch (e) {}
                 })();
