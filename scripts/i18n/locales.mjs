@@ -38,8 +38,6 @@ export const LOCALES = [
 
 export const DEFAULT_LOCALE = 'en-us';
 
-export const PORTFOLIO_TAG_SLUG = 'hash-portfolio';
-
 export const TRANSLATION_TAG_PREFIX = 'hash-translation-';
 
 const NON_DEFAULT_LOCALES = LOCALES.filter((locale) => locale.code !== DEFAULT_LOCALE);
@@ -47,23 +45,9 @@ const NON_DEFAULT_LOCALES = LOCALES.filter((locale) => locale.code !== DEFAULT_L
 /** Ghost collection/{{#get}} filter: default locale includes untagged posts. */
 export function articlesFilterForLocale(code) {
   if (code === DEFAULT_LOCALE) {
-    const excludeOtherLocales = NON_DEFAULT_LOCALES.map((locale) => `tag:-${locale.tagSlug}`).join(
-      '+',
-    );
-    return `${excludeOtherLocales}+tag:-${PORTFOLIO_TAG_SLUG}`;
+    return NON_DEFAULT_LOCALES.map((locale) => `tag:-${locale.tagSlug}`).join('+');
   }
-  return `tag:${getLocale(code).tagSlug}+tag:-${PORTFOLIO_TAG_SLUG}`;
-}
-
-/** Ghost collection filter for portfolio entries. */
-export function portfolioFilterForLocale(code) {
-  if (code === DEFAULT_LOCALE) {
-    const excludeOtherLocales = NON_DEFAULT_LOCALES.map((locale) => `tag:-${locale.tagSlug}`).join(
-      '+',
-    );
-    return `${excludeOtherLocales}+tag:${PORTFOLIO_TAG_SLUG}`;
-  }
-  return `tag:${getLocale(code).tagSlug}+tag:${PORTFOLIO_TAG_SLUG}`;
+  return `tag:${getLocale(code).tagSlug}`;
 }
 
 /** @param {string} tagSlug */

@@ -165,22 +165,27 @@ The shape language is **Strictly Sharp (0px roundedness)**. Every component shou
 ## Components
 
 ### Buttons
+
 - **Style:** Sharp-edged, high-vibrancy blocks.
 - **Primary:** Background in `neon-teal`, text in `neutral-black`. Apply a `15px` outer glow in `neon-teal`.
 - **Secondary:** Transparent background, `lantern-amber` 1px border. On hover, the border glows and the background fills with a 10% amber tint.
 
 ### Cards
+
 - **Style:** Charcoal glass with a top-weighted gradient.
 - **Accents:** A 2px "status stripe" on the left edge using a tertiary color (Magenta or Amber).
 - **Reflection:** A subtle diagonal "sheen" (light-leak) should occasionally sweep across the card face on hover.
 
 ### Input Fields
+
 - **Style:** Underline-only or full-border sharp rectangles. Use a monospace cursor that blinks with a `neon-teal` glow.
 - **Focus:** The entire input area gains a subtle cyan light-leak background at 5% opacity.
 
 ### Chips & Badges
+
 - **Style:** Sharp, solid-color tags with black `JetBrains Mono` text.
 - **Animation:** Important "System" chips should have a slight "flicker" animation, intermittently dropping opacity to 70% to mimic a failing neon sign.
 
 ### Navigation
+
 - **Top Bar:** Fixed, 100% width, sharp bottom border. Use a "Data Stream" progress bar at the very top that pulses with cyan light as pages load.

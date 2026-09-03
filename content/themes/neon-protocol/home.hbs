@@ -54,7 +54,7 @@
             </header>
             <div class="np-home-feed">
                 {{#match (block "np_lang") "en-us"}}
-                    {{#get "posts" filter="tag:-hash-lang-ja-jp+tag:-hash-lang-pt-br+tag:-hash-lang-es-la+tag:-hash-portfolio" include="tags,authors" limit="4" as |recent|}}
+                    {{#get "posts" filter="tag:-hash-lang-ja-jp+tag:-hash-lang-pt-br+tag:-hash-lang-es-la" include="tags,authors" limit="4" as |recent|}}
                         {{#foreach recent}}
                             {{> "log-card"}}
                         {{else}}
@@ -62,7 +62,7 @@
                         {{/foreach}}
                     {{/get}}
                 {{else match (block "np_lang") "ja-jp"}}
-                    {{#get "posts" filter="tag:hash-lang-ja-jp+tag:-hash-portfolio" include="tags,authors" limit="4" as |recent|}}
+                    {{#get "posts" filter="tag:hash-lang-ja-jp" include="tags,authors" limit="4" as |recent|}}
                         {{#foreach recent}}
                             {{> "log-card"}}
                         {{else}}
@@ -70,7 +70,7 @@
                         {{/foreach}}
                     {{/get}}
                 {{else match (block "np_lang") "pt-br"}}
-                    {{#get "posts" filter="tag:hash-lang-pt-br+tag:-hash-portfolio" include="tags,authors" limit="4" as |recent|}}
+                    {{#get "posts" filter="tag:hash-lang-pt-br" include="tags,authors" limit="4" as |recent|}}
                         {{#foreach recent}}
                             {{> "log-card"}}
                         {{else}}
@@ -78,7 +78,7 @@
                         {{/foreach}}
                     {{/get}}
                 {{else match (block "np_lang") "es-la"}}
-                    {{#get "posts" filter="tag:hash-lang-es-la+tag:-hash-portfolio" include="tags,authors" limit="4" as |recent|}}
+                    {{#get "posts" filter="tag:hash-lang-es-la" include="tags,authors" limit="4" as |recent|}}
                         {{#foreach recent}}
                             {{> "log-card"}}
                         {{else}}
@@ -86,7 +86,7 @@
                         {{/foreach}}
                     {{/get}}
                 {{else}}
-                    {{#get "posts" filter="tag:-hash-lang-ja-jp+tag:-hash-lang-pt-br+tag:-hash-lang-es-la+tag:-hash-portfolio" include="tags,authors" limit="4" as |recent|}}
+                    {{#get "posts" filter="tag:-hash-lang-ja-jp+tag:-hash-lang-pt-br+tag:-hash-lang-es-la" include="tags,authors" limit="4" as |recent|}}
                         {{#foreach recent}}
                             {{> "log-card"}}
                         {{else}}

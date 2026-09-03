@@ -5,22 +5,36 @@
         <h1 class="np-display"><span class="np-page-title"><span class="material-symbols-outlined" aria-hidden="true">layers</span>{{> "np-t" key="PORTFOLIO_TITLE"}}</span></h1>
         <p class="np-meta">{{#if @site.description}}{{@site.description}}{{else}}{{> "np-t" key="PORTFOLIO_SUBTITLE"}}{{/if}}</p>
     </header>
-    <div class="np-filters">
+
+    <div class="np-filters" role="toolbar" aria-label="{{> "np-t" key="FILTER"}}">
         <button class="np-btn np-btn-ghost is-active" type="button" data-np-filter="all">{{> "np-t" key="ALL"}}</button>
-        {{#get "tags" limit="12" include="count.posts" filter="visibility:public" as |archive_tags|}}
-            {{#foreach archive_tags}}
-                <button class="np-chip" type="button" data-np-filter="{{slug}}">{{name}}</button>
-            {{/foreach}}
-        {{/get}}
+        <button class="np-chip" type="button" data-np-filter="adroll">{{> "np-t" key="PORTFOLIO_ADROLL_TITLE"}}</button>
+        <button class="np-chip" type="button" data-np-filter="dexnews">{{> "np-t" key="PORTFOLIO_DEXNEWS_TITLE"}}</button>
+        <button class="np-chip" type="button" data-np-filter="reset-arcade">{{> "np-t" key="PORTFOLIO_RESET_ARCADE_TITLE"}}</button>
+        <button class="np-chip" type="button" data-np-filter="samu-app">{{> "np-t" key="PORTFOLIO_SAMU_APP_TITLE"}}</button>
     </div>
 
-    <div class="np-masonry">
-        {{#foreach posts}}
-            {{> "masonry-item"}}
-        {{else}}
-            <p class="np-empty np-meta">{{> "np-t" key="No posts"}}</p>
-        {{/foreach}}
-    </div>
+    {{> "portfolio-gallery"}}
 
-    {{pagination}}
+    <dialog class="np-lightbox" data-np-lightbox-dialog aria-label="{{> "np-t" key="PORTFOLIO_TITLE"}}">
+        <div class="np-lightbox-backdrop" data-np-lightbox-close tabindex="-1"></div>
+        <div class="np-lightbox-panel np-glass" role="document">
+            <header class="np-lightbox-head">
+                <p class="np-meta np-lightbox-counter" data-np-lightbox-counter></p>
+                <button class="np-icon-btn" type="button" data-np-lightbox-close aria-label="{{> "np-t" key="Close"}}">
+                    <span class="material-symbols-outlined" aria-hidden="true">close</span>
+                </button>
+            </header>
+            <div class="np-lightbox-stage">
+                <button class="np-lightbox-nav np-lightbox-nav--prev" type="button" data-np-lightbox-prev aria-label="{{> "np-t" key="Previous"}}">
+                    <span class="material-symbols-outlined" aria-hidden="true">chevron_left</span>
+                </button>
+                <img class="np-lightbox-image" data-np-lightbox-image alt="" decoding="async">
+                <button class="np-lightbox-nav np-lightbox-nav--next" type="button" data-np-lightbox-next aria-label="{{> "np-t" key="Next"}}">
+                    <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+                </button>
+            </div>
+            <p class="np-meta np-lightbox-caption" data-np-lightbox-caption></p>
+        </div>
+    </dialog>
 </main>

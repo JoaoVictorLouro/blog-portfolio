@@ -88,7 +88,7 @@ If you still have a combined `.env` from before this split, move `GHOST_ADMIN_EM
 
 Members can subscribe to the newsletter and comment on articles with a free account. Ghost native comments are enabled for all members; paid plans are turned off. Ghost Admin still has **Settings → Staff → Invite**; bootstrap never creates a second staff user.
 
-Tag portfolio posts with the internal `#portfolio` tag to show them on `/portfolio/`. Contact form endpoint, GitHub, and social URLs are theme design settings.
+Portfolio is a static image gallery in the theme (`content/themes/neon-protocol/assets/images/portfolio/`). Contact form endpoint, GitHub, and social URLs are theme design settings.
 
 ## CI
 

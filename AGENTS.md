@@ -46,6 +46,7 @@ Site: `http://localhost:2368` (nginx) — Admin: `http://localhost:2368/ghost` �
 - Use Conventional Commits (`feat`, `fix`, `chore`, …)
 - Leave `content/themes/source/renovate.json` alone (vendored theme); repo Renovate config is root `renovate.json`
 - Keep `neon-protocol` as the designed frontend: dark default, light via the sensors toggle, locale routes `/en-us/`, `/ja-jp/`, `/pt-br/`, `/es-la/` (home, articles, portfolio, about)
+- Portfolio is a static theme gallery under `content/themes/neon-protocol/assets/images/portfolio/` (no Ghost posts); edit images + `partials/portfolio-gallery.hbs` to change it
 - Tag every post with exactly one internal language tag (`#lang-en-us`, `#lang-ja-jp`, `#lang-pt-br`, `#lang-es-la`) and optionally one translation group tag (`#translation-{group-id}` shared across locale versions)
 - Run `deno task build:i18n` after editing locale JSON files under `content/themes/neon-protocol/locales/`
 

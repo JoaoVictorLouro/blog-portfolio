@@ -2137,15 +2137,43 @@ html.np-members-open {
   background: color-mix(in srgb, var(--np-lantern-amber) 15%, transparent);
 }
 
+.np-portfolio-project {
+  margin-bottom: 4rem;
+}
+
+.np-portfolio-project[hidden] {
+  display: none;
+}
+
+.np-portfolio-project-head {
+  margin-bottom: 1.5rem;
+  max-width: 42rem;
+}
+
+.np-portfolio-project-head .np-heading {
+  margin-bottom: 0.5rem;
+}
+
+.np-portfolio-project-head .np-body {
+  color: color-mix(in srgb, var(--np-text) 75%, transparent);
+}
+
 .np-masonry {
   column-count: 1;
   column-gap: var(--np-gutter);
 }
 
 .np-masonry-item {
+  position: relative;
   break-inside: avoid;
   margin-bottom: var(--np-gutter);
   display: block;
+  width: 100%;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
   background: var(--np-charcoal);
   border-top: 1px solid var(--np-border-bright);
   border-left: 1px solid var(--np-border-bright);
@@ -2158,19 +2186,28 @@ html.np-members-open {
     border-color 0.3s ease;
 }
 
-.np-masonry-item:hover {
+.np-masonry-item:hover,
+.np-masonry-item:focus-visible {
   transform: translateY(-2px);
   border-color: var(--np-neon-teal);
   box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
+  outline: none;
 }
 
 .np-masonry-item img {
-  width: 100%;
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 60vh;
+  margin-inline: auto;
+  object-fit: contain;
   filter: contrast(1.15) saturate(1.3);
   opacity: 0.85;
 }
 
-.np-masonry-item:hover img {
+.np-masonry-item:hover img,
+.np-masonry-item:focus-visible img {
   opacity: 1;
 }
 
@@ -2179,18 +2216,135 @@ html.np-members-open {
   left: 0;
   right: 0;
   bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
   padding: 1rem;
   background: linear-gradient(to top, var(--np-charcoal), transparent);
   transform: translateY(100%);
   transition: transform 0.3s ease;
+  pointer-events: none;
 }
 
-.np-masonry-item {
-  position: relative;
-}
-
-.np-masonry-item:hover .np-masonry-caption {
+.np-masonry-item:hover .np-masonry-caption,
+.np-masonry-item:focus-visible .np-masonry-caption {
   transform: translateY(0);
+}
+
+.np-lightbox {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: 1rem;
+  border: 0;
+  background: transparent;
+  color: var(--np-text);
+}
+
+.np-lightbox[open] {
+  display: grid;
+  place-items: center;
+}
+
+.np-lightbox::backdrop {
+  background: color-mix(in srgb, var(--np-void) 82%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+.np-lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+}
+
+.np-lightbox-panel {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: min(96vw, 72rem);
+  max-height: min(94vh, 56rem);
+  padding: 1rem 1rem 1.25rem;
+  border: 1px solid var(--np-border-bright);
+}
+
+.np-lightbox-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.np-lightbox-counter {
+  margin: 0;
+  letter-spacing: 0.08em;
+}
+
+.np-lightbox-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 12rem;
+  flex: 1;
+  overflow: hidden;
+}
+
+.np-lightbox-image {
+  display: block;
+  max-width: 100%;
+  max-height: min(78vh, 48rem);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  filter: contrast(1.05) saturate(1.1);
+}
+
+.np-lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid var(--np-border-bright);
+  background: color-mix(in srgb, var(--np-charcoal) 80%, transparent);
+  color: var(--np-text);
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.np-lightbox-nav:hover,
+.np-lightbox-nav:focus-visible {
+  border-color: var(--np-neon-teal);
+  box-shadow: 0 0 16px rgba(0, 242, 255, 0.25);
+  outline: none;
+}
+
+.np-lightbox-nav--prev {
+  left: 0.5rem;
+}
+
+.np-lightbox-nav--next {
+  right: 0.5rem;
+}
+
+.np-lightbox-caption {
+  margin: 0;
+  text-align: center;
+}
+
+html.np-lightbox-open {
+  overflow: hidden;
 }
 
 .np-empty,
@@ -2755,6 +2909,10 @@ html.np-tab-hidden .np-fx-layer::after {
 
   .np-masonry {
     column-count: 2;
+  }
+
+  .np-masonry-item img {
+    max-height: 35vh;
   }
 
   .np-home-feed {

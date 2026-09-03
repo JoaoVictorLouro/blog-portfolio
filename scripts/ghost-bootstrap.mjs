@@ -247,41 +247,6 @@ async function activateTheme(cookie) {
   );
 }
 
-async function ensurePortfolioTag(cookie) {
-  const { response, data } = await request(
-    '/ghost/api/admin/tags/?filter=slug:hash-portfolio&limit=1',
-    {
-      cookie,
-    },
-  );
-  if (!response.ok) {
-    fail(`Failed to query tags (${response.status}): ${describeError(data)}`);
-  }
-  if (Array.isArray(data?.tags) && data.tags.length > 0) {
-    return;
-  }
-
-  const created = await request('/ghost/api/admin/tags/', {
-    method: 'POST',
-    cookie,
-    body: {
-      tags: [
-        {
-          name: '#portfolio',
-          slug: 'hash-portfolio',
-          description: 'Internal tag for the archive / portfolio collection',
-        },
-      ],
-    },
-  });
-  if (!created.response.ok) {
-    fail(
-      `Failed to create #portfolio tag (${created.response.status}): ${describeError(created.data)}`,
-    );
-  }
-  console.log('Created internal tag #portfolio');
-}
-
 const ABOUT_PAGES = {
   'en-us': {
     title: 'System Architect',
@@ -757,7 +722,6 @@ await applyFreeMemberSettings(cookie);
 await activateTheme(cookie);
 await seedSiteTitle(cookie);
 await seedBrandTitleHtml(cookie);
-await ensurePortfolioTag(cookie);
 await ensureLanguageTags(cookie);
 await ensureDefaultLanguageOnPosts(cookie);
 await ensureAboutPages(cookie);

@@ -492,6 +492,116 @@
     });
   }
 
+  function initPortfolioLightbox() {
+    const dialog = document.querySelector('[data-np-lightbox-dialog]');
+    if (!dialog || typeof dialog.showModal !== 'function') {
+      return;
+    }
+
+    const image = dialog.querySelector('[data-np-lightbox-image]');
+    const counter = dialog.querySelector('[data-np-lightbox-counter]');
+    const caption = dialog.querySelector('[data-np-lightbox-caption]');
+    if (!image) {
+      return;
+    }
+
+    let currentIndex = 0;
+
+    function visibleItems() {
+      return Array.from(document.querySelectorAll('[data-np-lightbox]')).filter((item) => {
+        if (item.hidden) {
+          return false;
+        }
+        const project = item.closest('[data-np-tags]');
+        return !project || !project.hidden;
+      });
+    }
+
+    function showAt(index) {
+      const items = visibleItems();
+      if (items.length === 0) {
+        return;
+      }
+      currentIndex = ((index % items.length) + items.length) % items.length;
+      const item = items[currentIndex];
+      const src = item.getAttribute('data-np-src') || '';
+      const label = item.getAttribute('data-np-caption') || item.querySelector('img')?.alt || '';
+      image.src = src;
+      image.alt = label;
+      if (caption) {
+        caption.textContent = label;
+      }
+      if (counter) {
+        counter.textContent = `${String(currentIndex + 1).padStart(2, '0')} / ${String(items.length).padStart(2, '0')}`;
+      }
+    }
+
+    function openFrom(trigger) {
+      const items = visibleItems();
+      const index = items.indexOf(trigger);
+      if (index < 0) {
+        return;
+      }
+      showAt(index);
+      document.documentElement.classList.add('np-lightbox-open');
+      dialog.showModal();
+    }
+
+    function closeLightbox() {
+      if (!dialog.open) {
+        return;
+      }
+      dialog.close();
+    }
+
+    function handleLightboxClick(event) {
+      const trigger = event.target.closest('[data-np-lightbox]');
+      if (trigger && dialog.contains(trigger) === false) {
+        event.preventDefault();
+        openFrom(trigger);
+        return;
+      }
+      if (event.target.closest('[data-np-lightbox-close]')) {
+        closeLightbox();
+        return;
+      }
+      if (event.target.closest('[data-np-lightbox-prev]')) {
+        showAt(currentIndex - 1);
+        return;
+      }
+      if (event.target.closest('[data-np-lightbox-next]')) {
+        showAt(currentIndex + 1);
+      }
+    }
+
+    function handleLightboxKeydown(event) {
+      if (!dialog.open) {
+        return;
+      }
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        showAt(currentIndex - 1);
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        showAt(currentIndex + 1);
+      }
+    }
+
+    document.addEventListener('click', handleLightboxClick);
+    document.addEventListener('keydown', handleLightboxKeydown);
+    dialog.addEventListener('close', () => {
+      document.documentElement.classList.remove('np-lightbox-open');
+      image.removeAttribute('src');
+      image.alt = '';
+      if (caption) {
+        caption.textContent = '';
+      }
+      if (counter) {
+        counter.textContent = '';
+      }
+    });
+  }
+
   function handleMailto(event) {
     const form = event.target.closest('[data-np-mailto]');
     if (!form || event.target !== form) {
@@ -821,6 +931,8 @@
     handlePortfolioFilter(event);
     handlePageGlitchNav(event);
   });
+
+  initPortfolioLightbox();
 
   document.addEventListener('submit', handleMailto);
 
