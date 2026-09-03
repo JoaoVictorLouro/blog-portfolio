@@ -26,6 +26,33 @@
     {{#match (block "np_lang") "en-us"}}ABOUT{{else match (block "np_lang") "ja-jp"}}概要{{else match (block "np_lang") "pt-br"}}SOBRE{{else match (block "np_lang") "es-la"}}ACERCA{{else}}ABOUT{{/match}}
   {{/is}}
 {{/match}}
+{{#match key "ABOUT_MY_WORK_LIVE"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}対応可能{{else has tag="#lang-pt-br"}}DISPONÍVEL{{else has tag="#lang-es-la"}}DISPONIBLE{{else}}AVAILABLE{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}AVAILABLE{{else match (block "np_lang") "ja-jp"}}対応可能{{else match (block "np_lang") "pt-br"}}DISPONÍVEL{{else match (block "np_lang") "es-la"}}DISPONIBLE{{else}}AVAILABLE{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "ABOUT_MY_WORK_SUBTITLE"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}コンサルティング接続 // 能力マニフェスト{{else has tag="#lang-pt-br"}}UPLINK DE CONSULTORIA // MANIFESTO DE CAPACIDADES{{else has tag="#lang-es-la"}}ENLACE DE CONSULTORÍA // MANIFIESTO DE CAPACIDADES{{else}}CONSULTING UPLINK // CAPABILITY MANIFEST{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}CONSULTING UPLINK // CAPABILITY MANIFEST{{else match (block "np_lang") "ja-jp"}}コンサルティング接続 // 能力マニフェスト{{else match (block "np_lang") "pt-br"}}UPLINK DE CONSULTORIA // MANIFESTO DE CAPACIDADES{{else match (block "np_lang") "es-la"}}ENLACE DE CONSULTORÍA // MANIFIESTO DE CAPACIDADES{{else}}CONSULTING UPLINK // CAPABILITY MANIFEST{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "ABOUT_MY_WORK_TITLE"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}仕事について{{else has tag="#lang-pt-br"}}SOBRE_MEU_TRABALHO{{else has tag="#lang-es-la"}}SOBRE_MI_TRABAJO{{else}}ABOUT_MY_WORK{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}ABOUT_MY_WORK{{else match (block "np_lang") "ja-jp"}}仕事について{{else match (block "np_lang") "pt-br"}}SOBRE_MEU_TRABALHO{{else match (block "np_lang") "es-la"}}SOBRE_MI_TRABAJO{{else}}ABOUT_MY_WORK{{/match}}
+  {{/is}}
+{{/match}}
 {{#match key "ABOUT_STATUS"}}
   {{#is "post"}}
     {{#post}}
@@ -825,6 +852,348 @@
     {{/post}}
   {{else}}
     {{#match (block "np_lang") "en-us"}}USER_PROFILE{{else match (block "np_lang") "ja-jp"}}ユーザープロフィール{{else match (block "np_lang") "pt-br"}}PERFIL_DO_USUÁRIO{{else match (block "np_lang") "es-la"}}PERFIL_DE_USUARIO{{else}}USER_PROFILE{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_CERTS_LIVE"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}認証OK{{else has tag="#lang-pt-br"}}AUTH_OK{{else has tag="#lang-es-la"}}AUTH_OK{{else}}AUTH_OK{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}AUTH_OK{{else match (block "np_lang") "ja-jp"}}認証OK{{else match (block "np_lang") "pt-br"}}AUTH_OK{{else match (block "np_lang") "es-la"}}AUTH_OK{{else}}AUTH_OK{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_CERTS_SUBTITLE"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}資格スキャン // 検証済みクリアランス{{else has tag="#lang-pt-br"}}SCAN_DE_CREDENCIAIS // CLEARANCE_VERIFICADA{{else has tag="#lang-es-la"}}SCAN_DE_CREDENCIALES // CLEARANCE_VERIFICADA{{else}}CREDENTIAL_SCAN // VERIFIED_CLEARANCE{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}CREDENTIAL_SCAN // VERIFIED_CLEARANCE{{else match (block "np_lang") "ja-jp"}}資格スキャン // 検証済みクリアランス{{else match (block "np_lang") "pt-br"}}SCAN_DE_CREDENCIAIS // CLEARANCE_VERIFICADA{{else match (block "np_lang") "es-la"}}SCAN_DE_CREDENCIALES // CLEARANCE_VERIFICADA{{else}}CREDENTIAL_SCAN // VERIFIED_CLEARANCE{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_CERTS_TITLE"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}CERTIFIED_QUALITY{{else has tag="#lang-pt-br"}}CERTIFIED_QUALITY{{else has tag="#lang-es-la"}}CERTIFIED_QUALITY{{else}}CERTIFIED_QUALITY{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}CERTIFIED_QUALITY{{else match (block "np_lang") "ja-jp"}}CERTIFIED_QUALITY{{else match (block "np_lang") "pt-br"}}CERTIFIED_QUALITY{{else match (block "np_lang") "es-la"}}CERTIFIED_QUALITY{{else}}CERTIFIED_QUALITY{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_CERT_DEGREE_DESC"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}ソフトウェアエンジニアリング学士号。{{else has tag="#lang-pt-br"}}Bacharelado em Engenharia de Software.{{else has tag="#lang-es-la"}}Licenciatura en Ingeniería de Software.{{else}}Bachelor's degree in Software Engineering.{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}Bachelor's degree in Software Engineering.{{else match (block "np_lang") "ja-jp"}}ソフトウェアエンジニアリング学士号。{{else match (block "np_lang") "pt-br"}}Bacharelado em Engenharia de Software.{{else match (block "np_lang") "es-la"}}Licenciatura en Ingeniería de Software.{{else}}Bachelor's degree in Software Engineering.{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_CERT_DEGREE_TITLE"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}ソフトウェアエンジニアリング{{else has tag="#lang-pt-br"}}Engenharia de Software{{else has tag="#lang-es-la"}}Ingeniería de Software{{else}}Software Engineering{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}Software Engineering{{else match (block "np_lang") "ja-jp"}}ソフトウェアエンジニアリング{{else match (block "np_lang") "pt-br"}}Engenharia de Software{{else match (block "np_lang") "es-la"}}Ingeniería de Software{{else}}Software Engineering{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_CERT_GOOGLE_DESC"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}プロジェクト管理コース — ライフサイクル、手法、ドキュメント、ソフトスキル。{{else has tag="#lang-pt-br"}}Curso de gestão de projetos — ciclo de vida, metodologias, documentação e soft skills.{{else has tag="#lang-es-la"}}Curso de gestión de proyectos — ciclo de vida, metodologías, documentación y soft skills.{{else}}Project management course — complete lifecycle, methodologies, documentation and soft skills.{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}Project management course — complete lifecycle, methodologies, documentation and soft skills.{{else match (block "np_lang") "ja-jp"}}プロジェクト管理コース — ライフサイクル、手法、ドキュメント、ソフトスキル。{{else match (block "np_lang") "pt-br"}}Curso de gestão de projetos — ciclo de vida, metodologias, documentação e soft skills.{{else match (block "np_lang") "es-la"}}Curso de gestión de proyectos — ciclo de vida, metodologías, documentación y soft skills.{{else}}Project management course — complete lifecycle, methodologies, documentation and soft skills.{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_CERT_GOOGLE_TITLE"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}Google Project Management{{else has tag="#lang-pt-br"}}Google Project Management{{else has tag="#lang-es-la"}}Google Project Management{{else}}Google Project Management{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}Google Project Management{{else match (block "np_lang") "ja-jp"}}Google Project Management{{else match (block "np_lang") "pt-br"}}Google Project Management{{else match (block "np_lang") "es-la"}}Google Project Management{{else}}Google Project Management{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_CERT_IBM_DESC"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}プロジェクト管理コース — 需要の高いスキルと実践経験。{{else has tag="#lang-pt-br"}}Curso de gestão de projetos — skills em demanda e experiência prática.{{else has tag="#lang-es-la"}}Curso de gestión de proyectos — skills demandadas y experiencia práctica.{{else}}Project management course — in-demand skills and hands-on experience.{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}Project management course — in-demand skills and hands-on experience.{{else match (block "np_lang") "ja-jp"}}プロジェクト管理コース — 需要の高いスキルと実践経験。{{else match (block "np_lang") "pt-br"}}Curso de gestão de projetos — skills em demanda e experiência prática.{{else match (block "np_lang") "es-la"}}Curso de gestión de proyectos — skills demandadas y experiencia práctica.{{else}}Project management course — in-demand skills and hands-on experience.{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_CERT_IBM_TITLE"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}IBM Project Management{{else has tag="#lang-pt-br"}}IBM Project Management{{else has tag="#lang-es-la"}}IBM Project Management{{else}}IBM Project Management{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}IBM Project Management{{else match (block "np_lang") "ja-jp"}}IBM Project Management{{else match (block "np_lang") "pt-br"}}IBM Project Management{{else match (block "np_lang") "es-la"}}IBM Project Management{{else}}IBM Project Management{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_CERT_SCRUM_DESC"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}アジャイル手法とScrum実践の認定。{{else has tag="#lang-pt-br"}}Certificado em metodologias ágeis e práticas Scrum para entrega iterativa.{{else has tag="#lang-es-la"}}Certificado en metodologías ágiles y prácticas Scrum para entrega iterativa.{{else}}Certified in agile methodologies and Scrum practices for iterative delivery.{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}Certified in agile methodologies and Scrum practices for iterative delivery.{{else match (block "np_lang") "ja-jp"}}アジャイル手法とScrum実践の認定。{{else match (block "np_lang") "pt-br"}}Certificado em metodologias ágeis e práticas Scrum para entrega iterativa.{{else match (block "np_lang") "es-la"}}Certificado en metodologías ágiles y prácticas Scrum para entrega iterativa.{{else}}Certified in agile methodologies and Scrum practices for iterative delivery.{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_CERT_SCRUM_TITLE"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}アジャイル / Scrum認定{{else has tag="#lang-pt-br"}}Certificação Agile / Scrum{{else has tag="#lang-es-la"}}Certificación Agile / Scrum{{else}}Agile / Scrum certification{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}Agile / Scrum certification{{else match (block "np_lang") "ja-jp"}}アジャイル / Scrum認定{{else match (block "np_lang") "pt-br"}}Certificação Agile / Scrum{{else match (block "np_lang") "es-la"}}Certificación Agile / Scrum{{else}}Agile / Scrum certification{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_LEAD_HEADLINE"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}10年以上、スケールする高品質ソフトウェアを届けてきました{{else has tag="#lang-pt-br"}}10+ anos entregando software de qualidade que escala{{else has tag="#lang-es-la"}}10+ años entregando software de calidad que escala{{else}}10+ years shipping quality software that scales{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}10+ years shipping quality software that scales{{else match (block "np_lang") "ja-jp"}}10年以上、スケールする高品質ソフトウェアを届けてきました{{else match (block "np_lang") "pt-br"}}10+ anos entregando software de qualidade que escala{{else match (block "np_lang") "es-la"}}10+ años entregando software de calidad que escala{{else}}10+ years shipping quality software that scales{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_LEAD_HEADLINE_REST"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}年以上、スケールする高品質ソフトウェアを届けてきました{{else has tag="#lang-pt-br"}}anos entregando software de qualidade que escala{{else has tag="#lang-es-la"}}años entregando software de calidad que escala{{else}}years shipping quality software that scales{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}years shipping quality software that scales{{else match (block "np_lang") "ja-jp"}}年以上、スケールする高品質ソフトウェアを届けてきました{{else match (block "np_lang") "pt-br"}}anos entregando software de qualidade que escala{{else match (block "np_lang") "es-la"}}años entregando software de calidad que escala{{else}}years shipping quality software that scales{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_LEAD_LED_LABEL"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}経験指標 // アップリンク{{else has tag="#lang-pt-br"}}MÉTRICAS_DE_EXPERIÊNCIA // UPLINK{{else has tag="#lang-es-la"}}MÉTRICAS_DE_EXPERIENCIA // UPLINK{{else}}EXPERIENCE_METRICS // UPLINK{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}EXPERIENCE_METRICS // UPLINK{{else match (block "np_lang") "ja-jp"}}経験指標 // アップリンク{{else match (block "np_lang") "pt-br"}}MÉTRICAS_DE_EXPERIÊNCIA // UPLINK{{else match (block "np_lang") "es-la"}}MÉTRICAS_DE_EXPERIENCIA // UPLINK{{else}}EXPERIENCE_METRICS // UPLINK{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_LEAD_LED_STATUS"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}カウント稼働中{{else has tag="#lang-pt-br"}}COUNT_ATIVO{{else has tag="#lang-es-la"}}COUNT_ACTIVO{{else}}COUNT_ACTIVE{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}COUNT_ACTIVE{{else match (block "np_lang") "ja-jp"}}カウント稼働中{{else match (block "np_lang") "pt-br"}}COUNT_ATIVO{{else match (block "np_lang") "es-la"}}COUNT_ACTIVO{{else}}COUNT_ACTIVE{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_LEAD_SUBLINE"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}ソフトウェアエンジニアリングのコンサルティングとフリーランス{{else has tag="#lang-pt-br"}}Consultoria e freelancing em Engenharia de Software{{else has tag="#lang-es-la"}}Consultoría y freelancing en Ingeniería de Software{{else}}Software Engineering consulting and freelancing{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}Software Engineering consulting and freelancing{{else match (block "np_lang") "ja-jp"}}ソフトウェアエンジニアリングのコンサルティングとフリーランス{{else match (block "np_lang") "pt-br"}}Consultoria e freelancing em Engenharia de Software{{else match (block "np_lang") "es-la"}}Consultoría y freelancing en Ingeniería de Software{{else}}Software Engineering consulting and freelancing{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_PROJECTS_HEADLINE"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}40以上のソフトウェアプロジェクトを納品{{else has tag="#lang-pt-br"}}40+ projetos de software entregues{{else has tag="#lang-es-la"}}40+ proyectos de software entregados{{else}}40+ Software projects delivered{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}40+ Software projects delivered{{else match (block "np_lang") "ja-jp"}}40以上のソフトウェアプロジェクトを納品{{else match (block "np_lang") "pt-br"}}40+ projetos de software entregues{{else match (block "np_lang") "es-la"}}40+ proyectos de software entregados{{else}}40+ Software projects delivered{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_PROJECTS_HEADLINE_REST"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}ソフトウェアプロジェクトを納品{{else has tag="#lang-pt-br"}}projetos de software entregues{{else has tag="#lang-es-la"}}proyectos de software entregados{{else}}Software projects delivered{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}Software projects delivered{{else match (block "np_lang") "ja-jp"}}ソフトウェアプロジェクトを納品{{else match (block "np_lang") "pt-br"}}projetos de software entregues{{else match (block "np_lang") "es-la"}}proyectos de software entregados{{else}}Software projects delivered{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_STACKS_LIVE"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}マトリクス稼働中{{else has tag="#lang-pt-br"}}MATRIZ_ONLINE{{else has tag="#lang-es-la"}}MATRIZ_ONLINE{{else}}MATRIX_ONLINE{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}MATRIX_ONLINE{{else match (block "np_lang") "ja-jp"}}マトリクス稼働中{{else match (block "np_lang") "pt-br"}}MATRIZ_ONLINE{{else match (block "np_lang") "es-la"}}MATRIZ_ONLINE{{else}}MATRIX_ONLINE{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_STACKS_SUBTITLE"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}技術マトリクス // 選ぶか委任するか{{else has tag="#lang-pt-br"}}MATRIZ_TEC // ESCOLHA_OU_DELEGUE{{else has tag="#lang-es-la"}}MATRIZ_TECH // ELIGE_O_DELEGA{{else}}TECH_MATRIX // PICK_OR_DELEGATE{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}TECH_MATRIX // PICK_OR_DELEGATE{{else match (block "np_lang") "ja-jp"}}技術マトリクス // 選ぶか委任するか{{else match (block "np_lang") "pt-br"}}MATRIZ_TEC // ESCOLHA_OU_DELEGUE{{else match (block "np_lang") "es-la"}}MATRIZ_TECH // ELIGE_O_DELEGA{{else}}TECH_MATRIX // PICK_OR_DELEGATE{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_STACKS_TITLE"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}STACK_COVERAGE{{else has tag="#lang-pt-br"}}STACK_COVERAGE{{else has tag="#lang-es-la"}}STACK_COVERAGE{{else}}STACK_COVERAGE{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}STACK_COVERAGE{{else match (block "np_lang") "ja-jp"}}STACK_COVERAGE{{else match (block "np_lang") "pt-br"}}STACK_COVERAGE{{else match (block "np_lang") "es-la"}}STACK_COVERAGE{{else}}STACK_COVERAGE{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_STACK_AI"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}AI{{else has tag="#lang-pt-br"}}AI{{else has tag="#lang-es-la"}}AI{{else}}AI{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}AI{{else match (block "np_lang") "ja-jp"}}AI{{else match (block "np_lang") "pt-br"}}AI{{else match (block "np_lang") "es-la"}}AI{{else}}AI{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_STACK_BACKEND"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}バックエンド{{else has tag="#lang-pt-br"}}Backend{{else has tag="#lang-es-la"}}Backend{{else}}Backend{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}Backend{{else match (block "np_lang") "ja-jp"}}バックエンド{{else match (block "np_lang") "pt-br"}}Backend{{else match (block "np_lang") "es-la"}}Backend{{else}}Backend{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_STACK_CLOUD"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}クラウド{{else has tag="#lang-pt-br"}}Cloud{{else has tag="#lang-es-la"}}Cloud{{else}}Cloud{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}Cloud{{else match (block "np_lang") "ja-jp"}}クラウド{{else match (block "np_lang") "pt-br"}}Cloud{{else match (block "np_lang") "es-la"}}Cloud{{else}}Cloud{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_STACK_DEVOPS"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}DevOps{{else has tag="#lang-pt-br"}}DevOps{{else has tag="#lang-es-la"}}DevOps{{else}}DevOps{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}DevOps{{else match (block "np_lang") "ja-jp"}}DevOps{{else match (block "np_lang") "pt-br"}}DevOps{{else match (block "np_lang") "es-la"}}DevOps{{else}}DevOps{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_STACK_FRONTEND"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}フロントエンド{{else has tag="#lang-pt-br"}}Frontend{{else has tag="#lang-es-la"}}Frontend{{else}}Frontend{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}Frontend{{else match (block "np_lang") "ja-jp"}}フロントエンド{{else match (block "np_lang") "pt-br"}}Frontend{{else match (block "np_lang") "es-la"}}Frontend{{else}}Frontend{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_STACK_VIRT"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}仮想化{{else has tag="#lang-pt-br"}}Virtualização{{else has tag="#lang-es-la"}}Virtualización{{else}}Virtualization{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}Virtualization{{else match (block "np_lang") "ja-jp"}}仮想化{{else match (block "np_lang") "pt-br"}}Virtualização{{else match (block "np_lang") "es-la"}}Virtualización{{else}}Virtualization{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_VALUE_ACCOUNTING_DESC"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}時間単位またはプロジェクト単位の支払い。{{else has tag="#lang-pt-br"}}Pague por hora de trabalho ou por projeto.{{else has tag="#lang-es-la"}}Paga por hora de trabajo o por proyecto.{{else}}Pay per hour of work or per project.{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}Pay per hour of work or per project.{{else match (block "np_lang") "ja-jp"}}時間単位またはプロジェクト単位の支払い。{{else match (block "np_lang") "pt-br"}}Pague por hora de trabalho ou por projeto.{{else match (block "np_lang") "es-la"}}Paga por hora de trabajo o por proyecto.{{else}}Pay per hour of work or per project.{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_VALUE_ACCOUNTING_TITLE"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}会計{{else has tag="#lang-pt-br"}}Contabilidade{{else has tag="#lang-es-la"}}Contabilidad{{else}}Accounting{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}Accounting{{else match (block "np_lang") "ja-jp"}}会計{{else match (block "np_lang") "pt-br"}}Contabilidade{{else match (block "np_lang") "es-la"}}Contabilidad{{else}}Accounting{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_VALUE_LIVE"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}受付中{{else has tag="#lang-pt-br"}}OFERTA_ABERTA{{else has tag="#lang-es-la"}}OFERTA_ABIERTA{{else}}OPEN_OFFER{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}OPEN_OFFER{{else match (block "np_lang") "ja-jp"}}受付中{{else match (block "np_lang") "pt-br"}}OFERTA_ABERTA{{else match (block "np_lang") "es-la"}}OFERTA_ABIERTA{{else}}OPEN_OFFER{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_VALUE_PAYMENT_DESC"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}クレジットカード、PayPal、BTCでも支払い可能。{{else has tag="#lang-pt-br"}}Pague com cartão de crédito, PayPal ou até BTC.{{else has tag="#lang-es-la"}}Paga con tarjeta de crédito, PayPal o incluso BTC.{{else}}Pay with credit card, PayPal, or even BTC.{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}Pay with credit card, PayPal, or even BTC.{{else match (block "np_lang") "ja-jp"}}クレジットカード、PayPal、BTCでも支払い可能。{{else match (block "np_lang") "pt-br"}}Pague com cartão de crédito, PayPal ou até BTC.{{else match (block "np_lang") "es-la"}}Paga con tarjeta de crédito, PayPal o incluso BTC.{{else}}Pay with credit card, PayPal, or even BTC.{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_VALUE_PAYMENT_TITLE"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}支払い{{else has tag="#lang-pt-br"}}Pagamento{{else has tag="#lang-es-la"}}Pago{{else}}Payment{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}Payment{{else match (block "np_lang") "ja-jp"}}支払い{{else match (block "np_lang") "pt-br"}}Pagamento{{else match (block "np_lang") "es-la"}}Pago{{else}}Payment{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_VALUE_PROGRESS_DESC"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}専用プロジェクトトラッカーで進捗を追跡（またはお持ちのツールを利用）。{{else has tag="#lang-pt-br"}}Acompanhe o progresso com meu rastreador de projetos (ou traga suas próprias ferramentas).{{else has tag="#lang-es-la"}}Sigue el progreso con mi rastreador de proyectos (o trae tus propias herramientas).{{else}}Track progress with my project tracker (or bring your own tools).{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}Track progress with my project tracker (or bring your own tools).{{else match (block "np_lang") "ja-jp"}}専用プロジェクトトラッカーで進捗を追跡（またはお持ちのツールを利用）。{{else match (block "np_lang") "pt-br"}}Acompanhe o progresso com meu rastreador de projetos (ou traga suas próprias ferramentas).{{else match (block "np_lang") "es-la"}}Sigue el progreso con mi rastreador de proyectos (o trae tus propias herramientas).{{else}}Track progress with my project tracker (or bring your own tools).{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_VALUE_PROGRESS_TITLE"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}進捗追跡{{else has tag="#lang-pt-br"}}Rastreamento de progresso{{else has tag="#lang-es-la"}}Seguimiento de progreso{{else}}Progress tracking{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}Progress tracking{{else match (block "np_lang") "ja-jp"}}進捗追跡{{else match (block "np_lang") "pt-br"}}Rastreamento de progresso{{else match (block "np_lang") "es-la"}}Seguimiento de progreso{{else}}Progress tracking{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_VALUE_SUBTITLE"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}契約条件 // 最終アップリンク{{else has tag="#lang-pt-br"}}TERMOS_DE_ENGAJAMENTO // UPLINK_FINAL{{else has tag="#lang-es-la"}}TERMINOS_DE_ENGAGEMENT // UPLINK_FINAL{{else}}ENGAGEMENT_TERMS // FINAL_UPLINK{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}ENGAGEMENT_TERMS // FINAL_UPLINK{{else match (block "np_lang") "ja-jp"}}契約条件 // 最終アップリンク{{else match (block "np_lang") "pt-br"}}TERMOS_DE_ENGAJAMENTO // UPLINK_FINAL{{else match (block "np_lang") "es-la"}}TERMINOS_DE_ENGAGEMENT // UPLINK_FINAL{{else}}ENGAGEMENT_TERMS // FINAL_UPLINK{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_VALUE_SUPPORT_DESC"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}プレミアムサポートとオンコール対応が可能です。{{else has tag="#lang-pt-br"}}Suporte premium e deveres on-call disponíveis.{{else has tag="#lang-es-la"}}Soporte premium y deberes on-call disponibles.{{else}}Premium support and on-call duties are available.{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}Premium support and on-call duties are available.{{else match (block "np_lang") "ja-jp"}}プレミアムサポートとオンコール対応が可能です。{{else match (block "np_lang") "pt-br"}}Suporte premium e deveres on-call disponíveis.{{else match (block "np_lang") "es-la"}}Soporte premium y deberes on-call disponibles.{{else}}Premium support and on-call duties are available.{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_VALUE_SUPPORT_TITLE"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}サポート{{else has tag="#lang-pt-br"}}Suporte{{else has tag="#lang-es-la"}}Soporte{{else}}Support{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}Support{{else match (block "np_lang") "ja-jp"}}サポート{{else match (block "np_lang") "pt-br"}}Suporte{{else match (block "np_lang") "es-la"}}Soporte{{else}}Support{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "WORK_VALUE_TITLE"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}STILL_NOT_CONVINCED{{else has tag="#lang-pt-br"}}STILL_NOT_CONVINCED{{else has tag="#lang-es-la"}}STILL_NOT_CONVINCED{{else}}STILL_NOT_CONVINCED{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}STILL_NOT_CONVINCED{{else match (block "np_lang") "ja-jp"}}STILL_NOT_CONVINCED{{else match (block "np_lang") "pt-br"}}STILL_NOT_CONVINCED{{else match (block "np_lang") "es-la"}}STILL_NOT_CONVINCED{{else}}STILL_NOT_CONVINCED{{/match}}
   {{/is}}
 {{/match}}
 {{#match key "YOUTUBE_LIVE"}}

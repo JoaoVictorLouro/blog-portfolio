@@ -389,7 +389,7 @@
   }
 
   const FX_VISIBILITY_SELECTOR =
-    '.np-hero, .np-article-hero, .np-map, .np-live, .np-subscribe, .kg-embed-card';
+    '.np-hero, .np-article-hero, .np-map, .np-live, .np-subscribe, .kg-embed-card, .np-work-chips, .np-work-certs';
 
   function observeFxTargets(observer) {
     document.querySelectorAll(FX_VISIBILITY_SELECTOR).forEach((el) => {
@@ -1492,6 +1492,76 @@
       });
   }
 
+  function initLedCounter() {
+    const roots = document.querySelectorAll('[data-np-led-counter]');
+    if (!roots.length) {
+      return;
+    }
+
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    roots.forEach((root) => {
+      const digits = root.querySelectorAll('[data-np-led-digit]');
+      if (digits.length < 2) {
+        return;
+      }
+
+      const target = Math.min(
+        99,
+        Math.max(0, parseInt(root.dataset.npLedTarget || '10', 10) || 10),
+      );
+      const tens = Math.floor(target / 10);
+      const ones = target % 10;
+
+      const setDigits = (value) => {
+        const v = Math.min(99, Math.max(0, value));
+        digits[0].textContent = String(Math.floor(v / 10));
+        digits[1].textContent = String(v % 10);
+      };
+
+      if (prefersReduced) {
+        setDigits(target);
+        return;
+      }
+
+      const duration = 1400;
+      const start = performance.now();
+
+      const tick = (now) => {
+        const progress = Math.min(1, (now - start) / duration);
+        const eased = 1 - (1 - progress) ** 3;
+        setDigits(Math.round(eased * target));
+        if (progress < 1) {
+          requestAnimationFrame(tick);
+        } else {
+          digits[0].textContent = String(tens);
+          digits[1].textContent = String(ones);
+        }
+      };
+
+      setDigits(0);
+      requestAnimationFrame(tick);
+    });
+  }
+
+  function initWorkChipPulse() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+    document.querySelectorAll('.np-work-chips .np-chip').forEach((chip) => {
+      chip.style.setProperty('--np-chip-delay', `${Math.random() * 3}s`);
+    });
+  }
+
+  function initWorkCertTilt() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+    document.querySelectorAll('.np-work-cert').forEach((card) => {
+      card.style.setProperty('--np-cert-tilt-delay', `${Math.random() * 8}s`);
+    });
+  }
+
   function boot() {
     setTheme(currentTheme());
     initDeferredGhostScripts();
@@ -1509,6 +1579,9 @@
     initTranslationSwitcher();
     initNewsletterLocale();
     initYouTubeFeed();
+    initLedCounter();
+    initWorkChipPulse();
+    initWorkCertTilt();
     initServiceWorker();
   }
 
