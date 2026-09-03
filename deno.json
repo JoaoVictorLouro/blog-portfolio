@@ -1,13 +1,13 @@
 {
   "tasks": {
-    "format": "deno run -A npm:prettier@3.9.6 --write .",
-    "format:check": "deno run -A npm:prettier@3.9.6 --check .",
+    "format": "NPM_CONFIG_REGISTRY=https://registry.npmjs.org/ deno run -A npm:prettier@3.9.6 --write .",
+    "format:check": "NPM_CONFIG_REGISTRY=https://registry.npmjs.org/ deno run -A npm:prettier@3.9.6 --check .",
     "build:icons": "deno run -A scripts/build-material-symbols-subset.mjs",
-    "build:pwa-icons": "deno run -A scripts/build-pwa-icons.mjs",
+    "build:pwa-icons": "NPM_CONFIG_REGISTRY=https://registry.npmjs.org/ deno run -A scripts/build-pwa-icons.mjs",
     "build:pwa-manifests": "deno run -A scripts/build-pwa-manifests.mjs",
     "build:i18n": "deno run -A scripts/build-theme-i18n.mjs",
     "sync:ghost-assets": "deno run -A scripts/sync-ghost-cdn-assets.mjs",
-    "lint": "docker run --rm -v \"$PWD:/work\" -w /work node:22-bookworm-slim npx --yes gscan@6.4.2 content/themes/neon-protocol --verbose",
+    "lint": "docker run --rm -e NPM_CONFIG_REGISTRY=https://registry.npmjs.org/ -v \"$PWD:/work\" -w /work node:22-bookworm-slim npx --yes gscan@6.4.2 content/themes/neon-protocol --verbose",
     "test:content-api": "deno test -A content-api/",
     "content-api:run": "deno run -A content-api/main.ts",
     "content-api:refresh-once": "deno run -A content-api/main.ts --once",

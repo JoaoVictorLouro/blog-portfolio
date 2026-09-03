@@ -8,6 +8,7 @@ file_path=$(
 
 root=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
 cd "$root"
+export NPM_CONFIG_REGISTRY="${NPM_CONFIG_REGISTRY:-https://registry.npmjs.org/}"
 
 if [[ -n "${file_path:-}" && -f "$file_path" ]]; then
   if ! deno run -A npm:prettier@3.9.6 --write "$file_path" >/dev/null 2>&1; then
