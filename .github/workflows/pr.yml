@@ -37,3 +37,31 @@ jobs:
         with:
           deno-version: v2.x
       - run: deno task test
+
+  build-ghost:
+    name: Build Ghost image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./Dockerfile
+          push: false
+          cache-from: type=gha,scope=blog-portfolio
+          cache-to: type=gha,mode=max,scope=blog-portfolio
+
+  build-content-api:
+    name: Build Content API image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./content-api/Dockerfile
+          push: false
+          cache-from: type=gha,scope=blog-portfolio-content-api
+          cache-to: type=gha,mode=max,scope=blog-portfolio-content-api
