@@ -1759,6 +1759,7 @@
     }
 
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const duration = 1400;
 
     roots.forEach((root) => {
       const digits = root.querySelectorAll('[data-np-led-digit]');
@@ -1770,8 +1771,6 @@
         99,
         Math.max(0, parseInt(root.dataset.npLedTarget || '10', 10) || 10),
       );
-      const tens = Math.floor(target / 10);
-      const ones = target % 10;
 
       const setDigits = (value) => {
         const v = Math.min(99, Math.max(0, value));
@@ -1779,28 +1778,71 @@
         digits[1].textContent = String(v % 10);
       };
 
+      setDigits(target);
+
       if (prefersReduced) {
-        setDigits(target);
         return;
       }
 
-      const duration = 1400;
-      const start = performance.now();
+      let frame = 0;
+      let inView = false;
 
-      const tick = (now) => {
-        const progress = Math.min(1, (now - start) / duration);
-        const eased = 1 - (1 - progress) ** 3;
-        setDigits(Math.round(eased * target));
-        if (progress < 1) {
-          requestAnimationFrame(tick);
-        } else {
-          digits[0].textContent = String(tens);
-          digits[1].textContent = String(ones);
+      const stopTick = () => {
+        if (frame) {
+          cancelAnimationFrame(frame);
+          frame = 0;
         }
       };
 
-      setDigits(0);
-      requestAnimationFrame(tick);
+      const playCountUp = () => {
+        stopTick();
+        setDigits(0);
+        const start = performance.now();
+
+        const tick = (now) => {
+          const progress = Math.min(1, (now - start) / duration);
+          const eased = 1 - (1 - progress) ** 3;
+          setDigits(Math.round(eased * target));
+          if (progress < 1) {
+            frame = requestAnimationFrame(tick);
+          } else {
+            frame = 0;
+            setDigits(target);
+          }
+        };
+
+        frame = requestAnimationFrame(tick);
+      };
+
+      if (!('IntersectionObserver' in window)) {
+        playCountUp();
+        return;
+      }
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.target !== root) {
+              return;
+            }
+            if (entry.isIntersecting) {
+              if (!inView) {
+                inView = true;
+                playCountUp();
+              }
+              return;
+            }
+            if (inView) {
+              inView = false;
+              stopTick();
+              setDigits(target);
+            }
+          });
+        },
+        { threshold: 0.2 },
+      );
+
+      observer.observe(root);
     });
   }
 
