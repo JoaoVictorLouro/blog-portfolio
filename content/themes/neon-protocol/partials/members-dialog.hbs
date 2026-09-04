@@ -59,25 +59,58 @@
             {{#if @member}}
                 <section class="np-members-view" data-np-members-panel="account" data-np-members-title="{{> "np-t" key="NODE_SESSION"}}" hidden>
                     <p class="np-chip is-live">{{> "np-t" key="STATUS: AUTHENTICATED"}}</p>
-                    <dl class="np-members-kv">
-                        {{#if @member.name}}
-                            <div class="np-kv">
-                                <dt>{{> "np-t" key="HANDLE"}}</dt>
-                                <dd><strong>{{@member.name}}</strong></dd>
-                            </div>
-                        {{/if}}
-                        <div class="np-kv">
-                            <dt>{{> "np-t" key="COMM_LINK"}}</dt>
-                            <dd><strong>{{@member.email}}</strong></dd>
+                    <p class="np-meta np-members-clearance">{{> "np-t" key="CLEARANCE"}} // {{> "np-t" key="FREE_FEED"}}</p>
+                    <form class="np-form np-members-form" data-np-account-form>
+                        <label class="np-label">{{> "np-t" key="HANDLE"}}
+                            <input class="np-field" data-np-account-name type="text" autocomplete="name" value="{{@member.name}}" aria-label="{{> "np-t" key="HANDLE"}}">
+                        </label>
+                        <label class="np-label">{{> "np-t" key="COMM_LINK"}}
+                            <input class="np-field" data-np-account-email type="email" required autocomplete="email" value="{{@member.email}}" aria-label="{{> "np-t" key="COMM_LINK"}}">
+                        </label>
+                        <fieldset class="np-members-fieldset">
+                            <legend class="np-label">{{> "np-t" key="FEED_CHANNELS"}}</legend>
+                            {{#get "newsletters" filter="status:active" limit="100"}}
+                                {{#foreach newsletters}}
+                                    <label class="np-check">
+                                        <input type="checkbox" data-np-account-newsletter value="{{id}}"{{#foreach @member.newsletters}}{{#match id ../id}} checked{{/match}}{{/foreach}}>
+                                        <span>{{name}}</span>
+                                    </label>
+                                {{else}}
+                                    <p class="np-meta">{{> "np-t" key="NO_FEED_CHANNELS"}}</p>
+                                {{/foreach}}
+                            {{/get}}
+                        </fieldset>
+                        <label class="np-check">
+                            <input type="checkbox" data-np-account-comments checked>
+                            <span>{{> "np-t" key="BBS_ALERTS"}}</span>
+                        </label>
+                        <button class="np-btn np-btn-primary" type="submit">
+                            {{> "np-t" key="COMMIT"}}<span class="material-symbols-outlined" aria-hidden="true">save</span>
+                        </button>
+                        <p class="np-members-status np-members-status--loading">{{> "np-t" key="TRANSMITTING..."}}</p>
+                        <p class="np-members-status np-members-status--success" data-np-account-success>{{> "np-t" key="NODE_SYNC_SAVED"}}</p>
+                        <p class="np-members-status np-members-status--success" data-np-account-success-email hidden>{{> "np-t" key="COMM_LINK_CONFIRM"}}</p>
+                        <p class="np-members-status np-members-status--error" data-members-error></p>
+                    </form>
+                    <div class="np-members-account-actions">
+                        <button class="np-btn np-btn-ghost" type="button" data-members-signout>
+                            {{> "np-t" key="DISCONNECT"}}<span class="material-symbols-outlined" aria-hidden="true">logout</span>
+                        </button>
+                        <button class="np-btn np-btn-danger" type="button" data-np-account-delete>
+                            {{> "np-t" key="PURGE_NODE"}}<span class="material-symbols-outlined" aria-hidden="true">delete</span>
+                        </button>
+                    </div>
+                    <div class="np-members-purge" data-np-account-delete-panel hidden>
+                        <p class="np-body np-members-lead">{{> "np-t" key="PURGE_NODE_CONFIRM"}}</p>
+                        <div class="np-members-account-actions">
+                            <button class="np-btn np-btn-danger" type="button" data-np-account-delete-confirm>
+                                {{> "np-t" key="PURGE_NODE_CONFIRM_ACTION"}}<span class="material-symbols-outlined" aria-hidden="true">warning</span>
+                            </button>
+                            <button class="np-btn np-btn-ghost" type="button" data-np-account-delete-cancel>
+                                {{> "np-t" key="ABORT"}}
+                            </button>
                         </div>
-                        <div class="np-kv">
-                            <dt>{{> "np-t" key="CLEARANCE"}}</dt>
-                            <dd><strong>{{> "np-t" key="FREE_FEED"}}</strong></dd>
-                        </div>
-                    </dl>
-                    <button class="np-btn np-btn-ghost" type="button" data-members-signout>
-                        {{> "np-t" key="DISCONNECT"}}<span class="material-symbols-outlined" aria-hidden="true">logout</span>
-                    </button>
+                    </div>
                 </section>
             {{/if}}
         </div>

@@ -350,7 +350,7 @@ a:hover,
 /* CTA description – must follow meta/timestamp rules */
 section.ghost-display [data-testid='cta-box'] > p.text-neutral-600,
 section.ghost-display [data-testid='cta-box'] > p.text-neutral-600 span {
-  font-size: 1.8rem !important;
+  font-size: 1.4rem !important;
   line-height: 1.6 !important;
   font-family: 'Hanken Grotesk', sans-serif !important;
   letter-spacing: normal !important;

@@ -471,8 +471,52 @@
       return;
     }
     navigator.clipboard.writeText(url).then(() => {
+      const originalLabel = button.getAttribute('aria-label');
+      const originalTooltip = button.getAttribute('data-tooltip');
+      const copiedLabel = button.getAttribute('data-np-copied-label');
       button.classList.add('is-copied');
-      window.setTimeout(() => button.classList.remove('is-copied'), 1600);
+      if (copiedLabel) {
+        button.setAttribute('aria-label', copiedLabel);
+        button.setAttribute('data-tooltip', copiedLabel);
+      }
+      window.setTimeout(() => {
+        button.classList.remove('is-copied');
+        if (copiedLabel && originalLabel) {
+          button.setAttribute('aria-label', originalLabel);
+        }
+        if (copiedLabel && originalTooltip) {
+          button.setAttribute('data-tooltip', originalTooltip);
+        }
+      }, 1600);
+    });
+  }
+
+  function canUseWebShare() {
+    return typeof navigator.share === 'function';
+  }
+
+  function initWebShare() {
+    if (!canUseWebShare()) {
+      return;
+    }
+    document.querySelectorAll('[data-np-web-share]').forEach((button) => {
+      button.hidden = false;
+    });
+  }
+
+  function handleWebShare(event) {
+    const button = event.target.closest('[data-np-web-share]');
+    if (!button || !canUseWebShare()) {
+      return;
+    }
+    event.preventDefault();
+    const title = button.getAttribute('data-np-share-title') || document.title;
+    const text = button.getAttribute('data-np-share-text') || title;
+    const url = button.getAttribute('data-np-share-url') || window.location.href;
+    navigator.share({ title, text, url }).catch((error) => {
+      if (error && error.name === 'AbortError') {
+        return;
+      }
     });
   }
 
@@ -766,7 +810,9 @@
       return false;
     }
     if (
-      link.closest('[data-ghost-search], [data-np-theme-toggle], [data-np-filter], [data-np-copy]')
+      link.closest(
+        '[data-ghost-search], [data-np-theme-toggle], [data-np-filter], [data-np-copy], [data-np-web-share]',
+      )
     ) {
       return false;
     }
@@ -928,6 +974,7 @@
       handleThemeToggle();
     }
     handleCopyLink(event);
+    handleWebShare(event);
     handlePortfolioFilter(event);
     handlePageGlitchNav(event);
   });
@@ -1005,7 +1052,16 @@
     const titleEl = dialog.querySelector('#np-members-title');
     const panels = Array.from(dialog.querySelectorAll('[data-np-members-panel]'));
     const hashPrefix = '#/np-members/';
+    const portalPrefix = '#/portal/';
+    const memberApiUrl = `${window.__npSiteUrl || ''}/members/api/member/`;
+    const accountForm = dialog.querySelector('[data-np-account-form]');
+    const accountError = accountForm?.querySelector('[data-members-error]');
+    const accountSuccess = accountForm?.querySelector('[data-np-account-success]');
+    const accountSuccessEmail = accountForm?.querySelector('[data-np-account-success-email]');
+    const deletePanel = dialog.querySelector('[data-np-account-delete-panel]');
     let lastFocus = null;
+    let memberSnapshot = null;
+    let accountHydratePromise = null;
 
     function panelNames() {
       return panels.map((panel) => panel.getAttribute('data-np-members-panel')).filter(Boolean);
@@ -1046,17 +1102,21 @@
         return;
       }
       const focusable = panel.querySelector(
-        'input, button:not([disabled]), [href], textarea, select, [tabindex]:not([tabindex="-1"])',
+        'input:not([type="hidden"]):not([type="checkbox"]), button:not([disabled]), [href], textarea, select, [tabindex]:not([tabindex="-1"])',
       );
       if (focusable && typeof focusable.focus === 'function') {
         focusable.focus();
       }
     }
 
+    function isMembersHash(hash) {
+      return hash.startsWith(hashPrefix) || hash.startsWith(portalPrefix);
+    }
+
     function syncHash(name, open) {
       try {
         if (!open) {
-          if (window.location.hash.startsWith(hashPrefix)) {
+          if (isMembersHash(window.location.hash || '')) {
             history.replaceState(null, '', window.location.pathname + window.location.search);
           }
           return;
@@ -1067,6 +1127,112 @@
         }
       } catch {
         // Ignore history failures.
+      }
+    }
+
+    function panelFromHash() {
+      const hash = window.location.hash || '';
+      if (hash.startsWith(hashPrefix)) {
+        return resolvePanel(hash.slice(hashPrefix.length).split('/')[0]);
+      }
+      if (!hash.startsWith(portalPrefix)) {
+        return null;
+      }
+      const rest = hash.slice(portalPrefix.length);
+      if (rest.startsWith('signin')) {
+        return resolvePanel('signin');
+      }
+      if (rest.startsWith('signup')) {
+        return resolvePanel('subscribe');
+      }
+      if (rest.startsWith('account')) {
+        return resolvePanel('account');
+      }
+      return resolvePanel(null);
+    }
+
+    function setAccountFormState(state) {
+      if (!accountForm) {
+        return;
+      }
+      accountForm.classList.remove('loading', 'success', 'error');
+      if (state) {
+        accountForm.classList.add(state);
+      }
+    }
+
+    function setAccountError(message) {
+      if (accountError) {
+        accountError.textContent = message || '';
+      }
+      setAccountFormState(message ? 'error' : '');
+    }
+
+    function applyMemberToForm(member) {
+      if (!accountForm || !member) {
+        return;
+      }
+      const nameInput = accountForm.querySelector('[data-np-account-name]');
+      const emailInput = accountForm.querySelector('[data-np-account-email]');
+      const commentsInput = accountForm.querySelector('[data-np-account-comments]');
+      if (nameInput) {
+        nameInput.value = member.name || '';
+      }
+      if (emailInput) {
+        emailInput.value = member.email || '';
+      }
+      const subscribed = new Set(
+        (member.newsletters || []).map((newsletter) => newsletter.id).filter(Boolean),
+      );
+      accountForm.querySelectorAll('[data-np-account-newsletter]').forEach((input) => {
+        input.checked = subscribed.has(input.value);
+      });
+      if (commentsInput) {
+        commentsInput.checked = member.enable_comment_notifications !== false;
+      }
+    }
+
+    async function readMemberApiError(response) {
+      try {
+        const payload = await response.json();
+        return payload?.errors?.[0]?.message || payload?.message || `HTTP ${response.status}`;
+      } catch {
+        return `HTTP ${response.status}`;
+      }
+    }
+
+    function hydrateAccount() {
+      if (!accountForm) {
+        return;
+      }
+      if (!accountHydratePromise) {
+        accountHydratePromise = fetch(memberApiUrl, {
+          credentials: 'same-origin',
+          headers: { Accept: 'application/json' },
+        })
+          .then(async (response) => {
+            if (!response.ok) {
+              throw new Error(await readMemberApiError(response));
+            }
+            return response.json();
+          })
+          .then((member) => {
+            memberSnapshot = member;
+            applyMemberToForm(member);
+          })
+          .catch(() => {
+            // Keep server-rendered fields when the session payload is unavailable.
+          })
+          .finally(() => {
+            accountHydratePromise = null;
+          });
+      }
+      return accountHydratePromise;
+    }
+
+    function resetDeleteConfirm() {
+      if (deletePanel) {
+        deletePanel.hidden = true;
       }
     }
 
@@ -1082,6 +1248,11 @@
       }
       document.documentElement.classList.add('np-members-open');
       syncHash(panel, true);
+      if (panel === 'account') {
+        hydrateAccount();
+      } else {
+        resetDeleteConfirm();
+      }
       window.requestAnimationFrame(() => focusPanelField(panel));
     }
 
@@ -1095,18 +1266,87 @@
       }
       document.documentElement.classList.remove('np-members-open');
       syncHash('', false);
+      resetDeleteConfirm();
       if (lastFocus && typeof lastFocus.focus === 'function') {
         lastFocus.focus();
       }
       lastFocus = null;
     }
 
-    function panelFromHash() {
-      const hash = window.location.hash || '';
-      if (!hash.startsWith(hashPrefix)) {
-        return null;
+    async function handleAccountSubmit(event) {
+      event.preventDefault();
+      if (!accountForm) {
+        return;
       }
-      return resolvePanel(hash.slice(hashPrefix.length));
+      const nameInput = accountForm.querySelector('[data-np-account-name]');
+      const emailInput = accountForm.querySelector('[data-np-account-email]');
+      const commentsInput = accountForm.querySelector('[data-np-account-comments]');
+      const email = emailInput?.value?.trim() || '';
+      if (!email) {
+        setAccountError('Missing comm-link.');
+        return;
+      }
+      const previousEmail = memberSnapshot?.email || email;
+      const emailChanged = email.toLowerCase() !== String(previousEmail).toLowerCase();
+      const newsletters = Array.from(
+        accountForm.querySelectorAll('[data-np-account-newsletter]:checked'),
+      ).map((input) => ({ id: input.value }));
+      setAccountFormState('loading');
+      if (accountError) {
+        accountError.textContent = '';
+      }
+      try {
+        const response = await fetch(memberApiUrl, {
+          method: 'PUT',
+          credentials: 'same-origin',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: nameInput?.value?.trim() || '',
+            email,
+            newsletters,
+            enable_comment_notifications: Boolean(commentsInput?.checked),
+          }),
+        });
+        if (!response.ok) {
+          throw new Error(await readMemberApiError(response));
+        }
+        const payload = await response.text();
+        const member = payload
+          ? JSON.parse(payload)
+          : { name: nameInput?.value, email, newsletters };
+        memberSnapshot = member;
+        applyMemberToForm(member);
+        if (accountSuccess) {
+          accountSuccess.hidden = emailChanged;
+        }
+        if (accountSuccessEmail) {
+          accountSuccessEmail.hidden = !emailChanged;
+        }
+        setAccountFormState('success');
+      } catch (error) {
+        setAccountError(error instanceof Error ? error.message : 'Sync failed.');
+      }
+    }
+
+    async function handleAccountDelete() {
+      setAccountFormState('loading');
+      try {
+        const response = await fetch(memberApiUrl, {
+          method: 'DELETE',
+          credentials: 'same-origin',
+          headers: { Accept: 'application/json' },
+        });
+        if (!response.ok && response.status !== 204) {
+          throw new Error(await readMemberApiError(response));
+        }
+        window.location.reload();
+      } catch (error) {
+        resetDeleteConfirm();
+        setAccountError(error instanceof Error ? error.message : 'Purge failed.');
+      }
     }
 
     document.addEventListener('click', (event) => {
@@ -1119,8 +1359,27 @@
       if (event.target.closest('[data-np-members-close]')) {
         event.preventDefault();
         closeMembers();
+        return;
+      }
+      if (event.target.closest('[data-np-account-delete]')) {
+        event.preventDefault();
+        if (deletePanel) {
+          deletePanel.hidden = false;
+        }
+        return;
+      }
+      if (event.target.closest('[data-np-account-delete-cancel]')) {
+        event.preventDefault();
+        resetDeleteConfirm();
+        return;
+      }
+      if (event.target.closest('[data-np-account-delete-confirm]')) {
+        event.preventDefault();
+        handleAccountDelete();
       }
     });
+
+    accountForm?.addEventListener('submit', handleAccountSubmit);
 
     dialog.addEventListener('cancel', (event) => {
       event.preventDefault();
@@ -1130,6 +1389,7 @@
     dialog.addEventListener('close', () => {
       document.documentElement.classList.remove('np-members-open');
       syncHash('', false);
+      resetDeleteConfirm();
     });
 
     window.addEventListener('hashchange', () => {
@@ -1582,6 +1842,7 @@
     initLedCounter();
     initWorkChipPulse();
     initWorkCertTilt();
+    initWebShare();
     initServiceWorker();
   }
 

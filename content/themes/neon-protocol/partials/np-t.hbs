@@ -17,6 +17,15 @@
     {{#match (block "np_lang") "en-us"}}1 MIN READ{{else match (block "np_lang") "ja-jp"}}1 MIN READ{{else match (block "np_lang") "pt-br"}}1 MIN READ{{else match (block "np_lang") "es-la"}}1 MIN READ{{else}}1 MIN READ{{/match}}
   {{/is}}
 {{/match}}
+{{#match key "ABORT"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}ABORT{{else has tag="#lang-pt-br"}}ABORT{{else has tag="#lang-es-la"}}ABORT{{else}}ABORT{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}ABORT{{else match (block "np_lang") "ja-jp"}}ABORT{{else match (block "np_lang") "pt-br"}}ABORT{{else match (block "np_lang") "es-la"}}ABORT{{else}}ABORT{{/match}}
+  {{/is}}
+{{/match}}
 {{#match key "ABOUT"}}
   {{#is "post"}}
     {{#post}}
@@ -152,6 +161,15 @@
     {{#match (block "np_lang") "en-us"}}BANDWIDTH: OPTIMAL{{else match (block "np_lang") "ja-jp"}}BANDWIDTH: OPTIMAL{{else match (block "np_lang") "pt-br"}}BANDWIDTH: OPTIMAL{{else match (block "np_lang") "es-la"}}BANDWIDTH: OPTIMAL{{else}}BANDWIDTH: OPTIMAL{{/match}}
   {{/is}}
 {{/match}}
+{{#match key "BBS_ALERTS"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}BBS_ALERTS [コメント通知]{{else has tag="#lang-pt-br"}}BBS_ALERTS [EMAIL_COMENTÁRIOS]{{else has tag="#lang-es-la"}}BBS_ALERTS [MAIL_COMENTARIOS]{{else}}BBS_ALERTS [COMMENT_MAIL]{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}BBS_ALERTS [COMMENT_MAIL]{{else match (block "np_lang") "ja-jp"}}BBS_ALERTS [コメント通知]{{else match (block "np_lang") "pt-br"}}BBS_ALERTS [EMAIL_COMENTÁRIOS]{{else match (block "np_lang") "es-la"}}BBS_ALERTS [MAIL_COMENTARIOS]{{else}}BBS_ALERTS [COMMENT_MAIL]{{/match}}
+  {{/is}}
+{{/match}}
 {{#match key "Back"}}
   {{#is "post"}}
     {{#post}}
@@ -179,6 +197,15 @@
     {{#match (block "np_lang") "en-us"}}CLEARANCE{{else match (block "np_lang") "ja-jp"}}CLEARANCE{{else match (block "np_lang") "pt-br"}}CLEARANCE{{else match (block "np_lang") "es-la"}}CLEARANCE{{else}}CLEARANCE{{/match}}
   {{/is}}
 {{/match}}
+{{#match key "COMMIT"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}COMMIT{{else has tag="#lang-pt-br"}}COMMIT{{else has tag="#lang-es-la"}}COMMIT{{else}}COMMIT{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}COMMIT{{else match (block "np_lang") "ja-jp"}}COMMIT{{else match (block "np_lang") "pt-br"}}COMMIT{{else match (block "np_lang") "es-la"}}COMMIT{{else}}COMMIT{{/match}}
+  {{/is}}
+{{/match}}
 {{#match key "COMM_LINK"}}
   {{#is "post"}}
     {{#post}}
@@ -186,6 +213,15 @@
     {{/post}}
   {{else}}
     {{#match (block "np_lang") "en-us"}}COMM_LINK{{else match (block "np_lang") "ja-jp"}}COMM_LINK{{else match (block "np_lang") "pt-br"}}COMM_LINK{{else match (block "np_lang") "es-la"}}COMM_LINK{{else}}COMM_LINK{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "COMM_LINK_CONFIRM"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}COMM_LINK_CHANGE // 新しい受信箱を確認{{else has tag="#lang-pt-br"}}COMM_LINK_CHANGE // VERIFIQUE A NOVA CAIXA{{else has tag="#lang-es-la"}}COMM_LINK_CHANGE // REVISA LA NUEVA BANDEJA{{else}}COMM_LINK_CHANGE // CHECK_NEW_INBOX{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}COMM_LINK_CHANGE // CHECK_NEW_INBOX{{else match (block "np_lang") "ja-jp"}}COMM_LINK_CHANGE // 新しい受信箱を確認{{else match (block "np_lang") "pt-br"}}COMM_LINK_CHANGE // VERIFIQUE A NOVA CAIXA{{else match (block "np_lang") "es-la"}}COMM_LINK_CHANGE // REVISA LA NUEVA BANDEJA{{else}}COMM_LINK_CHANGE // CHECK_NEW_INBOX{{/match}}
   {{/is}}
 {{/match}}
 {{#match key "Close"}}
@@ -218,10 +254,10 @@
 {{#match key "Copy link"}}
   {{#is "post"}}
     {{#post}}
-      {{#has tag="#lang-ja-jp"}}Copy link{{else has tag="#lang-pt-br"}}Copy link{{else has tag="#lang-es-la"}}Copy link{{else}}Copy link{{/has}}
+      {{#has tag="#lang-ja-jp"}}リンクをコピー{{else has tag="#lang-pt-br"}}Copiar link{{else has tag="#lang-es-la"}}Copiar enlace{{else}}Copy link{{/has}}
     {{/post}}
   {{else}}
-    {{#match (block "np_lang") "en-us"}}Copy link{{else match (block "np_lang") "ja-jp"}}Copy link{{else match (block "np_lang") "pt-br"}}Copy link{{else match (block "np_lang") "es-la"}}Copy link{{else}}Copy link{{/match}}
+    {{#match (block "np_lang") "en-us"}}Copy link{{else match (block "np_lang") "ja-jp"}}リンクをコピー{{else match (block "np_lang") "pt-br"}}Copiar link{{else match (block "np_lang") "es-la"}}Copiar enlace{{else}}Copy link{{/match}}
   {{/is}}
 {{/match}}
 {{#match key "DATA_MAP"}}
@@ -294,6 +330,24 @@
     {{/post}}
   {{else}}
     {{#match (block "np_lang") "en-us"}}ESTABLISH_CONNECTION{{else match (block "np_lang") "ja-jp"}}接続を確立{{else match (block "np_lang") "pt-br"}}ESTABELECER_CONEXÃO{{else match (block "np_lang") "es-la"}}ESTABLECER_CONEXIÓN{{else}}ESTABLISH_CONNECTION{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "Email"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}メール{{else has tag="#lang-pt-br"}}E-mail{{else has tag="#lang-es-la"}}Correo{{else}}Email{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}Email{{else match (block "np_lang") "ja-jp"}}メール{{else match (block "np_lang") "pt-br"}}E-mail{{else match (block "np_lang") "es-la"}}Correo{{else}}Email{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "FEED_CHANNELS"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}FEED_CHANNELS{{else has tag="#lang-pt-br"}}FEED_CHANNELS{{else has tag="#lang-es-la"}}FEED_CHANNELS{{else}}FEED_CHANNELS{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}FEED_CHANNELS{{else match (block "np_lang") "ja-jp"}}FEED_CHANNELS{{else match (block "np_lang") "pt-br"}}FEED_CHANNELS{{else match (block "np_lang") "es-la"}}FEED_CHANNELS{{else}}FEED_CHANNELS{{/match}}
   {{/is}}
 {{/match}}
 {{#match key "FILTER"}}
@@ -386,6 +440,15 @@
     {{#match (block "np_lang") "en-us"}}LOG_DECRYPTED{{else match (block "np_lang") "ja-jp"}}LOG_DECRYPTED{{else match (block "np_lang") "pt-br"}}LOG_DECRYPTED{{else match (block "np_lang") "es-la"}}LOG_DECRYPTED{{else}}LOG_DECRYPTED{{/match}}
   {{/is}}
 {{/match}}
+{{#match key "Link copied"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}リンクをコピーしました{{else has tag="#lang-pt-br"}}Link copiado{{else has tag="#lang-es-la"}}Enlace copiado{{else}}Link copied{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}Link copied{{else match (block "np_lang") "ja-jp"}}リンクをコピーしました{{else match (block "np_lang") "pt-br"}}Link copiado{{else match (block "np_lang") "es-la"}}Enlace copiado{{else}}Link copied{{/match}}
+  {{/is}}
+{{/match}}
 {{#match key "Load more"}}
   {{#is "post"}}
     {{#post}}
@@ -456,6 +519,24 @@
     {{/post}}
   {{else}}
     {{#match (block "np_lang") "en-us"}}NODE_SYNC_COMPLETE{{else match (block "np_lang") "ja-jp"}}NODE_SYNC_COMPLETE{{else match (block "np_lang") "pt-br"}}NODE_SYNC_COMPLETE{{else match (block "np_lang") "es-la"}}NODE_SYNC_COMPLETE{{else}}NODE_SYNC_COMPLETE{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "NODE_SYNC_SAVED"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}NODE_SYNC // PROFILE_COMMITTED{{else has tag="#lang-pt-br"}}NODE_SYNC // PROFILE_COMMITTED{{else has tag="#lang-es-la"}}NODE_SYNC // PROFILE_COMMITTED{{else}}NODE_SYNC // PROFILE_COMMITTED{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}NODE_SYNC // PROFILE_COMMITTED{{else match (block "np_lang") "ja-jp"}}NODE_SYNC // PROFILE_COMMITTED{{else match (block "np_lang") "pt-br"}}NODE_SYNC // PROFILE_COMMITTED{{else match (block "np_lang") "es-la"}}NODE_SYNC // PROFILE_COMMITTED{{else}}NODE_SYNC // PROFILE_COMMITTED{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "NO_FEED_CHANNELS"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}NO_ACTIVE_CHANNELS{{else has tag="#lang-pt-br"}}NO_ACTIVE_CHANNELS{{else has tag="#lang-es-la"}}NO_ACTIVE_CHANNELS{{else}}NO_ACTIVE_CHANNELS{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}NO_ACTIVE_CHANNELS{{else match (block "np_lang") "ja-jp"}}NO_ACTIVE_CHANNELS{{else match (block "np_lang") "pt-br"}}NO_ACTIVE_CHANNELS{{else match (block "np_lang") "es-la"}}NO_ACTIVE_CHANNELS{{else}}NO_ACTIVE_CHANNELS{{/match}}
   {{/is}}
 {{/match}}
 {{#match key "NO_TRANSLATIONS"}}
@@ -609,6 +690,33 @@
     {{/post}}
   {{else}}
     {{#match (block "np_lang") "en-us"}}PORTFOLIO{{else match (block "np_lang") "ja-jp"}}ポートフォリオ{{else match (block "np_lang") "pt-br"}}PORTFÓLIO{{else match (block "np_lang") "es-la"}}PORTAFOLIO{{else}}PORTFOLIO{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "PURGE_NODE"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}PURGE_NODE{{else has tag="#lang-pt-br"}}PURGE_NODE{{else has tag="#lang-es-la"}}PURGE_NODE{{else}}PURGE_NODE{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}PURGE_NODE{{else match (block "np_lang") "ja-jp"}}PURGE_NODE{{else match (block "np_lang") "pt-br"}}PURGE_NODE{{else match (block "np_lang") "es-la"}}PURGE_NODE{{else}}PURGE_NODE{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "PURGE_NODE_CONFIRM"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}メンバー記録、フィード、BBS識別子を消去します。元に戻せません。{{else has tag="#lang-pt-br"}}Isso apaga o registro de membro, canais do feed e identidade BBS. Irreversível.{{else has tag="#lang-es-la"}}Esto borra el registro de miembro, canales del feed e identidad BBS. Irreversible.{{else}}This wipes the member record, feed channels, and BBS identity. Irreversible.{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}This wipes the member record, feed channels, and BBS identity. Irreversible.{{else match (block "np_lang") "ja-jp"}}メンバー記録、フィード、BBS識別子を消去します。元に戻せません。{{else match (block "np_lang") "pt-br"}}Isso apaga o registro de membro, canais do feed e identidade BBS. Irreversível.{{else match (block "np_lang") "es-la"}}Esto borra el registro de miembro, canales del feed e identidad BBS. Irreversible.{{else}}This wipes the member record, feed channels, and BBS identity. Irreversible.{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "PURGE_NODE_CONFIRM_ACTION"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}CONFIRM_PURGE{{else has tag="#lang-pt-br"}}CONFIRM_PURGE{{else has tag="#lang-es-la"}}CONFIRM_PURGE{{else}}CONFIRM_PURGE{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}CONFIRM_PURGE{{else match (block "np_lang") "ja-jp"}}CONFIRM_PURGE{{else match (block "np_lang") "pt-br"}}CONFIRM_PURGE{{else match (block "np_lang") "es-la"}}CONFIRM_PURGE{{else}}CONFIRM_PURGE{{/match}}
   {{/is}}
 {{/match}}
 {{#match key "Page {page} of {pages}"}}
@@ -776,10 +884,10 @@
 {{#match key "Share"}}
   {{#is "post"}}
     {{#post}}
-      {{#has tag="#lang-ja-jp"}}Share{{else has tag="#lang-pt-br"}}Share{{else has tag="#lang-es-la"}}Share{{else}}Share{{/has}}
+      {{#has tag="#lang-ja-jp"}}共有{{else has tag="#lang-pt-br"}}Compartilhar{{else has tag="#lang-es-la"}}Compartir{{else}}Share{{/has}}
     {{/post}}
   {{else}}
-    {{#match (block "np_lang") "en-us"}}Share{{else match (block "np_lang") "ja-jp"}}Share{{else match (block "np_lang") "pt-br"}}Share{{else match (block "np_lang") "es-la"}}Share{{else}}Share{{/match}}
+    {{#match (block "np_lang") "en-us"}}Share{{else match (block "np_lang") "ja-jp"}}共有{{else match (block "np_lang") "pt-br"}}Compartilhar{{else match (block "np_lang") "es-la"}}Compartir{{else}}Share{{/match}}
   {{/is}}
 {{/match}}
 {{#match key "Sign in"}}

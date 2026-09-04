@@ -40,12 +40,15 @@
         </div>
     </header>
 
+    <div class="np-article-share">
+        {{> "share"}}
+    </div>
+
     <div class="np-article-translations">
         {{> "translation-switcher"}}
     </div>
 
     <article class="np-article-wrap {{post_class}}">
-        {{> "share"}}
         <section class="np-prose">
             {{content}}
         </section>
