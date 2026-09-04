@@ -1818,7 +1818,7 @@
       return;
     }
     document.querySelectorAll('.np-work-cert').forEach((card) => {
-      card.style.setProperty('--np-cert-tilt-delay', `${Math.random() * 8}s`);
+      card.style.setProperty('--np-cert-tilt-delay', `${Math.random() * 6.4}s`);
     });
   }
 

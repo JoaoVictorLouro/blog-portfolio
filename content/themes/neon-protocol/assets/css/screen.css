@@ -2579,7 +2579,7 @@ html.np-members-open {
   border-left: 2px solid var(--np-lantern-amber);
   color: #121315;
   box-shadow: 0 0 18px color-mix(in srgb, var(--np-lantern-amber) 25%, transparent);
-  animation: np-cert-tilt 8s ease-in-out infinite;
+  animation: np-cert-tilt 6.4s ease-in-out infinite;
   animation-delay: var(--np-cert-tilt-delay, 0s);
 }
 
@@ -2618,13 +2618,13 @@ html.np-members-open {
     transform: perspective(900px) rotateX(0deg) rotateY(0deg);
   }
   25% {
-    transform: perspective(900px) rotateX(3deg) rotateY(-5deg);
+    transform: perspective(900px) rotateX(3.6deg) rotateY(-6deg);
   }
   50% {
-    transform: perspective(900px) rotateX(-2.5deg) rotateY(4deg);
+    transform: perspective(900px) rotateX(-3deg) rotateY(4.8deg);
   }
   75% {
-    transform: perspective(900px) rotateX(4deg) rotateY(2.5deg);
+    transform: perspective(900px) rotateX(4.8deg) rotateY(3deg);
   }
 }
 
