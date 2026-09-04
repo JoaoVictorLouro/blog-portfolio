@@ -16,7 +16,7 @@ if [ -d "$ghost_assets" ]; then
   fi
 
   if [ -d "$ghost_assets/fonts" ]; then
-    cp -a "$ghost_assets/fonts/." "$theme_assets/fonts/"
+    cp -au "$ghost_assets/fonts/." "$theme_assets/fonts/"
   fi
 fi
 

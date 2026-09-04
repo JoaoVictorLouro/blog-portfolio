@@ -45,7 +45,10 @@ tasks:
     desc: Build and start Ghost in the background
     deps: [setup]
     cmds:
-      - docker compose up -d --build
+      - deno task build:icons
+      - |
+        export MATERIAL_SYMBOLS_CACHEBUST="$(cksum scripts/build-material-symbols-subset.sh | awk '{print $1 "-" $2}')"
+        docker compose up -d --build
 
   down:
     desc: Stop Ghost
@@ -75,13 +78,19 @@ tasks:
   update:
     desc: Pull base images, rebuild, and restart
     cmds:
+      - deno task build:icons
       - docker compose pull
-      - docker compose up -d --build
+      - |
+        export MATERIAL_SYMBOLS_CACHEBUST="$(cksum scripts/build-material-symbols-subset.sh | awk '{print $1 "-" $2}')"
+        docker compose up -d --build
 
   recreate:
     desc: Recreate the Ghost container (use after env file changes)
     cmds:
-      - docker compose up -d --force-recreate --build ghost
+      - deno task build:icons
+      - |
+        export MATERIAL_SYMBOLS_CACHEBUST="$(cksum scripts/build-material-symbols-subset.sh | awk '{print $1 "-" $2}')"
+        docker compose up -d --force-recreate --build ghost
 
   format:
     desc: Format repo files with Prettier (via Deno)

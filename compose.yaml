@@ -14,7 +14,10 @@ services:
       - ./content/public/humans.txt:/usr/share/nginx/html/humans.txt:ro
 
   ghost:
-    build: .
+    build:
+      context: .
+      args:
+        MATERIAL_SYMBOLS_CACHEBUST: ${MATERIAL_SYMBOLS_CACHEBUST:-0}
     image: ghcr.io/joaovictorlouro/blog-portfolio:latest
     restart: unless-stopped
     expose:
@@ -51,7 +54,10 @@ services:
       start_period: 60s
 
   bootstrap:
-    build: .
+    build:
+      context: .
+      args:
+        MATERIAL_SYMBOLS_CACHEBUST: ${MATERIAL_SYMBOLS_CACHEBUST:-0}
     image: ghcr.io/joaovictorlouro/blog-portfolio:latest
     restart: 'no'
     network_mode: service:ghost

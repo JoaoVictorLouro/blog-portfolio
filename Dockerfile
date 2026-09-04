@@ -10,8 +10,9 @@ COPY scripts/i18n/locales.mjs scripts/i18n/locales.mjs
 COPY content/themes/neon-protocol/locales content/themes/neon-protocol/locales
 RUN mkdir -p content/themes/neon-protocol/assets content/themes/neon-protocol/partials \
     && deno run -A scripts/sync-ghost-cdn-assets.mjs \
-    && bash scripts/build-material-symbols-subset.sh \
     && deno run -A scripts/build-theme-i18n.mjs
+ARG MATERIAL_SYMBOLS_CACHEBUST=0
+RUN bash scripts/build-material-symbols-subset.sh
 
 FROM ghost:6-alpine
 
