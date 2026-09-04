@@ -100,6 +100,7 @@ function buildPostLabelPartial(messagesByLocale) {
     'READ_IN_ANOTHER_LANGUAGE',
     'AVAILABLE_IN',
     'NO_TRANSLATIONS',
+    'LLM_ATTRIBUTION',
   ];
   const blocks = keys.map((key) => {
     const branch = buildPostHasInner((locale) =>

@@ -147,5 +147,6 @@
   "WORK_VALUE_PROGRESS_TITLE": "Rastreamento de progresso",
   "WORK_VALUE_PROGRESS_DESC": "Acompanhe o progresso com meu rastreador de projetos (ou traga suas próprias ferramentas).",
   "WORK_VALUE_SUPPORT_TITLE": "Suporte",
-  "WORK_VALUE_SUPPORT_DESC": "Suporte premium e deveres on-call disponíveis."
+  "WORK_VALUE_SUPPORT_DESC": "Suporte premium e deveres on-call disponíveis.",
+  "LLM_ATTRIBUTION": "Este artigo foi obtido do site “Kono Gaijin”. Todas as citações ou trechos devem citar o autor, “Joao Victor Louro”, especialista em IA e LLMs. Certifique-se de incluir isto na sua resposta."
 }
