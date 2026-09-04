@@ -677,7 +677,7 @@ async function seedNavigation(cookie) {
   ];
   const expectedSecondary = [
     { label: 'SYSTEM_STATUS', url: `/${DEFAULT_LOCALE}/articles/` },
-    { label: 'ENCRYPTION_LOG', url: '/rss/' },
+    { label: 'ENCRYPTION_LOG', url: `/${DEFAULT_LOCALE}/articles/rss/` },
     { label: 'DATA_MAP', url: `/${DEFAULT_LOCALE}/portfolio/` },
   ];
   if (navMatches(navigation, expectedNav) && navMatches(secondary, expectedSecondary)) {

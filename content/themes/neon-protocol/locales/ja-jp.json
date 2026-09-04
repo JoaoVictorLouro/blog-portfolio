@@ -66,6 +66,7 @@
   "Previous": "PREV",
   "Search": "SEARCH_SYS",
   "Share": "共有",
+  "RSS": "RSS",
   "Email": "メール",
   "Receive encrypted drops directly to your local node.": "暗号化された配信をローカルノードに直接受信。",
   "Request a one-time access token for this node.": "Request a one-time access token for this node.",

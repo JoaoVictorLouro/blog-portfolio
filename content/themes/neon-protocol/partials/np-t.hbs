@@ -782,6 +782,15 @@
     {{#match (block "np_lang") "en-us"}}REQUEST_TOKEN{{else match (block "np_lang") "ja-jp"}}REQUEST_TOKEN{{else match (block "np_lang") "pt-br"}}REQUEST_TOKEN{{else match (block "np_lang") "es-la"}}REQUEST_TOKEN{{else}}REQUEST_TOKEN{{/match}}
   {{/is}}
 {{/match}}
+{{#match key "RSS"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}RSS{{else has tag="#lang-pt-br"}}RSS{{else has tag="#lang-es-la"}}RSS{{else}}RSS{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}RSS{{else match (block "np_lang") "ja-jp"}}RSS{{else match (block "np_lang") "pt-br"}}RSS{{else match (block "np_lang") "es-la"}}RSS{{else}}RSS{{/match}}
+  {{/is}}
+{{/match}}
 {{#match key "Receive encrypted drops directly to your local node."}}
   {{#is "post"}}
     {{#post}}

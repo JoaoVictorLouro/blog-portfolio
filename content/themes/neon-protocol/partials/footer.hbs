@@ -1,12 +1,16 @@
 <footer class="np-footer">
     <div class="np-footer-copy">© {{date format="YYYY"}} {{@site.title}} // {{t "ALL RIGHTS RESERVED"}}</div>
     <ul class="np-footer-links">
-        {{#foreach navigation from="secondary"}}
-            <li><a href="{{url}}">{{label}}</a></li>
+        {{#is "post"}}
+        {{#post}}
+            <li><a href="{{@site.url}}/{{> "np-locale-prefix-post"}}/articles/">{{t "SYSTEM_STATUS"}}</a></li>
+            <li><a href="{{@site.url}}/{{> "np-locale-prefix-post"}}/articles/rss/">{{t "ENCRYPTION_LOG"}}</a></li>
+            <li><a href="{{@site.url}}/{{> "np-locale-prefix-post"}}/portfolio/">{{t "DATA_MAP"}}</a></li>
+        {{/post}}
         {{else}}
-            <li><a href="{{@site.url}}/rss/">{{t "ENCRYPTION_LOG"}}</a></li>
-            <li><a href="{{@site.url}}/articles/">{{t "SYSTEM_STATUS"}}</a></li>
-            <li><a href="{{@site.url}}/portfolio/">{{t "DATA_MAP"}}</a></li>
-        {{/foreach}}
+            <li><a href="{{@site.url}}/{{> "np-locale-prefix-site"}}/articles/">{{t "SYSTEM_STATUS"}}</a></li>
+            <li><a href="{{@site.url}}/{{> "np-locale-prefix-site"}}/articles/rss/">{{t "ENCRYPTION_LOG"}}</a></li>
+            <li><a href="{{@site.url}}/{{> "np-locale-prefix-site"}}/portfolio/">{{t "DATA_MAP"}}</a></li>
+        {{/is}}
     </ul>
 </footer>

@@ -51,6 +51,7 @@
   "Previous": "PREV",
   "Search": "SEARCH_SYS",
   "Share": "Share",
+  "RSS": "RSS",
   "Email": "Email",
   "Receive encrypted drops directly to your local node.": "Receive encrypted drops directly to your local node.",
   "Request a one-time access token for this node.": "Request a one-time access token for this node.",

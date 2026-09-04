@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {{{block "head"}}}
     {{> "hreflang"}}
+    {{#is "post"}}
+    {{#post}}
+    <link rel="alternate" type="application/rss+xml" title="{{@site.title}}" href="{{@site.url}}/{{> "np-locale-prefix-post"}}/articles/rss/">
+    {{/post}}
+    {{else}}
+    <link rel="alternate" type="application/rss+xml" title="{{@site.title}}" href="{{@site.url}}/{{> "np-locale-prefix-site"}}/articles/rss/">
+    {{/is}}
     <script>
     window.__npLocale = "{{#block "np_lang"}}en-us{{/block}}";
     window.__npSiteUrl = "{{@site.url}}";
