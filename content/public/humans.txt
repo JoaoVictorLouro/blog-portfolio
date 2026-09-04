@@ -1,0 +1,12 @@
+/* TEAM */
+Owner: Joao Victor Louro
+Site: https://joaovictorlouro.com
+Contact: hello@joaovictorlouro.com
+
+/* CONTACT */
+Bugs and issues: hello@joaovictorlouro.com
+Contact form: /en-us/about/
+
+/* SITE */
+Name: Kono Gaijin
+Language: en-US, ja-JP, pt-BR, es-LA
