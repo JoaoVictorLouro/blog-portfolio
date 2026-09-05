@@ -260,15 +260,6 @@
     {{#match (block "np_lang") "en-us"}}Copy link{{else match (block "np_lang") "ja-jp"}}リンクをコピー{{else match (block "np_lang") "pt-br"}}Copiar link{{else match (block "np_lang") "es-la"}}Copiar enlace{{else}}Copy link{{/match}}
   {{/is}}
 {{/match}}
-{{#match key "DATA_MAP"}}
-  {{#is "post"}}
-    {{#post}}
-      {{#has tag="#lang-ja-jp"}}DATA_MAP{{else has tag="#lang-pt-br"}}DATA_MAP{{else has tag="#lang-es-la"}}DATA_MAP{{else}}DATA_MAP{{/has}}
-    {{/post}}
-  {{else}}
-    {{#match (block "np_lang") "en-us"}}DATA_MAP{{else match (block "np_lang") "ja-jp"}}DATA_MAP{{else match (block "np_lang") "pt-br"}}DATA_MAP{{else match (block "np_lang") "es-la"}}DATA_MAP{{else}}DATA_MAP{{/match}}
-  {{/is}}
-{{/match}}
 {{#match key "DISCONNECT"}}
   {{#is "post"}}
     {{#post}}
@@ -303,15 +294,6 @@
     {{/post}}
   {{else}}
     {{#match (block "np_lang") "en-us"}}ENCRYPTED{{else match (block "np_lang") "ja-jp"}}暗号化済み{{else match (block "np_lang") "pt-br"}}CRIPTOGRAFADO{{else match (block "np_lang") "es-la"}}CIFRADO{{else}}ENCRYPTED{{/match}}
-  {{/is}}
-{{/match}}
-{{#match key "ENCRYPTION_LOG"}}
-  {{#is "post"}}
-    {{#post}}
-      {{#has tag="#lang-ja-jp"}}ENCRYPTION_LOG{{else has tag="#lang-pt-br"}}ENCRYPTION_LOG{{else has tag="#lang-es-la"}}ENCRYPTION_LOG{{else}}ENCRYPTION_LOG{{/has}}
-    {{/post}}
-  {{else}}
-    {{#match (block "np_lang") "en-us"}}ENCRYPTION_LOG{{else match (block "np_lang") "ja-jp"}}ENCRYPTION_LOG{{else match (block "np_lang") "pt-br"}}ENCRYPTION_LOG{{else match (block "np_lang") "es-la"}}ENCRYPTION_LOG{{else}}ENCRYPTION_LOG{{/match}}
   {{/is}}
 {{/match}}
 {{#match key "ENTER_ADDRESS"}}
@@ -881,15 +863,6 @@
     {{#match (block "np_lang") "en-us"}}SYSTEM.READY{{else match (block "np_lang") "ja-jp"}}SYSTEM.READY{{else match (block "np_lang") "pt-br"}}SYSTEM.READY{{else match (block "np_lang") "es-la"}}SYSTEM.READY{{else}}SYSTEM.READY{{/match}}
   {{/is}}
 {{/match}}
-{{#match key "SYSTEM_STATUS"}}
-  {{#is "post"}}
-    {{#post}}
-      {{#has tag="#lang-ja-jp"}}SYSTEM_STATUS{{else has tag="#lang-pt-br"}}SYSTEM_STATUS{{else has tag="#lang-es-la"}}SYSTEM_STATUS{{else}}SYSTEM_STATUS{{/has}}
-    {{/post}}
-  {{else}}
-    {{#match (block "np_lang") "en-us"}}SYSTEM_STATUS{{else match (block "np_lang") "ja-jp"}}SYSTEM_STATUS{{else match (block "np_lang") "pt-br"}}SYSTEM_STATUS{{else match (block "np_lang") "es-la"}}SYSTEM_STATUS{{else}}SYSTEM_STATUS{{/match}}
-  {{/is}}
-{{/match}}
 {{#match key "Search"}}
   {{#is "post"}}
     {{#post}}
@@ -1316,10 +1289,10 @@
 {{#match key "WORK_VALUE_TITLE"}}
   {{#is "post"}}
     {{#post}}
-      {{#has tag="#lang-ja-jp"}}STILL_NOT_CONVINCED{{else has tag="#lang-pt-br"}}STILL_NOT_CONVINCED{{else has tag="#lang-es-la"}}STILL_NOT_CONVINCED{{else}}STILL_NOT_CONVINCED{{/has}}
+      {{#has tag="#lang-ja-jp"}}STILL_NOT_CONVINCED{{else has tag="#lang-pt-br"}}AINDA_NAO_CONVENCIDO?{{else has tag="#lang-es-la"}}AÚN_NO_CONVENCIDO?{{else}}STILL_NOT_CONVINCED?{{/has}}
     {{/post}}
   {{else}}
-    {{#match (block "np_lang") "en-us"}}STILL_NOT_CONVINCED{{else match (block "np_lang") "ja-jp"}}STILL_NOT_CONVINCED{{else match (block "np_lang") "pt-br"}}STILL_NOT_CONVINCED{{else match (block "np_lang") "es-la"}}STILL_NOT_CONVINCED{{else}}STILL_NOT_CONVINCED{{/match}}
+    {{#match (block "np_lang") "en-us"}}STILL_NOT_CONVINCED?{{else match (block "np_lang") "ja-jp"}}STILL_NOT_CONVINCED{{else match (block "np_lang") "pt-br"}}AINDA_NAO_CONVENCIDO?{{else match (block "np_lang") "es-la"}}AÚN_NO_CONVENCIDO?{{else}}STILL_NOT_CONVINCED?{{/match}}
   {{/is}}
 {{/match}}
 {{#match key "YOUTUBE_LIVE"}}

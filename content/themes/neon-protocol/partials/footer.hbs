@@ -3,14 +3,16 @@
     <ul class="np-footer-links">
         {{#is "post"}}
         {{#post}}
-            <li><a href="{{@site.url}}/{{> "np-locale-prefix-post"}}/articles/">{{t "SYSTEM_STATUS"}}</a></li>
-            <li><a href="{{@site.url}}/{{> "np-locale-prefix-post"}}/articles/rss/">{{t "ENCRYPTION_LOG"}}</a></li>
-            <li><a href="{{@site.url}}/{{> "np-locale-prefix-post"}}/portfolio/">{{t "DATA_MAP"}}</a></li>
+            <li><a href="{{@site.url}}/{{> "np-locale-prefix-post"}}/articles/">{{> "np-t" key="ARTICLES"}}</a></li>
+            <li><a href="{{@site.url}}/{{> "np-locale-prefix-post"}}/articles/rss/">{{> "np-t" key="RSS"}}</a></li>
+            <li><a href="{{@site.url}}/{{> "np-locale-prefix-post"}}/portfolio/">{{> "np-t" key="PORTFOLIO"}}</a></li>
+            <li><a href="{{@site.url}}/{{> "np-locale-prefix-post"}}/about/">{{> "np-t" key="ABOUT"}}</a></li>
         {{/post}}
         {{else}}
-            <li><a href="{{@site.url}}/{{> "np-locale-prefix-site"}}/articles/">{{t "SYSTEM_STATUS"}}</a></li>
-            <li><a href="{{@site.url}}/{{> "np-locale-prefix-site"}}/articles/rss/">{{t "ENCRYPTION_LOG"}}</a></li>
-            <li><a href="{{@site.url}}/{{> "np-locale-prefix-site"}}/portfolio/">{{t "DATA_MAP"}}</a></li>
+            <li><a href="{{@site.url}}/{{> "np-locale-prefix-site"}}/articles/">{{> "np-t" key="ARTICLES"}}</a></li>
+            <li><a href="{{@site.url}}/{{> "np-locale-prefix-site"}}/articles/rss/">{{> "np-t" key="RSS"}}</a></li>
+            <li><a href="{{@site.url}}/{{> "np-locale-prefix-site"}}/portfolio/">{{> "np-t" key="PORTFOLIO"}}</a></li>
+            <li><a href="{{@site.url}}/{{> "np-locale-prefix-site"}}/about/">{{> "np-t" key="ABOUT"}}</a></li>
         {{/is}}
     </ul>
 </footer>

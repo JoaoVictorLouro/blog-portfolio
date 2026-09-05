@@ -676,9 +676,10 @@ async function seedNavigation(cookie) {
     { label: 'ABOUT', url: `/${DEFAULT_LOCALE}/about/` },
   ];
   const expectedSecondary = [
-    { label: 'SYSTEM_STATUS', url: `/${DEFAULT_LOCALE}/articles/` },
-    { label: 'ENCRYPTION_LOG', url: `/${DEFAULT_LOCALE}/articles/rss/` },
-    { label: 'DATA_MAP', url: `/${DEFAULT_LOCALE}/portfolio/` },
+    { label: 'ARTICLES', url: `/${DEFAULT_LOCALE}/articles/` },
+    { label: 'RSS', url: `/${DEFAULT_LOCALE}/articles/rss/` },
+    { label: 'PORTFOLIO', url: `/${DEFAULT_LOCALE}/portfolio/` },
+    { label: 'ABOUT', url: `/${DEFAULT_LOCALE}/about/` },
   ];
   if (navMatches(navigation, expectedNav) && navMatches(secondary, expectedSecondary)) {
     return;
