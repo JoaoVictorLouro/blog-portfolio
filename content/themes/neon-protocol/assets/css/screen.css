@@ -2871,6 +2871,11 @@ html.np-members-open {
   mix-blend-mode: luminosity;
 }
 
+.np-about-photo .np-avatar img {
+  opacity: 1;
+  mix-blend-mode: normal;
+}
+
 .np-avatar::after {
   content: '';
   position: absolute;

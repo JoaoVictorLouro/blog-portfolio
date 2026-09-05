@@ -25,19 +25,9 @@
         </article>
 
         <aside class="np-glass np-card np-about-photo">
-            {{#if feature_image}}
-                <div class="np-avatar">
-                    <img src="{{img_url feature_image size="l"}}" alt="{{title}}">
-                </div>
-            {{else}}
-                {{#foreach authors}}
-                    {{#if profile_image}}
-                        <div class="np-avatar">
-                            <img src="{{img_url profile_image size="l"}}" alt="{{name}}">
-                        </div>
-                    {{/if}}
-                {{/foreach}}
-            {{/if}}
+            <div class="np-avatar">
+                <img src="{{asset "images/profile.webp"}}" alt="{{@site.title}}" width="800" height="800">
+            </div>
             <div class="np-kv">
                 <span>ID: {{slug}}</span>
                 <span class="np-label" style="color: var(--np-lantern-amber);">{{> "np-t" key="ENCRYPTED"}}</span>
