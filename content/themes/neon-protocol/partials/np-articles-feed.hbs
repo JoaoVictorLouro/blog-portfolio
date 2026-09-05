@@ -1,0 +1,13 @@
+{{#foreach posts}}
+    {{#if @first}}
+        {{> "post-card-hero"}}
+    {{/if}}
+{{/foreach}}
+
+<div class="np-bento">
+    {{#foreach posts}}
+        {{#unless @first}}
+            {{> "post-card" wide=@odd}}
+        {{/unless}}
+    {{/foreach}}
+</div>

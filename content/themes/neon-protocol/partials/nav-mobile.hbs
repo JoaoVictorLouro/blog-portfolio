@@ -3,5 +3,9 @@
 {{> "nav-mobile-post"}}
 {{/post}}
 {{else}}
+{{#is "tag"}}
+{{> "nav-mobile-tag"}}
+{{else}}
 {{> "nav-mobile-site"}}
+{{/is}}
 {{/is}}

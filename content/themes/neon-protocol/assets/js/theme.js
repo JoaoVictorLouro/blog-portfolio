@@ -442,6 +442,12 @@
     if (linkPath.endsWith('/articles/') && currentPath.startsWith(linkPath)) {
       return true;
     }
+    if (linkPath.endsWith('/articles/')) {
+      const localeRoot = linkPath.replace(/articles\/$/, '');
+      if (currentPath.startsWith(`${localeRoot}tag/`)) {
+        return true;
+      }
+    }
     return false;
   }
 
@@ -1861,6 +1867,27 @@
     });
   }
 
+  function rewriteTagArchiveLocaleUrls() {
+    const locale = document.documentElement.dataset.npPathLocale;
+    if (!locale || !document.body.classList.contains('tag-template')) {
+      return;
+    }
+
+    const rewritePath = (pathname) => pathname.replace(/^\/en-us\/tag\//, `/${locale}/tag/`);
+
+    document.querySelectorAll('.np-pagination a[href], a.np-chip[href]').forEach((anchor) => {
+      try {
+        const url = new URL(anchor.href, window.location.origin);
+        const nextPath = rewritePath(url.pathname);
+        if (nextPath !== url.pathname) {
+          anchor.href = `${nextPath}${url.search}${url.hash}`;
+        }
+      } catch {
+        /* ignore invalid href */
+      }
+    });
+  }
+
   function initWorkCertTilt() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       return;
@@ -1884,6 +1911,7 @@
     initMembersDialog();
     bootstrapFxVisibility();
     initLanguagePicker();
+    rewriteTagArchiveLocaleUrls();
     initTranslationSwitcher();
     initNewsletterLocale();
     initYouTubeFeed();

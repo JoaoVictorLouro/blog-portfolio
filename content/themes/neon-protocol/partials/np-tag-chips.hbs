@@ -1,0 +1,3 @@
+{{#foreach tags visibility="public"}}
+    <a class="np-chip{{#if chip_class}} {{chip_class}}{{/if}}" href="{{@site.url}}/{{> "np-locale-prefix-site"}}/tag/{{slug}}/">{{name}}</a>
+{{/foreach}}

@@ -1,0 +1,30 @@
+{{> "np-articles-feed"}}
+{{#unless posts}}
+    <p class="np-empty np-meta">{{> "np-t" key="No posts"}}</p>
+{{/unless}}
+{{#with meta.pagination}}
+    {{#if next}}
+        <nav class="np-pagination np-more" aria-label="{{t "Page {page} of {pages}" page=page pages=pages}}">
+            <a class="np-btn np-btn-primary" href="{{@site.url}}/en-us/tag/{{archive_slug}}/page/{{next}}/">
+                <span class="material-symbols-outlined" aria-hidden="true">download</span>{{t "Load more"}}
+            </a>
+            {{#if prev}}
+                {{#match prev "=" 1}}
+                    <a class="np-btn np-btn-ghost" href="{{@site.url}}/en-us/tag/{{archive_slug}}/">{{t "Newer posts"}}</a>
+                {{else}}
+                    <a class="np-btn np-btn-ghost" href="{{@site.url}}/en-us/tag/{{archive_slug}}/page/{{prev}}/">{{t "Newer posts"}}</a>
+                {{/match}}
+            {{/if}}
+        </nav>
+    {{else}}
+        {{#if prev}}
+            <nav class="np-pagination np-more" aria-label="{{t "Page {page} of {pages}" page=page pages=pages}}">
+                {{#match prev "=" 1}}
+                    <a class="np-btn np-btn-ghost" href="{{@site.url}}/en-us/tag/{{archive_slug}}/">{{t "Newer posts"}}</a>
+                {{else}}
+                    <a class="np-btn np-btn-ghost" href="{{@site.url}}/en-us/tag/{{archive_slug}}/page/{{prev}}/">{{t "Newer posts"}}</a>
+                {{/match}}
+            </nav>
+        {{/if}}
+    {{/if}}
+{{/with}}

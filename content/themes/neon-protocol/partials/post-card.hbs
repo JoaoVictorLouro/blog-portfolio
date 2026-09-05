@@ -14,7 +14,7 @@
         {{/if}}
         <div class="np-wide-body">
             <div class="np-card-tags">
-                {{#if primary_tag}}<span class="np-chip is-amber">{{primary_tag.name}}</span>{{/if}}
+                {{> "np-tag-chips" chip_class="is-amber"}}
             </div>
             <h2 class="np-heading"><a href="{{url}}">{{title}}</a></h2>
             {{#if excerpt}}<p>{{excerpt words="24"}}</p>{{/if}}
@@ -35,7 +35,7 @@
                     loading="lazy">
             </div>
         {{/if}}
-        {{#if primary_tag}}<span class="np-chip is-amber">{{primary_tag.name}}</span>{{/if}}
+        {{> "np-tag-chips" chip_class="is-amber"}}
         <h2 class="np-heading"><a href="{{url}}">{{title}}</a></h2>
         <div class="np-card-tags">
             <time class="np-label" datetime="{{date format="YYYY-MM-DD"}}">{{date format="YYYY.MM.DD"}}</time>

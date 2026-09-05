@@ -845,6 +845,15 @@
     {{#match (block "np_lang") "en-us"}}STATUS: ONLINE // ARCHIVE INDEX{{else match (block "np_lang") "ja-jp"}}ステータス: オンライン // アーカイブ索引{{else match (block "np_lang") "pt-br"}}STATUS: ONLINE // ÍNDICE DO ARQUIVO{{else match (block "np_lang") "es-la"}}ESTADO: EN LÍNEA // ÍNDICE DE ARCHIVO{{else}}STATUS: ONLINE // ARCHIVE INDEX{{/match}}
   {{/is}}
 {{/match}}
+{{#match key "STATUS_ONLINE_TAG"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}ステータス: オンライン // タグ索引{{else has tag="#lang-pt-br"}}STATUS: ONLINE // ÍNDICE DE TAG{{else has tag="#lang-es-la"}}ESTADO: EN LÍNEA // ÍNDICE DE ETIQUETA{{else}}STATUS: ONLINE // TAG INDEX{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}STATUS: ONLINE // TAG INDEX{{else match (block "np_lang") "ja-jp"}}ステータス: オンライン // タグ索引{{else match (block "np_lang") "pt-br"}}STATUS: ONLINE // ÍNDICE DE TAG{{else match (block "np_lang") "es-la"}}ESTADO: EN LÍNEA // ÍNDICE DE ETIQUETA{{else}}STATUS: ONLINE // TAG INDEX{{/match}}
+  {{/is}}
+{{/match}}
 {{#match key "STREAM_BUFFER_ACTIVE"}}
   {{#is "post"}}
     {{#post}}

@@ -23,6 +23,27 @@
     </div>
     {{/post}}
     {{else}}
+    {{#is "tag"}}
+    <a class="np-brand" href="{{~> "np-tag-relative-prefix"}}">
+        {{#if @site.logo}}
+            <img src="{{@site.logo}}" alt="{{@site.title}}">
+        {{else}}
+            {{> "brand-title"}}
+        {{/if}}
+    </a>
+    <nav class="np-nav-menu" aria-label="{{> "np-t" key="Menu"}}">
+        {{> "np-nav-links-tag"}}
+    </nav>
+    <div class="np-nav-actions">
+        {{> "language-picker"}}
+        <button class="np-icon-btn" type="button" data-np-theme-toggle aria-pressed="false" aria-label="{{> "np-t" key="Theme"}}">
+            <span class="material-symbols-outlined" aria-hidden="true">light_mode</span>
+        </button>
+        <button class="np-icon-btn" type="button" data-ghost-search aria-label="{{> "np-t" key="Search"}}">
+            <span class="material-symbols-outlined" aria-hidden="true">search</span>
+        </button>
+    </div>
+    {{else}}
     <a class="np-brand" href="{{@site.url}}/{{> "np-locale-prefix-site"}}/">
         {{#if @site.logo}}
             <img src="{{@site.logo}}" alt="{{@site.title}}">
@@ -42,5 +63,6 @@
             <span class="material-symbols-outlined" aria-hidden="true">search</span>
         </button>
     </div>
+    {{/is}}
     {{/is}}
 </header>

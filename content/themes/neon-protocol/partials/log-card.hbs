@@ -20,8 +20,6 @@
     <h3 class="np-heading"><a href="{{url}}">{{title}}</a></h3>
     {{#if excerpt}}<p>{{excerpt words="28"}}</p>{{/if}}
     <div class="np-card-tags">
-        {{#foreach tags}}
-            <span class="np-chip">#{{slug}}</span>
-        {{/foreach}}
+        {{> "np-tag-chips"}}
     </div>
 </article>

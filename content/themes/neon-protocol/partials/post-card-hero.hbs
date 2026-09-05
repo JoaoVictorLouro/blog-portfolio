@@ -6,7 +6,7 @@
     {{/if}}
     <div class="np-hero-log-body">
         <div class="np-card-tags">
-            {{#if primary_tag}}<span class="np-chip is-signal">{{primary_tag.name}}</span>{{/if}}
+            {{> "np-tag-chips" chip_class="is-signal"}}
             <span class="np-chip">{{date format="YY.MM"}}</span>
         </div>
         <h1 class="np-title"><a href="{{url}}">{{title}}</a></h1>

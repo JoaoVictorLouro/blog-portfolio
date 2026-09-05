@@ -8,3 +8,4 @@
   ^/logs/(.+)$: /en-us/articles/$1
   ^/archive/$: /en-us/portfolio/
   ^/archive/(.+)$: /en-us/portfolio/
+  ^/tag/(.+)$: /en-us/tag/$1

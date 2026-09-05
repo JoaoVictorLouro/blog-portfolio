@@ -1047,6 +1047,40 @@ body:has(#announcement-bar-root .gh-announcement-bar) .np-main {
   color: var(--np-on-surface);
 }
 
+a.np-chip {
+  position: relative;
+  z-index: 1;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+a.np-chip:hover {
+  border-color: var(--np-neon-teal);
+  color: var(--np-neon-teal);
+}
+
+a.np-chip.is-amber:hover {
+  color: var(--np-lantern-amber);
+  border-color: var(--np-lantern-amber);
+}
+
+a.np-chip.is-signal:hover {
+  color: var(--np-charcoal);
+  border-color: var(--np-neon-teal);
+}
+
+.np-tag-locale-panel {
+  display: none;
+}
+
+html:not([data-np-path-locale]) .np-tag-locale-panel[data-np-tag-locale='en-us'],
+html[data-np-path-locale='en-us'] .np-tag-locale-panel[data-np-tag-locale='en-us'],
+html[data-np-path-locale='ja-jp'] .np-tag-locale-panel[data-np-tag-locale='ja-jp'],
+html[data-np-path-locale='pt-br'] .np-tag-locale-panel[data-np-tag-locale='pt-br'],
+html[data-np-path-locale='es-la'] .np-tag-locale-panel[data-np-tag-locale='es-la'] {
+  display: block;
+}
+
 .np-chip.is-signal {
   background: var(--np-neon-teal);
   color: var(--np-charcoal);

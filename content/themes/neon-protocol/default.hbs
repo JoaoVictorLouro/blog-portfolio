@@ -27,6 +27,14 @@
         comments: "{{asset 'js/vendor/ghost-comments-ui.min.js'}}",
         commentsOverrides: "{{asset 'css/ghost-comments-overrides.css'}}"
     };
+    (function () {
+        var pathMatch = window.location.pathname.match(/^\/(en-us|ja-jp|pt-br|es-la)(\/|$)/);
+        var pathLocale = pathMatch ? pathMatch[1] : (window.__npLocale || 'en-us');
+        document.documentElement.setAttribute('data-np-path-locale', pathLocale);
+        if (pathMatch) {
+            window.__npLocale = pathMatch[1];
+        }
+    })();
     </script>
     <script>
     (function () {
@@ -163,6 +171,12 @@
     <title>{{meta_title page=(t " (Page %)")}}</title>
     <script>
         (function () {
+            var pathMatch = window.location.pathname.match(/^\/(en-us|ja-jp|pt-br|es-la)(\/|$)/);
+            var pathLocale = pathMatch ? pathMatch[1] : (window.__npLocale || 'en-us');
+            document.documentElement.setAttribute('data-np-path-locale', pathLocale);
+            if (pathMatch) {
+                window.__npLocale = pathMatch[1];
+            }
             try {
                 var theme = localStorage.getItem('np-theme');
                 document.documentElement.setAttribute('data-theme', theme === 'light' ? 'light' : 'dark');

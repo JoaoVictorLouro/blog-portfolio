@@ -9,10 +9,17 @@
             <li><a href="{{@site.url}}/{{> "np-locale-prefix-post"}}/about/">{{> "np-t" key="ABOUT"}}</a></li>
         {{/post}}
         {{else}}
+        {{#is "tag"}}
+            <li><a href="{{~> "np-tag-relative-prefix"}}articles/">{{> "np-t" key="ARTICLES"}}</a></li>
+            <li><a href="{{~> "np-tag-relative-prefix"}}articles/rss/">{{> "np-t" key="RSS"}}</a></li>
+            <li><a href="{{~> "np-tag-relative-prefix"}}portfolio/">{{> "np-t" key="PORTFOLIO"}}</a></li>
+            <li><a href="{{~> "np-tag-relative-prefix"}}about/">{{> "np-t" key="ABOUT"}}</a></li>
+        {{else}}
             <li><a href="{{@site.url}}/{{> "np-locale-prefix-site"}}/articles/">{{> "np-t" key="ARTICLES"}}</a></li>
             <li><a href="{{@site.url}}/{{> "np-locale-prefix-site"}}/articles/rss/">{{> "np-t" key="RSS"}}</a></li>
             <li><a href="{{@site.url}}/{{> "np-locale-prefix-site"}}/portfolio/">{{> "np-t" key="PORTFOLIO"}}</a></li>
             <li><a href="{{@site.url}}/{{> "np-locale-prefix-site"}}/about/">{{> "np-t" key="ABOUT"}}</a></li>
+        {{/is}}
         {{/is}}
     </ul>
 </footer>

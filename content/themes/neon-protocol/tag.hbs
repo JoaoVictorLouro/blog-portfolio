@@ -3,18 +3,62 @@
 <main class="np-main">
     {{#tag}}
         <header class="np-about-banner">
-            <h1 class="np-display">{{name}}</h1>
-            {{#if description}}<p class="np-body">{{description}}</p>{{/if}}
+            <h1 class="np-display"><span class="np-page-title"><span class="material-symbols-outlined" aria-hidden="true">sell</span>{{name}}</span></h1>
+            {{#if description}}
+                <p class="np-body">{{description}}</p>
+            {{else}}
+                <p class="np-meta">{{> "np-t" key="STATUS_ONLINE_TAG"}}</p>
+            {{/if}}
         </header>
     {{/tag}}
 
-    <div class="np-bento">
-        {{#foreach posts}}
-            {{> "post-card" wide=@odd}}
-        {{else}}
-            <p class="np-empty np-meta">{{t "No posts"}}</p>
-        {{/foreach}}
+    <div class="np-toolbar">
+        <div class="np-search">
+            <span class="material-symbols-outlined" aria-hidden="true">search</span>
+            <button type="button" data-ghost-search>{{> "np-t" key="Search"}}</button>
+        </div>
+        <div class="np-card-tags">
+            <span class="np-chip is-live">{{> "np-t" key="STATUS_ONLINE"}}</span>
+            <a class="np-btn np-btn-ghost" href="{{~> "np-tag-relative-prefix"}}articles/">
+                <span class="material-symbols-outlined">filter_list</span>{{> "np-t" key="ARTICLES"}}
+            </a>
+        </div>
     </div>
 
-    {{pagination}}
+    {{#tag}}
+        <div class="np-tag-locale-panel" data-np-tag-locale="en-us">
+            {{#get "posts" filter="tag:{{slug}}+tag:-hash-lang-ja-jp+tag:-hash-lang-pt-br+tag:-hash-lang-es-la" include="tags,authors" limit="15" page=@root.pagination.page}}
+                {{> "np-tag-locale-feed" archive_slug=slug}}
+            {{/get}}
+        </div>
+        <div class="np-tag-locale-panel" data-np-tag-locale="ja-jp">
+            {{#get "posts" filter="tag:{{slug}}+tag:hash-lang-ja-jp" include="tags,authors" limit="15" page=@root.pagination.page}}
+                {{> "np-tag-locale-feed" archive_slug=slug}}
+            {{/get}}
+        </div>
+        <div class="np-tag-locale-panel" data-np-tag-locale="pt-br">
+            {{#get "posts" filter="tag:{{slug}}+tag:hash-lang-pt-br" include="tags,authors" limit="15" page=@root.pagination.page}}
+                {{> "np-tag-locale-feed" archive_slug=slug}}
+            {{/get}}
+        </div>
+        <div class="np-tag-locale-panel" data-np-tag-locale="es-la">
+            {{#get "posts" filter="tag:{{slug}}+tag:hash-lang-es-la" include="tags,authors" limit="15" page=@root.pagination.page}}
+                {{> "np-tag-locale-feed" archive_slug=slug}}
+            {{/get}}
+        </div>
+    {{/tag}}
 </main>
+<script>
+(function () {
+    var locale = document.documentElement.getAttribute('data-np-path-locale') || 'en-us';
+    document.querySelectorAll('.np-tag-locale-panel').forEach(function (panel) {
+        var active = panel.getAttribute('data-np-tag-locale') === locale;
+        panel.hidden = !active;
+        if (active) {
+            panel.removeAttribute('inert');
+        } else {
+            panel.setAttribute('inert', '');
+        }
+    });
+})();
+</script>
