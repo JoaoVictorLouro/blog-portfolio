@@ -1592,6 +1592,17 @@
     }
   }
 
+  const GHOST_SEARCH_LOCALES = {
+    'en-us': 'en',
+    'ja-jp': 'ja',
+    'pt-br': 'pt-BR',
+    'es-la': 'es',
+  };
+
+  function ghostSearchLocale() {
+    return GHOST_SEARCH_LOCALES[window.__npLocale] || 'en';
+  }
+
   function applyScriptAttributes(script, attrs) {
     Object.entries(attrs).forEach(([name, value]) => {
       if (name === 'defer') {
@@ -1624,10 +1635,13 @@
 
     window.__npGhostLoaders[kind] = new Promise((resolve, reject) => {
       const script = document.createElement('script');
-      const attrs = entry.attrs || (entry.src ? { src: entry.src } : null);
+      const attrs = { ...(entry.attrs || (entry.src ? { src: entry.src } : null)) };
       if (!attrs?.src) {
         reject(new Error(`Missing Ghost ${kind} script src`));
         return;
+      }
+      if (kind === 'search') {
+        attrs['data-locale'] = ghostSearchLocale();
       }
       applyScriptAttributes(script, attrs);
       script.onload = () => {
