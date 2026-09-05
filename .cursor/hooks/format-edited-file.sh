@@ -12,12 +12,11 @@ export NPM_CONFIG_REGISTRY="${NPM_CONFIG_REGISTRY:-https://registry.npmjs.org/}"
 
 if [[ -n "${file_path:-}" && -f "$file_path" ]]; then
   if ! deno run -A npm:prettier@3.9.6 --write "$file_path" >/dev/null 2>&1; then
-    echo "format-and-lint: prettier skipped or failed for $file_path" >&2
+    echo "format-edited-file: prettier skipped or failed for $file_path" >&2
   fi
 fi
 
-if ! deno task test >&2; then
-  echo "format-and-lint: deno task test failed" >&2
-fi
+mkdir -p tmp
+touch tmp/cursor-verify-pending
 
 exit 0

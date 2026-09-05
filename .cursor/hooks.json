@@ -9,8 +9,15 @@
     ],
     "afterFileEdit": [
       {
-        "command": ".cursor/hooks/format-and-lint.sh",
-        "timeout": 180
+        "command": ".cursor/hooks/format-edited-file.sh",
+        "timeout": 60
+      }
+    ],
+    "stop": [
+      {
+        "command": ".cursor/hooks/verify-on-stop.sh",
+        "timeout": 180,
+        "loop_limit": 3
       }
     ]
   }

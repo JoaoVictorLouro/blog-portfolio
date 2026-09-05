@@ -66,4 +66,5 @@ Site: `http://localhost:2368` (nginx) — Admin: `http://localhost:2368/ghost` �
 - [`.cursorignore`](.cursorignore) excludes `.env` / `.env.*` (keeps `*.example` templates) and `data/`
 - [`.cursor/hooks.json`](.cursor/hooks.json):
   - `beforeReadFile` — deny agent reads of `.env` files (`failClosed`)
-  - `afterFileEdit` — format the edited file with Prettier, then run `deno task test`
+  - `afterFileEdit` — format the edited file with Prettier and mark a verify sentinel (no gscan)
+  - `stop` — if files were edited this turn, run `deno task test` once (gscan via Docker); send failures back as a follow-up (max 3 loops)
