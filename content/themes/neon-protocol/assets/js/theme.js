@@ -20,6 +20,10 @@
         'aria-label',
         next === 'light' ? 'Switch to dark theme' : 'Switch to light theme',
       );
+      const icon = button.querySelector('.material-symbols-outlined');
+      if (icon) {
+        icon.textContent = next === 'light' ? 'dark_mode' : 'light_mode';
+      }
     });
     syncGhostCommentsTheme(next);
   }
