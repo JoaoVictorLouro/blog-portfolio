@@ -17,12 +17,9 @@
             <span class="material-symbols-outlined" aria-hidden="true">search</span>
             <button type="button" data-ghost-search>{{> "np-t" key="Search"}}</button>
         </div>
-        <div class="np-card-tags">
-            <span class="np-chip is-live">{{> "np-t" key="STATUS_ONLINE"}}</span>
-            <a class="np-btn np-btn-ghost" href="{{~> "np-tag-relative-prefix"}}articles/">
-                <span class="material-symbols-outlined">filter_list</span>{{> "np-t" key="ARTICLES"}}
-            </a>
-        </div>
+        {{#tag}}
+            {{> "np-article-filters" active_slug=slug filter_open=true}}
+        {{/tag}}
     </div>
 
     {{#tag}}

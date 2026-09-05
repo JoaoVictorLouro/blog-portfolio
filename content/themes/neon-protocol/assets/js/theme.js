@@ -532,6 +532,178 @@
     });
   }
 
+  function handleArticleFilterToggle(event) {
+    const button = event.target.closest('[data-np-article-filter]');
+    if (!button) {
+      return;
+    }
+    const panel = document.getElementById('np-article-filters');
+    if (!panel) {
+      return;
+    }
+    const open = panel.hasAttribute('hidden');
+    panel.toggleAttribute('hidden', !open);
+    button.classList.toggle('is-active', open);
+    button.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  function currentPathLocale() {
+    return document.documentElement.dataset.npPathLocale || window.__npLocale || 'en-us';
+  }
+
+  function searchIndexPathname(urlString) {
+    const url = new URL(urlString, window.location.origin);
+    const locale = currentPathLocale();
+    let pathname = url.pathname.endsWith('/') ? url.pathname : `${url.pathname}/`;
+    return pathname.replace(/^\/en-us\/tag\//, `/${locale}/tag/`);
+  }
+
+  function searchIndexItemAllowed(item) {
+    if (!item?.url) {
+      return false;
+    }
+    try {
+      const pathname = searchIndexPathname(item.url);
+      const locale = currentPathLocale();
+      return pathname.startsWith(`/${locale}/`) || pathname.startsWith('/author/');
+    } catch {
+      return false;
+    }
+  }
+
+  function rewriteSearchIndexItem(item) {
+    if (!item?.url) {
+      return item;
+    }
+    try {
+      const url = new URL(item.url, window.location.origin);
+      const locale = currentPathLocale();
+      url.pathname = url.pathname.replace(/^\/en-us\/tag\//, `/${locale}/tag/`);
+      return { ...item, url: url.toString() };
+    } catch {
+      return item;
+    }
+  }
+
+  function patchSodoSearchIndexFetch() {
+    if (window.__npSearchFetchPatched) {
+      return;
+    }
+    window.__npSearchFetchPatched = true;
+    const originalFetch = window.fetch.bind(window);
+    window.fetch = async (...args) => {
+      const response = await originalFetch(...args);
+      const requestUrl = typeof args[0] === 'string' ? args[0] : args[0]?.url;
+      if (!requestUrl || !String(requestUrl).includes('/ghost/api/content/search-index/')) {
+        return response;
+      }
+      try {
+        const payload = await response.clone().json();
+        if (Array.isArray(payload.posts)) {
+          payload.posts = payload.posts.filter(searchIndexItemAllowed);
+        }
+        if (Array.isArray(payload.tags)) {
+          payload.tags = payload.tags.map(rewriteSearchIndexItem).filter(searchIndexItemAllowed);
+        }
+        return new Response(JSON.stringify(payload), {
+          status: response.status,
+          statusText: response.statusText,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      } catch {
+        return response;
+      }
+    };
+  }
+
+  function applySodoSearchLocale(scope) {
+    if (!scope?.querySelectorAll) {
+      return;
+    }
+    const locale = currentPathLocale();
+    const localePrefix = `/${locale}/`;
+    scope.querySelectorAll('a[href]').forEach((anchor) => {
+      try {
+        const url = new URL(anchor.href, window.location.origin);
+        if (url.origin !== window.location.origin) {
+          return;
+        }
+        let pathname = url.pathname.endsWith('/') ? url.pathname : `${url.pathname}/`;
+        const rewritten = pathname.replace(/^\/en-us\/tag\//, `/${locale}/tag/`);
+        if (rewritten !== pathname) {
+          pathname = rewritten;
+          anchor.href = `${rewritten}${url.search}${url.hash}`;
+        }
+        const allowed = pathname.startsWith(localePrefix) || pathname.startsWith('/author/');
+        const row = anchor.closest('li') || anchor;
+        row.hidden = !allowed;
+        row.style.display = allowed ? '' : 'none';
+      } catch {
+        /* ignore invalid href */
+      }
+    });
+  }
+
+  function bindSodoSearchFrame(iframe) {
+    if (iframe.dataset.npSodoBound === '1') {
+      return;
+    }
+    iframe.dataset.npSodoBound = '1';
+    const sync = () => {
+      const doc = iframe.contentDocument;
+      if (!doc?.documentElement) {
+        return;
+      }
+      doc.documentElement.style.background = 'transparent';
+      if (doc.body) {
+        doc.body.style.background = 'transparent';
+      }
+      applySodoSearchLocale(doc);
+      if (doc.documentElement.dataset.npSodoBound === '1') {
+        return;
+      }
+      doc.documentElement.dataset.npSodoBound = '1';
+      const observer = new MutationObserver(() => {
+        doc.documentElement.style.background = 'transparent';
+        if (doc.body) {
+          doc.body.style.background = 'transparent';
+        }
+        applySodoSearchLocale(doc);
+      });
+      observer.observe(doc.documentElement, { childList: true, subtree: true });
+    };
+    sync();
+    iframe.addEventListener('load', sync);
+  }
+
+  function attachSodoSearchRoot(root) {
+    if (!root || root.dataset.npLocaleBound === '1') {
+      return;
+    }
+    root.dataset.npLocaleBound = '1';
+    root.querySelectorAll('iframe').forEach(bindSodoSearchFrame);
+    const observer = new MutationObserver(() => {
+      root.querySelectorAll('iframe').forEach(bindSodoSearchFrame);
+    });
+    observer.observe(root, { childList: true, subtree: true });
+  }
+
+  function initSodoSearchLocale() {
+    patchSodoSearchIndexFetch();
+    const existing = document.getElementById('sodo-search-root');
+    if (existing) {
+      attachSodoSearchRoot(existing);
+    }
+
+    const bodyObserver = new MutationObserver(() => {
+      const root = document.getElementById('sodo-search-root');
+      if (root) {
+        attachSodoSearchRoot(root);
+      }
+    });
+    bodyObserver.observe(document.body, { childList: true });
+  }
+
   function handlePortfolioFilter(event) {
     const button = event.target.closest('[data-np-filter]');
     if (!button) {
@@ -823,7 +995,7 @@
     }
     if (
       link.closest(
-        '[data-ghost-search], [data-np-theme-toggle], [data-np-filter], [data-np-copy], [data-np-web-share]',
+        '[data-ghost-search], [data-np-theme-toggle], [data-np-filter], [data-np-article-filter], [data-np-copy], [data-np-web-share]',
       )
     ) {
       return false;
@@ -988,6 +1160,7 @@
     handleCopyLink(event);
     handleWebShare(event);
     handlePortfolioFilter(event);
+    handleArticleFilterToggle(event);
     handlePageGlitchNav(event);
   });
 
@@ -1478,9 +1651,13 @@
         // Ignore announcement prefetch failures.
       });
 
-    loadGhostScript('search').catch(() => {
-      // Ignore search prefetch failures; first click retries.
-    });
+    loadGhostScript('search')
+      .then(() => {
+        initSodoSearchLocale();
+      })
+      .catch(() => {
+        // Ignore search prefetch failures; first click retries.
+      });
 
     document.addEventListener(
       'click',
@@ -1492,6 +1669,7 @@
         event.preventDefault();
         event.stopPropagation();
         loadGhostScript('search').then(() => {
+          initSodoSearchLocale();
           searchTrigger.click();
         });
       },
@@ -1873,7 +2051,10 @@
       return;
     }
 
-    const rewritePath = (pathname) => pathname.replace(/^\/en-us\/tag\//, `/${locale}/tag/`);
+    const rewritePath = (pathname) =>
+      pathname
+        .replace(/^\/en-us\/tag\//, `/${locale}/tag/`)
+        .replace(/^\/en-us\/articles\//, `/${locale}/articles/`);
 
     document.querySelectorAll('.np-pagination a[href], a.np-chip[href]').forEach((anchor) => {
       try {
@@ -1888,6 +2069,18 @@
     });
   }
 
+  function syncArticleFilterChips() {
+    const row = document.querySelector('#np-article-filters [data-np-filter-slug]');
+    if (!row) {
+      return;
+    }
+    const activeSlug = row.getAttribute('data-np-filter-slug') || '';
+    row.querySelectorAll('a.np-chip').forEach((chip) => {
+      const chipSlug = chip.getAttribute('data-np-chip-slug') || '';
+      chip.classList.toggle('is-active', chipSlug === activeSlug);
+    });
+  }
+
   function initWorkCertTilt() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       return;
@@ -1899,6 +2092,7 @@
 
   function boot() {
     setTheme(currentTheme());
+    patchSodoSearchIndexFetch();
     initDeferredGhostScripts();
     initGhostCommentsThemeSync();
     initAnnouncementLayout();
@@ -1911,7 +2105,9 @@
     initMembersDialog();
     bootstrapFxVisibility();
     initLanguagePicker();
+    initSodoSearchLocale();
     rewriteTagArchiveLocaleUrls();
+    syncArticleFilterChips();
     initTranslationSwitcher();
     initNewsletterLocale();
     initYouTubeFeed();

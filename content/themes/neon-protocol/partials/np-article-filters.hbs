@@ -1,0 +1,18 @@
+<div class="np-toolbar-row">
+    <div class="np-card-tags">
+        <span class="np-chip is-live">{{> "np-t" key="STATUS_ONLINE"}}</span>
+        <button class="np-btn np-btn-ghost{{#if filter_open}} is-active{{/if}}" type="button" data-np-article-filter aria-expanded="{{#if filter_open}}true{{else}}false{{/if}}" aria-controls="np-article-filters">
+            <span class="material-symbols-outlined">filter_list</span>{{> "np-t" key="FILTER"}}
+        </button>
+    </div>
+</div>
+<div class="np-article-filters" id="np-article-filters"{{#unless filter_open}} hidden{{/unless}}>
+    <div class="np-filters" role="toolbar" aria-label="{{> "np-t" key="FILTER"}}" data-np-filter-slug="{{active_slug}}">
+        <a class="np-chip{{#unless active_slug}} is-active{{/unless}}" href="{{@site.url}}/{{> "np-locale-prefix-site"}}/articles/">{{> "np-t" key="ALL"}}</a>
+        {{#get "tags" visibility="public" limit="100"}}
+            {{#foreach tags visibility="public"}}
+                <a class="np-chip" data-np-chip-slug="{{slug}}" href="{{@site.url}}/{{> "np-locale-prefix-site"}}/tag/{{slug}}/">{{name}}</a>
+            {{/foreach}}
+        {{/get}}
+    </div>
+</div>

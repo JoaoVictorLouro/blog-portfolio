@@ -179,9 +179,23 @@ button {
   color: var(--np-charcoal);
 }
 
+html {
+  font-size: 100% !important;
+}
+
 #sodo-search-root,
 #ghost-portal-root {
   color-scheme: light;
+}
+
+#sodo-search-root,
+#sodo-search-root .gh-root-frame {
+  z-index: 200;
+}
+
+#sodo-search-root iframe,
+#sodo-search-root .gh-root-frame {
+  background: transparent;
 }
 
 #ghost-portal-root {
@@ -1289,6 +1303,12 @@ html[data-np-path-locale='es-la'] .np-tag-locale-panel[data-np-tag-locale='es-la
   padding-top: 1rem;
 }
 
+.np-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
 .np-sidebar {
   display: flex;
   flex-direction: column;
@@ -1784,6 +1804,38 @@ html.np-members-open {
   margin-bottom: 3rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--np-outline-variant);
+}
+
+.np-toolbar-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.np-article-filters[hidden] {
+  display: none;
+}
+
+.np-article-filters .np-filters {
+  margin-bottom: 0;
+}
+
+.np-article-filters .np-chip.is-active {
+  color: var(--np-lantern-amber);
+  border-color: var(--np-lantern-amber);
+  background: color-mix(in srgb, var(--np-lantern-amber) 10%, transparent);
+}
+
+.np-article-filters a.np-chip.is-active:hover {
+  color: var(--np-lantern-amber);
+  border-color: var(--np-lantern-amber);
+}
+
+.np-btn.is-active[data-np-article-filter] {
+  border-color: var(--np-lantern-amber);
+  color: var(--np-lantern-amber);
 }
 
 .np-search {
