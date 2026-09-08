@@ -26,7 +26,10 @@
 
         <aside class="np-glass np-card np-about-photo">
             <div class="np-avatar">
-                <img src="{{asset "images/profile.webp"}}" alt="{{@site.title}}" width="800" height="800">
+                <picture>
+                    <source type="image/webp" srcset="{{asset "images/profile-320.webp"}} 320w, {{asset "images/profile-480.webp"}} 480w, {{asset "images/profile-640.webp"}} 640w, {{asset "images/profile.webp"}} 800w" sizes="(min-width: 1024px) min(28rem, 33vw), calc(100vw - 5rem)">
+                    <img src="{{asset "images/profile.webp"}}" alt="{{@site.title}}" width="800" height="800" decoding="async">
+                </picture>
             </div>
             <div class="np-kv">
                 <span>ID: {{slug}}</span>

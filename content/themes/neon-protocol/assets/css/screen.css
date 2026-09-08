@@ -2949,6 +2949,10 @@ html.np-members-open {
   border: 1px solid color-mix(in srgb, var(--np-outline-variant) 50%, transparent);
 }
 
+.np-avatar picture {
+  display: contents;
+}
+
 .np-avatar img {
   width: 100%;
   height: 100%;
