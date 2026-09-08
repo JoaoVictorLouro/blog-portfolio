@@ -14,6 +14,21 @@ const I18N_PUBLIC_DIR =
 const CONTENT_API_WEBHOOK_SECRET = process.env.CONTENT_API_WEBHOOK_SECRET?.trim() ?? '';
 const CONTENT_API_WEBHOOK_TARGET_URL =
   process.env.CONTENT_API_WEBHOOK_TARGET_URL?.trim() || 'http://content-api:8080/webhooks/ghost';
+
+function envTruthy(value) {
+  return ['1', 'true', 'yes'].includes(
+    String(value ?? '')
+      .trim()
+      .toLowerCase(),
+  );
+}
+
+const SKIP_CONFIGS = envTruthy(process.env.BOOTSTRAP_SKIP_CONFIGS);
+const SKIP_TAGS = envTruthy(process.env.BOOTSTRAP_SKIP_TAGS);
+const SKIP_PAGES = envTruthy(process.env.BOOTSTRAP_SKIP_PAGES);
+const SKIP_NEWSLETTERS = envTruthy(process.env.BOOTSTRAP_SKIP_NEWSLETTERS);
+const SKIP_INTEGRATIONS = envTruthy(process.env.BOOTSTRAP_SKIP_INTEGRATIONS);
+const SKIP_ARTICLES = envTruthy(process.env.BOOTSTRAP_SKIP_ARTICLES);
 const CONTENT_API_INTEGRATION_NAME = 'Neon Protocol Content API';
 const CONTENT_API_WEBHOOK_EVENTS = [
   'post.added',
@@ -719,15 +734,47 @@ if (setupStatus(setup)) {
 }
 
 const cookie = await createSession();
-await applyFreeMemberSettings(cookie);
 await activateTheme(cookie);
-await seedSiteTitle(cookie);
-await seedBrandTitleHtml(cookie);
-await ensureLanguageTags(cookie);
-await ensureDefaultLanguageOnPosts(cookie);
-await ensureAboutPages(cookie);
-const newsletterMap = await ensureNewsletters(cookie);
-await seedDemoArticles(request, describeError, fail, ensureInternalTag, cookie, newsletterMap);
-await ensureContentApiWebhooks(cookie);
-await seedNavigation(cookie);
+
+if (SKIP_CONFIGS) {
+  console.log('Skipping configs (members, site title, brand HTML, navigation)');
+} else {
+  await applyFreeMemberSettings(cookie);
+  await seedSiteTitle(cookie);
+  await seedBrandTitleHtml(cookie);
+  await seedNavigation(cookie);
+}
+
+if (SKIP_TAGS) {
+  console.log('Skipping language tags');
+} else {
+  await ensureLanguageTags(cookie);
+  await ensureDefaultLanguageOnPosts(cookie);
+}
+
+if (SKIP_PAGES) {
+  console.log('Skipping About pages');
+} else {
+  await ensureAboutPages(cookie);
+}
+
+let newsletterMap = {};
+if (SKIP_NEWSLETTERS) {
+  console.log('Skipping newsletters');
+} else {
+  newsletterMap = await ensureNewsletters(cookie);
+}
+
+if (SKIP_INTEGRATIONS) {
+  console.log('Skipping content-api integrations');
+} else {
+  await ensureContentApiWebhooks(cookie);
+}
+
+if (SKIP_ARTICLES) {
+  console.log('Skipping demo articles');
+} else {
+  await seedDemoArticles(request, describeError, fail, ensureInternalTag, cookie, newsletterMap);
+}
+
 console.log('Bootstrap complete');

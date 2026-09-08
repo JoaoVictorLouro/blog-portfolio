@@ -75,11 +75,17 @@ services:
       GHOST_SITE_TITLE: ${GHOST_SITE_TITLE:-Kono Gaijin}
       CONTENT_API_WEBHOOK_SECRET: ${CONTENT_API_WEBHOOK_SECRET:-}
       CONTENT_API_WEBHOOK_TARGET_URL: ${CONTENT_API_WEBHOOK_TARGET_URL:-http://content-api:8080/webhooks/ghost}
+      BOOTSTRAP_SKIP_CONFIGS: ${BOOTSTRAP_SKIP_CONFIGS:-false}
+      BOOTSTRAP_SKIP_TAGS: ${BOOTSTRAP_SKIP_TAGS:-false}
+      BOOTSTRAP_SKIP_PAGES: ${BOOTSTRAP_SKIP_PAGES:-false}
+      BOOTSTRAP_SKIP_NEWSLETTERS: ${BOOTSTRAP_SKIP_NEWSLETTERS:-false}
+      BOOTSTRAP_SKIP_INTEGRATIONS: ${BOOTSTRAP_SKIP_INTEGRATIONS:-false}
+      BOOTSTRAP_SKIP_ARTICLES: ${BOOTSTRAP_SKIP_ARTICLES:-false}
     volumes:
-      - ./scripts/ghost-bootstrap.mjs:/ghost-bootstrap.mjs:ro
-      - ./scripts/i18n:/i18n:ro
+      - ./scripts/ghost-bootstrap.mjs:/opt/ghost-bootstrap/ghost-bootstrap.mjs:ro
+      - ./scripts/i18n:/opt/ghost-bootstrap/i18n:ro
       - ./content/themes/neon-protocol/assets/i18n:/var/lib/ghost/content/themes/neon-protocol/assets/i18n
-    entrypoint: ['node', '/ghost-bootstrap.mjs']
+    entrypoint: ['node', '/opt/ghost-bootstrap/ghost-bootstrap.mjs']
 
   content-api:
     build:
