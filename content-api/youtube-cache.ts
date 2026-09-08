@@ -20,6 +20,18 @@ export type YouTubeVideosPayload = {
 
 let cachedVideos: YouTubeVideosPayload | null = null;
 
+export function emptyYouTubeVideosPayload(): YouTubeVideosPayload {
+  return {
+    updated_at: new Date().toISOString(),
+    channel: {
+      id: '',
+      title: '',
+      url: '',
+    },
+    videos: [],
+  };
+}
+
 export function getYouTubeVideos(): YouTubeVideosPayload | null {
   return cachedVideos;
 }

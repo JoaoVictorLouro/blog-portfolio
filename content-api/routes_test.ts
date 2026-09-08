@@ -38,13 +38,16 @@ Deno.test('GET /i18n/article-translations.json returns cached map', async () => 
   clearTranslationMap();
 });
 
-Deno.test('GET /youtube/videos.json returns 503 when cache empty', async () => {
+Deno.test('GET /youtube/videos.json returns empty payload when cache empty', async () => {
   clearYouTubeVideos();
   const response = await handleRequest(new Request('http://localhost/youtube/videos.json'), {
     refreshConfig,
     webhookSecret: 'secret',
   });
-  assertEquals(response.status, 503);
+  assertEquals(response.status, 200);
+  const body = await response.json();
+  assertEquals(body.videos, []);
+  assertEquals(body.channel.id, '');
 });
 
 Deno.test('GET /youtube/videos.json returns cached payload', async () => {

@@ -1,7 +1,7 @@
 import { getTranslationMap, isTranslationMapLoaded } from './cache.ts';
 import type { RefreshConfig } from './refresh.ts';
 import { scheduleWebhookRefresh, verifyGhostWebhookSignature } from './webhooks.ts';
-import { getYouTubeVideos } from './youtube-cache.ts';
+import { emptyYouTubeVideosPayload, getYouTubeVideos } from './youtube-cache.ts';
 
 const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' };
 
@@ -40,13 +40,7 @@ export async function handleRequest(request: Request, context: RouteContext): Pr
     if (request.method !== 'GET') {
       return new Response('Method Not Allowed', { status: 405 });
     }
-    const payload = getYouTubeVideos();
-    if (!payload) {
-      return Response.json(
-        { error: 'YouTube videos not loaded yet' },
-        { status: 503, headers: JSON_HEADERS },
-      );
-    }
+    const payload = getYouTubeVideos() ?? emptyYouTubeVideosPayload();
     return Response.json(payload, { headers: JSON_HEADERS });
   }
 

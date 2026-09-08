@@ -1,5 +1,6 @@
 import { handleRequest } from './routes.ts';
 import { refreshTranslationMapSingleFlight } from './refresh.ts';
+import { emptyYouTubeVideosPayload, setYouTubeVideos } from './youtube-cache.ts';
 import { refreshYouTubeVideosSingleFlight } from './youtube-refresh.ts';
 
 const API_BASE = Deno.env.get('GHOST_API_URL') ?? 'http://127.0.0.1:2368';
@@ -9,8 +10,9 @@ const ADMIN_PASSWORD = Deno.env.get('GHOST_ADMIN_PASSWORD') ?? '';
 const WEBHOOK_SECRET = Deno.env.get('CONTENT_API_WEBHOOK_SECRET') ?? '';
 const PORT = Number(Deno.env.get('CONTENT_API_PORT') ?? '8080');
 const REFRESH_MS = Number(Deno.env.get('I18N_REFRESH_MS') ?? '3600000');
-const YOUTUBE_CHANNEL_ID = Deno.env.get('YOUTUBE_CHANNEL_ID')?.trim() || 'UCV3h2_srSVaiEmjrZ8v7Qsw';
+const YOUTUBE_CHANNEL_ID = Deno.env.get('YOUTUBE_CHANNEL_ID')?.trim() ?? '';
 const YOUTUBE_REFRESH_MS = Number(Deno.env.get('YOUTUBE_REFRESH_MS') ?? '3600000');
+const youtubeEnabled = YOUTUBE_CHANNEL_ID.length > 0;
 
 const refreshConfig = {
   apiBase: API_BASE,
@@ -30,6 +32,11 @@ const routeContext = {
 };
 
 async function refreshYouTubeSafe(): Promise<void> {
+  if (!youtubeEnabled) {
+    setYouTubeVideos(emptyYouTubeVideosPayload());
+    return;
+  }
+
   try {
     await refreshYouTubeVideosSingleFlight(youtubeRefreshConfig);
   } catch (error) {
@@ -77,7 +84,9 @@ if (import.meta.main) {
   await refreshYouTubeSafe();
 
   startTranslationRefreshLoop();
-  startYouTubeRefreshLoop();
+  if (youtubeEnabled) {
+    startYouTubeRefreshLoop();
+  }
 
   Deno.serve({ port: PORT, hostname: '0.0.0.0' }, (request) =>
     handleRequest(request, routeContext),

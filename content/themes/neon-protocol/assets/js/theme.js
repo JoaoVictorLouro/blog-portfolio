@@ -1915,8 +1915,9 @@
   }
 
   function initYouTubeFeed() {
+    const section = document.querySelector('[data-np-youtube-section]');
     const mount = document.querySelector('[data-np-youtube-feed]');
-    if (!mount) {
+    if (!section || !mount) {
       return;
     }
 
@@ -1933,6 +1934,7 @@
       .then((payload) => {
         const videos = Array.isArray(payload?.videos) ? payload.videos.slice(0, 4) : [];
         if (videos.length === 0) {
+          section.hidden = true;
           return;
         }
 
@@ -1949,10 +1951,10 @@
             );
           })
           .join('');
-        mount.hidden = false;
+        section.hidden = false;
       })
       .catch(() => {
-        // YouTube strip is optional when content-api cache is cold.
+        section.hidden = true;
       });
   }
 
