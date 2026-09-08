@@ -76,10 +76,10 @@ tasks:
       - docker compose ps
 
   update:
-    desc: Pull base images, rebuild, and restart
+    desc: Pull nginx, rebuild local images, and restart
     cmds:
       - deno task build:icons
-      - docker compose pull
+      - docker compose pull --ignore-buildable
       - |
         export MATERIAL_SYMBOLS_CACHEBUST="$(cksum scripts/build-material-symbols-subset.sh | awk '{print $1 "-" $2}')"
         docker compose up -d --build

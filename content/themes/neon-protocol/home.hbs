@@ -1,19 +1,18 @@
 {{!< default}}
 
-{{#if @site.cover_image}}
-    {{#contentFor "head"}}
-        <link rel="preload" as="image" href="{{img_url @site.cover_image size="xl"}}" fetchpriority="high">
-    {{/contentFor}}
-{{/if}}
+{{#contentFor "head"}}
+    <link rel="preload" as="image" href="{{asset "images/hero-960.webp"}}" imagesrcset="{{asset "images/hero-640.webp"}} 640w, {{asset "images/hero-960.webp"}} 960w, {{asset "images/hero-1280.webp"}} 1280w, {{asset "images/hero.webp"}} 1600w" imagesizes="min(1280px, calc(100vw - 32px))" fetchpriority="high">
+{{/contentFor}}
 
 <main class="np-main np-home">
-    <section class="np-glass np-hero" data-np-tilt="subtle"{{#if @site.cover_image}} style="--np-hero-image: url('{{img_url @site.cover_image size="xl"}}');"{{/if}}>
-        {{#if @site.cover_image}}
-            <img class="np-hero-media np-fx-layer" src="{{img_url @site.cover_image size="xl"}}" fetchpriority="high" alt="" aria-hidden="true" decoding="async" width="1200" height="675">
-            <div class="np-hero-shade np-fx-layer" aria-hidden="true"></div>
-            {{> "cover-scan-overlay" line1="NODE_SYNC_COMPLETE" line2="BANDWIDTH: OPTIMAL" line3="AWAITING_TRANSMISSION..."}}
-            <div class="np-glitch-effect np-fx-layer" aria-hidden="true"></div>
-        {{/if}}
+    <section class="np-glass np-hero" data-np-tilt="subtle" style="--np-hero-image: url('{{asset "images/hero-960.webp"}}');">
+        <picture>
+            <source type="image/webp" srcset="{{asset "images/hero-640.webp"}} 640w, {{asset "images/hero-960.webp"}} 960w, {{asset "images/hero-1280.webp"}} 1280w, {{asset "images/hero.webp"}} 1600w" sizes="min(1280px, calc(100vw - 32px))">
+            <img class="np-hero-media np-fx-layer" src="{{asset "images/hero.webp"}}" fetchpriority="high" alt="" aria-hidden="true" decoding="async" width="1600" height="900">
+        </picture>
+        <div class="np-hero-shade np-fx-layer" aria-hidden="true"></div>
+        {{> "cover-scan-overlay" line1="NODE_SYNC_COMPLETE" line2="BANDWIDTH: OPTIMAL" line3="AWAITING_TRANSMISSION..."}}
+        <div class="np-glitch-effect np-fx-layer" aria-hidden="true"></div>
         <div class="np-hero-body">
             <div class="np-hero-kicker">
                 <span class="np-chip is-live">{{> "np-t" key="SYSTEM_READY"}}</span>
