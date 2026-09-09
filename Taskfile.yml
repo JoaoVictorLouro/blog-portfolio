@@ -46,6 +46,7 @@ tasks:
     deps: [setup]
     cmds:
       - deno task build:icons
+      - deno task build:pwa-manifests
       - |
         export MATERIAL_SYMBOLS_CACHEBUST="$(cksum scripts/build-material-symbols-subset.sh | awk '{print $1 "-" $2}')"
         docker compose up -d --build
@@ -79,6 +80,7 @@ tasks:
     desc: Pull nginx, rebuild local images, and restart
     cmds:
       - deno task build:icons
+      - deno task build:pwa-manifests
       - docker compose pull --ignore-buildable
       - |
         export MATERIAL_SYMBOLS_CACHEBUST="$(cksum scripts/build-material-symbols-subset.sh | awk '{print $1 "-" $2}')"
@@ -88,6 +90,7 @@ tasks:
     desc: Recreate the Ghost container (use after env file changes)
     cmds:
       - deno task build:icons
+      - deno task build:pwa-manifests
       - |
         export MATERIAL_SYMBOLS_CACHEBUST="$(cksum scripts/build-material-symbols-subset.sh | awk '{print $1 "-" $2}')"
         docker compose up -d --force-recreate --build ghost
