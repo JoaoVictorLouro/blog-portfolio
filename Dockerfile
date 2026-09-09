@@ -21,6 +21,14 @@ COPY scripts/docker-entrypoint.sh /usr/local/bin/ghost-vendor-entrypoint.sh
 RUN chmod +x /usr/local/bin/ghost-vendor-entrypoint.sh
 
 COPY content/themes /var/lib/ghost/content/themes
+RUN cp /var/lib/ghost/content/themes/neon-protocol/locales/en-us.json \
+        /var/lib/ghost/content/themes/neon-protocol/assets/i18n/en-us.json \
+    && cp /var/lib/ghost/content/themes/neon-protocol/locales/ja-jp.json \
+        /var/lib/ghost/content/themes/neon-protocol/assets/i18n/ja-jp.json \
+    && cp /var/lib/ghost/content/themes/neon-protocol/locales/pt-br.json \
+        /var/lib/ghost/content/themes/neon-protocol/assets/i18n/pt-br.json \
+    && cp /var/lib/ghost/content/themes/neon-protocol/locales/es-la.json \
+        /var/lib/ghost/content/themes/neon-protocol/assets/i18n/es-la.json
 COPY --from=theme-assets /build/content/themes/neon-protocol/partials/np-t.hbs \
     /var/lib/ghost/content/themes/neon-protocol/partials/np-t.hbs
 COPY --from=theme-assets /build/content/themes/neon-protocol/partials/np-locale-options.hbs \

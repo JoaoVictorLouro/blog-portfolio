@@ -2102,7 +2102,10 @@
       return;
     }
     const locale = currentPathLocale();
-    const stringsUrl = `${window.__npI18nBase || `${window.__npSiteUrl || ''}/assets/i18n/`}ui-strings.json`;
+    if (!/^(en-us|ja-jp|pt-br|es-la)$/.test(locale)) {
+      return;
+    }
+    const stringsUrl = `${window.__npI18nBase || `${window.__npSiteUrl || ''}/assets/i18n/`}${locale}.json`;
     fetch(stringsUrl, { cache: 'no-store' })
       .then((response) => {
         if (!response.ok) {
@@ -2110,9 +2113,8 @@
         }
         return response.json();
       })
-      .then((payload) => {
-        const strings = payload?.[locale];
-        if (!strings) {
+      .then((strings) => {
+        if (!strings || typeof strings !== 'object') {
           return;
         }
         document.querySelectorAll('[data-np-i18n]').forEach((node) => {

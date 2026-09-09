@@ -13,6 +13,10 @@ content/themes/*/assets/built/
 content/themes/neon-protocol/assets/js/vendor/
 content/themes/neon-protocol/assets/css/vendor/
 content/themes/neon-protocol/assets/fonts/
+content/themes/neon-protocol/assets/i18n/en-us.json
+content/themes/neon-protocol/assets/i18n/ja-jp.json
+content/themes/neon-protocol/assets/i18n/pt-br.json
+content/themes/neon-protocol/assets/i18n/es-la.json
 
 # OS
 .DS_Store
