@@ -6,8 +6,7 @@ import { clearYouTubeVideos, setYouTubeVideos } from './youtube-cache.ts';
 const refreshConfig = {
   apiBase: 'http://ghost:2368',
   origin: 'http://localhost:2368',
-  adminEmail: 'admin@example.com',
-  adminPassword: 'password',
+  adminApiKey: '64c3f3a1b2c3d4e5f6071829:aabbccddeeff00112233445566778899',
 };
 
 Deno.test('GET /health returns 503 when map not loaded', async () => {

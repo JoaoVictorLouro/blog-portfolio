@@ -1,10 +1,11 @@
 import { handleRequest } from './routes.ts';
-import { refreshTranslationMapSingleFlight } from './refresh.ts';
+import { refreshTranslationMapSingleFlight, type RefreshConfig } from './refresh.ts';
 import { emptyYouTubeVideosPayload, setYouTubeVideos } from './youtube-cache.ts';
 import { refreshYouTubeVideosSingleFlight } from './youtube-refresh.ts';
 
 const API_BASE = Deno.env.get('GHOST_API_URL') ?? 'http://127.0.0.1:2368';
 const ORIGIN = Deno.env.get('URL') ?? 'http://localhost:2368';
+const ADMIN_API_KEY = Deno.env.get('GHOST_ADMIN_API_KEY')?.trim() ?? '';
 const ADMIN_EMAIL = Deno.env.get('GHOST_ADMIN_EMAIL')?.trim() ?? '';
 const ADMIN_PASSWORD = Deno.env.get('GHOST_ADMIN_PASSWORD') ?? '';
 const WEBHOOK_SECRET = Deno.env.get('CONTENT_API_WEBHOOK_SECRET') ?? '';
@@ -14,9 +15,10 @@ const YOUTUBE_CHANNEL_ID = Deno.env.get('YOUTUBE_CHANNEL_ID')?.trim() ?? '';
 const YOUTUBE_REFRESH_MS = Number(Deno.env.get('YOUTUBE_REFRESH_MS') ?? '3600000');
 const youtubeEnabled = YOUTUBE_CHANNEL_ID.length > 0;
 
-const refreshConfig = {
+const refreshConfig: RefreshConfig = {
   apiBase: API_BASE,
   origin: ORIGIN,
+  adminApiKey: ADMIN_API_KEY,
   adminEmail: ADMIN_EMAIL,
   adminPassword: ADMIN_PASSWORD,
 };

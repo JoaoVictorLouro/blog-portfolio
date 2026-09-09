@@ -24,7 +24,7 @@ Set `GHOST_ADMIN_EMAIL` and `GHOST_ADMIN_PASSWORD` in `.env.secrets` before the 
 - About: [http://localhost:2368/about/](http://localhost:2368/about/)
 - Admin: [http://localhost:2368/ghost](http://localhost:2368/ghost) (log in with the env credentials; no setup wizard)
 
-Runtime data (SQLite, uploads, logs) lives under `./data/content` and is gitignored. An existing database that already has an owner keeps that user; later `.env.secrets` password changes are ignored.
+Runtime data (SQLite, uploads, logs) lives under `./data/content` and is gitignored. An existing database that already has an owner keeps that user; later `.env.secrets` password changes are ignored. Content-api refreshes the translation map with `GHOST_ADMIN_API_KEY` (JWT) when that env var is set; otherwise it uses owner email/password (local compose disables staff device verification).
 
 ## Versioned content
 
@@ -87,10 +87,11 @@ Local compose leaves every skip flag `false`, so development bootstraps everythi
 
 `.env.secrets` (from `.env.secrets.example`):
 
-| Variable               | Purpose                                  |
-| ---------------------- | ---------------------------------------- |
-| `GHOST_ADMIN_EMAIL`    | Owner email (created once on first boot) |
-| `GHOST_ADMIN_PASSWORD` | Owner password (min 10 characters)       |
+| Variable               | Purpose                                                                                                                            |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `GHOST_ADMIN_EMAIL`    | Owner email (created once on first boot)                                                                                           |
+| `GHOST_ADMIN_PASSWORD` | Owner password (min 10 characters)                                                                                                 |
+| `GHOST_ADMIN_API_KEY`  | Optional content-api JWT (`id:secret` from Ghost Admin → Integrations). When unset, content-api uses owner email/password instead. |
 
 If you still have a combined `.env` from before this split, move `GHOST_ADMIN_EMAIL` and `GHOST_ADMIN_PASSWORD` into `.env.secrets`.
 
