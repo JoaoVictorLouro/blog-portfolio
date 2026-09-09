@@ -710,6 +710,33 @@
     {{#match (block "np_lang") "en-us"}}CONFIRM_PURGE{{else match (block "np_lang") "ja-jp"}}CONFIRM_PURGE{{else match (block "np_lang") "pt-br"}}CONFIRM_PURGE{{else match (block "np_lang") "es-la"}}CONFIRM_PURGE{{else}}CONFIRM_PURGE{{/match}}
   {{/is}}
 {{/match}}
+{{#match key "PWA_DESCRIPTION"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}グリッドからのサイバーノマド通信{{else has tag="#lang-pt-br"}}Transmissões de um ciber-nômade a partir da rede{{else has tag="#lang-es-la"}}Transmisiones de un ciber-nómada desde la red{{else}}Cyber-nomad transmissions from the grid{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}Cyber-nomad transmissions from the grid{{else match (block "np_lang") "ja-jp"}}グリッドからのサイバーノマド通信{{else match (block "np_lang") "pt-br"}}Transmissões de um ciber-nômade a partir da rede{{else match (block "np_lang") "es-la"}}Transmisiones de un ciber-nómada desde la red{{else}}Cyber-nomad transmissions from the grid{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "PWA_NAME"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}この外人{{else has tag="#lang-pt-br"}}Kono Gaijin{{else has tag="#lang-es-la"}}Kono Gaijin{{else}}Kono Gaijin{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}Kono Gaijin{{else match (block "np_lang") "ja-jp"}}この外人{{else match (block "np_lang") "pt-br"}}Kono Gaijin{{else match (block "np_lang") "es-la"}}Kono Gaijin{{else}}Kono Gaijin{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "PWA_SHORT_NAME"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}この外人{{else has tag="#lang-pt-br"}}Kono Gaijin{{else has tag="#lang-es-la"}}Kono Gaijin{{else}}Kono Gaijin{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}Kono Gaijin{{else match (block "np_lang") "ja-jp"}}この外人{{else match (block "np_lang") "pt-br"}}Kono Gaijin{{else match (block "np_lang") "es-la"}}Kono Gaijin{{else}}Kono Gaijin{{/match}}
+  {{/is}}
+{{/match}}
 {{#match key "Page {page} of {pages}"}}
   {{#is "post"}}
     {{#post}}

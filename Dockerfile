@@ -8,7 +8,6 @@ COPY scripts/build-material-symbols-subset.sh scripts/build-material-symbols-sub
 COPY scripts/build-theme-i18n.mjs scripts/build-pwa-manifests.mjs scripts/
 COPY scripts/i18n/locales.mjs scripts/i18n/locales.mjs
 COPY content/themes/neon-protocol/locales content/themes/neon-protocol/locales
-COPY content/themes/neon-protocol/assets/data/pwa-site.json content/themes/neon-protocol/assets/data/pwa-site.json
 RUN mkdir -p content/themes/neon-protocol/assets content/themes/neon-protocol/partials \
     && deno run -A scripts/sync-ghost-cdn-assets.mjs \
     && deno run -A scripts/build-theme-i18n.mjs \

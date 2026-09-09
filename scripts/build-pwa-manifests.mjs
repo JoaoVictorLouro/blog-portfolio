@@ -7,9 +7,10 @@ import { LOCALES } from './i18n/locales.mjs';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
 const dataDir = join(root, 'content/themes/neon-protocol/assets/data');
+const localesDir = join(root, 'content/themes/neon-protocol/locales');
 const partialsDir = join(root, 'content/themes/neon-protocol/partials');
 
-const site = JSON.parse(await Deno.readTextFile(join(dataDir, 'pwa-site.json')));
+const PWA_KEYS = ['PWA_NAME', 'PWA_SHORT_NAME', 'PWA_DESCRIPTION'];
 
 const SHARED = {
   display: 'standalone',
@@ -38,12 +39,26 @@ const SHARED = {
   ],
 };
 
+function requiredString(messages, key, localeCode) {
+  const value = messages[key];
+  if (typeof value !== 'string' || value.trim() === '') {
+    throw new Error(`Missing ${key} in locales/${localeCode}.json`);
+  }
+  return value;
+}
+
+await Deno.mkdir(dataDir, { recursive: true });
+
 for (const locale of LOCALES) {
+  const messages = JSON.parse(await Deno.readTextFile(join(localesDir, `${locale.code}.json`)));
+  for (const key of PWA_KEYS) {
+    requiredString(messages, key, locale.code);
+  }
   const manifest = {
     id: `/${locale.code}/`,
-    name: site.name,
-    short_name: site.short_name,
-    description: site.description,
+    name: messages.PWA_NAME,
+    short_name: messages.PWA_SHORT_NAME,
+    description: messages.PWA_DESCRIPTION,
     start_url: `/${locale.code}/`,
     scope: `/${locale.code}/`,
     lang: locale.bcp47,
