@@ -83,6 +83,7 @@ services:
       BOOTSTRAP_SKIP_ARTICLES: ${BOOTSTRAP_SKIP_ARTICLES:-false}
     volumes:
       - ./scripts/ghost-bootstrap.mjs:/opt/ghost-bootstrap/ghost-bootstrap.mjs:ro
+      - ./scripts/ghost-session-cookie.mjs:/opt/ghost-bootstrap/ghost-session-cookie.mjs:ro
       - ./scripts/i18n:/opt/ghost-bootstrap/i18n:ro
       - ./content/themes/neon-protocol/assets/i18n:/var/lib/ghost/content/themes/neon-protocol/assets/i18n
     entrypoint: ['node', '/opt/ghost-bootstrap/ghost-bootstrap.mjs']

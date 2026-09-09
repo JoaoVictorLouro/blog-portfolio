@@ -6,6 +6,7 @@ ENV NPM_CONFIG_REGISTRY=https://registry.npmjs.org/
 COPY .npmrc .npmrc
 COPY content-api/ content-api/
 COPY scripts/i18n/ scripts/i18n/
+COPY scripts/ghost-session-cookie.mjs scripts/ghost-session-cookie.mjs
 
 RUN deno cache content-api/main.ts
 

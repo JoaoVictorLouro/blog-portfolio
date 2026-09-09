@@ -34,6 +34,7 @@ COPY content/settings /var/lib/ghost/content/settings
 COPY content/settings/redirects.yaml /var/lib/ghost/content/data/redirects.yaml
 COPY content/public /var/lib/ghost/content/public
 COPY scripts/ghost-bootstrap.mjs /opt/ghost-bootstrap/ghost-bootstrap.mjs
+COPY scripts/ghost-session-cookie.mjs /opt/ghost-bootstrap/ghost-session-cookie.mjs
 COPY scripts/i18n /opt/ghost-bootstrap/i18n
 
 ENTRYPOINT ["/usr/local/bin/ghost-vendor-entrypoint.sh"]

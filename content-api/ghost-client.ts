@@ -1,3 +1,9 @@
+import {
+  extractAdminSessionCookie,
+  logGhostHttp,
+  setCookieNames,
+} from '../scripts/ghost-session-cookie.mjs';
+
 const ACCEPT_VERSION = 'v6.0';
 const JWT_TTL_SECONDS = 300;
 
@@ -96,7 +102,9 @@ export async function createAdminSession(
   email: string,
   password: string,
 ): Promise<string> {
-  const response = await fetch(`${apiBase}/ghost/api/admin/session/`, {
+  const sessionPath = '/ghost/api/admin/session/';
+  const started = Date.now();
+  const response = await fetch(`${apiBase}${sessionPath}`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -106,25 +114,32 @@ export async function createAdminSession(
     },
     body: JSON.stringify({ username: email, password }),
   });
-
-  const cookies =
-    typeof response.headers.getSetCookie === 'function'
-      ? response.headers.getSetCookie()
-      : [response.headers.get('set-cookie')].filter(Boolean);
-  const session = cookies.find(
-    (entry): entry is string =>
-      typeof entry === 'string' && entry.startsWith('ghost-admin-api-session='),
-  );
+  const durationMs = Date.now() - started;
+  const session = extractAdminSessionCookie(response.headers);
+  logGhostHttp({
+    method: 'POST',
+    path: sessionPath,
+    status: response.status,
+    durationMs,
+    headers: response.headers,
+    extra: `sessionCookie=${session ? 'yes' : 'no'}`,
+  });
   const text = await response.text();
   if (response.status === 403) {
     throw new Error(
       `Admin login requires device verification. Set security__staffDeviceVerification=false, configure SMTP, or set GHOST_ADMIN_API_KEY. ${text}`,
     );
   }
+  if (response.ok && !session) {
+    const names = setCookieNames(response.headers);
+    throw new Error(
+      `Admin login succeeded (${response.status}) but no session Set-Cookie (names: ${names.join(',') || 'none'})`,
+    );
+  }
   if (!response.ok || !session) {
     throw new Error(`Admin login failed (${response.status}): ${text}`);
   }
-  return session.split(';')[0];
+  return session;
 }
 
 async function adminAuthHeaders(origin: string, auth: AdminAuth): Promise<Record<string, string>> {
@@ -147,8 +162,16 @@ async function adminRequest(
   auth: AdminAuth,
   path: string,
 ): Promise<Record<string, unknown>> {
+  const started = Date.now();
   const response = await fetch(`${apiBase}${path}`, {
     headers: await adminAuthHeaders(origin, auth),
+  });
+  logGhostHttp({
+    method: 'GET',
+    path,
+    status: response.status,
+    durationMs: Date.now() - started,
+    headers: response.headers,
   });
   const text = await response.text();
   let data: Record<string, unknown> | null = null;

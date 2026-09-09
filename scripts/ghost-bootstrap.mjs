@@ -2,6 +2,11 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { DEFAULT_LOCALE, isLanguageTagSlug, LOCALES } from './i18n/locales.mjs';
 import { seedDemoArticles } from './i18n/seed-demo-articles.mjs';
+import {
+  extractAdminSessionCookie,
+  logGhostHttp,
+  setCookieNames,
+} from './ghost-session-cookie.mjs';
 
 const API_BASE = process.env.GHOST_API_URL ?? 'http://127.0.0.1:2368';
 const ORIGIN = process.env.URL ?? 'http://localhost:2368';
@@ -66,20 +71,6 @@ function setupStatus(body) {
   return Boolean(body?.status);
 }
 
-function sessionCookie(response) {
-  const cookies =
-    typeof response.headers.getSetCookie === 'function'
-      ? response.headers.getSetCookie()
-      : [response.headers.get('set-cookie')].filter(Boolean);
-
-  const session = cookies.find((cookie) => cookie.startsWith('ghost-admin-api-session='));
-  if (!session) {
-    return null;
-  }
-
-  return session.split(';')[0];
-}
-
 async function request(path, { method = 'GET', cookie, body } = {}) {
   const headers = {
     Accept: 'application/json',
@@ -95,11 +86,13 @@ async function request(path, { method = 'GET', cookie, body } = {}) {
     headers.Cookie = cookie;
   }
 
+  const started = Date.now();
   const response = await fetch(`${API_BASE}${path}`, {
     method,
     headers,
     body: body === undefined ? undefined : JSON.stringify(body),
   });
+  const durationMs = Date.now() - started;
 
   const text = await response.text();
   let data = null;
@@ -110,6 +103,19 @@ async function request(path, { method = 'GET', cookie, body } = {}) {
       data = text;
     }
   }
+
+  const extra =
+    method === 'POST' && path.includes('/ghost/api/admin/session/')
+      ? `sessionCookie=${extractAdminSessionCookie(response.headers) ? 'yes' : 'no'}`
+      : undefined;
+  logGhostHttp({
+    method,
+    path,
+    status: response.status,
+    durationMs,
+    headers: response.headers,
+    extra,
+  });
 
   return { response, data };
 }
@@ -189,8 +195,16 @@ async function createSession() {
     );
   }
 
-  const cookie = sessionCookie(response);
-  if (!response.ok || !cookie) {
+  const cookie = extractAdminSessionCookie(response.headers);
+
+  if (response.ok && !cookie) {
+    const names = setCookieNames(response.headers);
+    fail(
+      `Admin login succeeded (${response.status}) but no session Set-Cookie (names: ${names.join(',') || 'none'})`,
+    );
+  }
+
+  if (!response.ok) {
     fail(`Admin login failed (${response.status}): ${describeError(data)}`);
   }
 

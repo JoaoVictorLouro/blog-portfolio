@@ -1,5 +1,10 @@
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {
+  extractAdminSessionCookie,
+  logGhostHttp,
+  setCookieNames,
+} from './ghost-session-cookie.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const FIXTURES_DIR = join(__dirname, 'fixtures');
@@ -27,20 +32,6 @@ function fail(message) {
   Deno.exit(1);
 }
 
-function sessionCookie(response) {
-  const cookies =
-    typeof response.headers.getSetCookie === 'function'
-      ? response.headers.getSetCookie()
-      : [response.headers.get('set-cookie')].filter(Boolean);
-
-  const session = cookies.find((cookie) => cookie.startsWith('ghost-admin-api-session='));
-  if (!session) {
-    return null;
-  }
-
-  return session.split(';')[0];
-}
-
 async function request(path, { method = 'GET', cookie, body } = {}) {
   const headers = {
     Accept: 'application/json',
@@ -56,11 +47,13 @@ async function request(path, { method = 'GET', cookie, body } = {}) {
     headers.Cookie = cookie;
   }
 
+  const started = Date.now();
   const response = await fetch(`${API_BASE}${path}`, {
     method,
     headers,
     body: body === undefined ? undefined : JSON.stringify(body),
   });
+  const durationMs = Date.now() - started;
 
   const text = await response.text();
   let data = null;
@@ -71,6 +64,19 @@ async function request(path, { method = 'GET', cookie, body } = {}) {
       data = text;
     }
   }
+
+  const extra =
+    method === 'POST' && path.includes('/ghost/api/admin/session/')
+      ? `sessionCookie=${extractAdminSessionCookie(response.headers) ? 'yes' : 'no'}`
+      : undefined;
+  logGhostHttp({
+    method,
+    path,
+    status: response.status,
+    durationMs,
+    headers: response.headers,
+    extra,
+  });
 
   return { response, data };
 }
@@ -109,8 +115,16 @@ async function createSession() {
     );
   }
 
-  const cookie = sessionCookie(response);
-  if (!response.ok || !cookie) {
+  const cookie = extractAdminSessionCookie(response.headers);
+
+  if (response.ok && !cookie) {
+    const names = setCookieNames(response.headers);
+    fail(
+      `Admin login succeeded (${response.status}) but no session Set-Cookie (names: ${names.join(',') || 'none'})`,
+    );
+  }
+
+  if (!response.ok) {
     fail(`Admin login failed (${response.status}): ${describeError(data)}`);
   }
 
@@ -123,6 +137,7 @@ async function uploadImageBytes(cookie, bytes, filename, contentType) {
   form.append('purpose', 'image');
   form.append('ref', filename);
 
+  const started = Date.now();
   const response = await fetch(`${API_BASE}/ghost/api/admin/images/upload/`, {
     method: 'POST',
     headers: {
@@ -132,6 +147,13 @@ async function uploadImageBytes(cookie, bytes, filename, contentType) {
       Cookie: cookie,
     },
     body: form,
+  });
+  logGhostHttp({
+    method: 'POST',
+    path: '/ghost/api/admin/images/upload/',
+    status: response.status,
+    durationMs: Date.now() - started,
+    headers: response.headers,
   });
 
   const data = await response.json();
@@ -167,6 +189,7 @@ async function uploadFile(cookie, filename) {
   form.append('file', new Blob([bytes], { type: 'application/pdf' }), filename);
   form.append('ref', filename);
 
+  const started = Date.now();
   const response = await fetch(`${API_BASE}/ghost/api/admin/files/upload/`, {
     method: 'POST',
     headers: {
@@ -176,6 +199,13 @@ async function uploadFile(cookie, filename) {
       Cookie: cookie,
     },
     body: form,
+  });
+  logGhostHttp({
+    method: 'POST',
+    path: '/ghost/api/admin/files/upload/',
+    status: response.status,
+    durationMs: Date.now() - started,
+    headers: response.headers,
   });
 
   const data = await response.json();
