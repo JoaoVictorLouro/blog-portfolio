@@ -34,7 +34,7 @@ Tracked under `content/`:
 | ------------------- | ----------------------------------------------------------------- |
 | `content/themes/`   | Themes (`neon-protocol` active; Source kept as a vendor baseline) |
 | `content/settings/` | `routes.yaml`, `redirects.yaml`, etc.                             |
-| `content/public/`   | Public assets (`.well-known`, admin-auth, `humans.txt`)           |
+| `content/public/`   | Public assets (`.well-known`, admin-auth)                         |
 
 These folders are bind-mounted into Ghost and baked into the published image.
 
