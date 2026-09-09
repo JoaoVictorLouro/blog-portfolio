@@ -31,15 +31,15 @@
             {{> "brand-title"}}
         {{/if}}
     </a>
-    <nav class="np-nav-menu" aria-label="{{> "np-t" key="Menu"}}">
+    <nav class="np-nav-menu" data-np-i18n-aria="Menu" aria-label="{{> "np-t" key="Menu"}}">
         {{> "np-nav-links-tag"}}
     </nav>
     <div class="np-nav-actions">
         {{> "language-picker"}}
-        <button class="np-icon-btn" type="button" data-np-theme-toggle aria-pressed="false" aria-label="{{> "np-t" key="Theme"}}">
+        <button class="np-icon-btn" type="button" data-np-theme-toggle aria-pressed="false" data-np-i18n-aria="Theme" aria-label="{{> "np-t" key="Theme"}}">
             <span class="material-symbols-outlined" aria-hidden="true">light_mode</span>
         </button>
-        <button class="np-icon-btn" type="button" data-ghost-search aria-label="{{> "np-t" key="Search"}}">
+        <button class="np-icon-btn" type="button" data-ghost-search data-np-i18n-aria="Search" aria-label="{{> "np-t" key="Search"}}">
             <span class="material-symbols-outlined" aria-hidden="true">search</span>
         </button>
     </div>

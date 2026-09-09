@@ -551,11 +551,24 @@
     return document.documentElement.dataset.npPathLocale || window.__npLocale || 'en-us';
   }
 
-  function searchIndexPathname(urlString) {
-    const url = new URL(urlString, window.location.origin);
-    const locale = currentPathLocale();
-    let pathname = url.pathname.endsWith('/') ? url.pathname : `${url.pathname}/`;
-    return pathname.replace(/^\/en-us\/tag\//, `/${locale}/tag/`);
+  function normalizePathname(pathname) {
+    return pathname.endsWith('/') ? pathname : `${pathname}/`;
+  }
+
+  function rewriteEnUsFacadePath(pathname, locale) {
+    return normalizePathname(pathname)
+      .replace(/^\/en-us\/tag\//, `/${locale}/tag/`)
+      .replace(/^\/en-us\/articles\//, `/${locale}/articles/`);
+  }
+
+  function isLocaleFacadePath(pathname, locale) {
+    const path = normalizePathname(pathname);
+    return (
+      path.startsWith('/en-us/tag/') ||
+      path.startsWith(`/${locale}/tag/`) ||
+      path === '/en-us/articles/' ||
+      path === `/${locale}/articles/`
+    );
   }
 
   function searchIndexItemAllowed(item) {
@@ -563,9 +576,15 @@
       return false;
     }
     try {
-      const pathname = searchIndexPathname(item.url);
+      const pathname = normalizePathname(new URL(item.url, window.location.origin).pathname);
       const locale = currentPathLocale();
-      return pathname.startsWith(`/${locale}/`) || pathname.startsWith('/author/');
+      if (pathname.startsWith('/author/')) {
+        return true;
+      }
+      if (isLocaleFacadePath(pathname, locale)) {
+        return rewriteEnUsFacadePath(pathname, locale).startsWith(`/${locale}/`);
+      }
+      return pathname.startsWith(`/${locale}/`);
     } catch {
       return false;
     }
@@ -578,7 +597,10 @@
     try {
       const url = new URL(item.url, window.location.origin);
       const locale = currentPathLocale();
-      url.pathname = url.pathname.replace(/^\/en-us\/tag\//, `/${locale}/tag/`);
+      if (!isLocaleFacadePath(url.pathname, locale)) {
+        return item;
+      }
+      url.pathname = rewriteEnUsFacadePath(url.pathname, locale);
       return { ...item, url: url.toString() };
     } catch {
       return item;
@@ -600,7 +622,7 @@
       try {
         const payload = await response.clone().json();
         if (Array.isArray(payload.posts)) {
-          payload.posts = payload.posts.filter(searchIndexItemAllowed);
+          payload.posts = payload.posts.map(rewriteSearchIndexItem).filter(searchIndexItemAllowed);
         }
         if (Array.isArray(payload.tags)) {
           payload.tags = payload.tags.map(rewriteSearchIndexItem).filter(searchIndexItemAllowed);
@@ -628,11 +650,13 @@
         if (url.origin !== window.location.origin) {
           return;
         }
-        let pathname = url.pathname.endsWith('/') ? url.pathname : `${url.pathname}/`;
-        const rewritten = pathname.replace(/^\/en-us\/tag\//, `/${locale}/tag/`);
-        if (rewritten !== pathname) {
-          pathname = rewritten;
-          anchor.href = `${rewritten}${url.search}${url.hash}`;
+        let pathname = normalizePathname(url.pathname);
+        if (isLocaleFacadePath(pathname, locale)) {
+          const rewritten = rewriteEnUsFacadePath(pathname, locale);
+          if (rewritten !== pathname) {
+            pathname = rewritten;
+            anchor.href = `${rewritten}${url.search}${url.hash}`;
+          }
         }
         const allowed = pathname.startsWith(localePrefix) || pathname.startsWith('/author/');
         const row = anchor.closest('li') || anchor;
@@ -1600,7 +1624,7 @@
   };
 
   function ghostSearchLocale() {
-    return GHOST_SEARCH_LOCALES[window.__npLocale] || 'en';
+    return GHOST_SEARCH_LOCALES[currentPathLocale()] || 'en';
   }
 
   function applyScriptAttributes(script, attrs) {
@@ -1769,10 +1793,22 @@
   }
 
   function fallbackLocalePath(pathname, nextLocale) {
+    const tagMatch = pathname.match(/^\/(?:en-us|ja-jp|pt-br|es-la)\/tag\/([^/]+)(\/.*)?$/);
+    if (tagMatch) {
+      const rest = tagMatch[2] || '/';
+      const suffix = rest.endsWith('/') ? rest : `${rest}/`;
+      return `/${nextLocale}/tag/${tagMatch[1]}${suffix}`;
+    }
     if (/\/articles(?:\/|$)/.test(pathname)) {
       return `/${nextLocale}/articles/`;
     }
     return `/${nextLocale}/`;
+  }
+
+  function localeNavigationSuffix() {
+    const hash = window.location.hash || '';
+    const keepHash = hash.startsWith('#/np-members/') || hash.startsWith('#/portal/');
+    return `${window.location.search}${keepHash ? hash : ''}`;
   }
 
   function initLanguagePicker() {
@@ -1797,7 +1833,7 @@
       }
 
       const navigate = (nextPath) => {
-        window.location.href = `${window.__npSiteUrl || ''}${nextPath}${window.location.search}${window.location.hash}`;
+        window.location.href = `${window.__npSiteUrl || ''}${nextPath}${localeNavigationSuffix()}`;
       };
 
       const prefixSwapPath = match
@@ -1882,7 +1918,7 @@
     }
 
     const base = window.__npI18nBase || `${window.__npSiteUrl || ''}/i18n/`;
-    const locale = window.__npLocale || 'en-us';
+    const locale = currentPathLocale();
 
     fetch(`${base}np-newsletters.json`, { cache: 'no-store' })
       .then((response) => {
@@ -2061,16 +2097,51 @@
     });
   }
 
+  function applyPathLocaleUi() {
+    if (!document.body.classList.contains('tag-template')) {
+      return;
+    }
+    const locale = currentPathLocale();
+    const stringsUrl = `${window.__npI18nBase || `${window.__npSiteUrl || ''}/assets/i18n/`}ui-strings.json`;
+    fetch(stringsUrl, { cache: 'no-store' })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`UI strings HTTP ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((payload) => {
+        const strings = payload?.[locale];
+        if (!strings) {
+          return;
+        }
+        document.querySelectorAll('[data-np-i18n]').forEach((node) => {
+          const key = node.getAttribute('data-np-i18n');
+          const value = key ? strings[key] : null;
+          if (value != null) {
+            node.textContent = value;
+          }
+        });
+        document.querySelectorAll('[data-np-i18n-aria]').forEach((node) => {
+          const key = node.getAttribute('data-np-i18n-aria');
+          const value = key ? strings[key] : null;
+          if (value != null) {
+            node.setAttribute('aria-label', value);
+          }
+        });
+      })
+      .catch(() => {
+        // Tag chrome stays on SSR English if the map is unavailable.
+      });
+  }
+
   function rewriteTagArchiveLocaleUrls() {
     const locale = document.documentElement.dataset.npPathLocale;
     if (!locale || !document.body.classList.contains('tag-template')) {
       return;
     }
 
-    const rewritePath = (pathname) =>
-      pathname
-        .replace(/^\/en-us\/tag\//, `/${locale}/tag/`)
-        .replace(/^\/en-us\/articles\//, `/${locale}/articles/`);
+    const rewritePath = (pathname) => rewriteEnUsFacadePath(pathname, locale);
 
     document.querySelectorAll('.np-pagination a[href], a.np-chip[href]').forEach((anchor) => {
       try {
@@ -2122,6 +2193,7 @@
     bootstrapFxVisibility();
     initLanguagePicker();
     initSodoSearchLocale();
+    applyPathLocaleUi();
     rewriteTagArchiveLocaleUrls();
     syncArticleFilterChips();
     initTranslationSwitcher();

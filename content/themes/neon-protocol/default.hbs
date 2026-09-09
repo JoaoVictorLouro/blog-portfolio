@@ -28,9 +28,11 @@
         commentsOverrides: "{{asset 'css/ghost-comments-overrides.css'}}"
     };
     (function () {
+        var bcp47 = { 'en-us': 'en-US', 'ja-jp': 'ja-JP', 'pt-br': 'pt-BR', 'es-la': 'es-419' };
         var pathMatch = window.location.pathname.match(/^\/(en-us|ja-jp|pt-br|es-la)(\/|$)/);
         var pathLocale = pathMatch ? pathMatch[1] : (window.__npLocale || 'en-us');
         document.documentElement.setAttribute('data-np-path-locale', pathLocale);
+        document.documentElement.setAttribute('lang', bcp47[pathLocale] || 'en-US');
         if (pathMatch) {
             window.__npLocale = pathMatch[1];
         }
@@ -171,9 +173,11 @@
     <title>{{meta_title page=(t " (Page %)")}}</title>
     <script>
         (function () {
+            var bcp47 = { 'en-us': 'en-US', 'ja-jp': 'ja-JP', 'pt-br': 'pt-BR', 'es-la': 'es-419' };
             var pathMatch = window.location.pathname.match(/^\/(en-us|ja-jp|pt-br|es-la)(\/|$)/);
             var pathLocale = pathMatch ? pathMatch[1] : (window.__npLocale || 'en-us');
             document.documentElement.setAttribute('data-np-path-locale', pathLocale);
+            document.documentElement.setAttribute('lang', bcp47[pathLocale] || 'en-US');
             if (pathMatch) {
                 window.__npLocale = pathMatch[1];
             }

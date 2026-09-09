@@ -190,6 +190,12 @@ writeFileSync(
 );
 syncLegacyEnJson(messagesByLocale);
 
+const i18nAssetsDir = join(root, 'content/themes/neon-protocol/assets/i18n');
+writeFileSync(
+  join(i18nAssetsDir, 'ui-strings.json'),
+  `${JSON.stringify(messagesByLocale, null, 2)}\n`,
+);
+
 console.log(
-  'Generated np-t.hbs, np-post-label.hbs, np-locale-options.hbs, np-locale-prefix-{post,site}.hbs, np-nav-links-{post,site}.hbs, nav-mobile-{post,site}.hbs',
+  'Generated np-t.hbs, np-post-label.hbs, np-locale-options.hbs, np-locale-prefix-{post,site}.hbs, np-nav-links-{post,site}.hbs, nav-mobile-{post,site}.hbs, assets/i18n/ui-strings.json',
 );

@@ -7,7 +7,7 @@
             {{#if description}}
                 <p class="np-body">{{description}}</p>
             {{else}}
-                <p class="np-meta">{{> "np-t" key="STATUS_ONLINE_TAG"}}</p>
+                <p class="np-meta" data-np-i18n="STATUS_ONLINE_TAG">{{> "np-t" key="STATUS_ONLINE_TAG"}}</p>
             {{/if}}
         </header>
     {{/tag}}
@@ -15,7 +15,7 @@
     <div class="np-toolbar">
         <div class="np-search">
             <span class="material-symbols-outlined" aria-hidden="true">search</span>
-            <button type="button" data-ghost-search>{{> "np-t" key="Search"}}</button>
+            <button type="button" data-ghost-search data-np-i18n="Search">{{> "np-t" key="Search"}}</button>
         </div>
         {{#tag}}
             {{> "np-article-filters" active_slug=slug filter_open=true}}

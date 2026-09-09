@@ -2,10 +2,10 @@
     <div class="np-footer-copy">© {{date format="YYYY"}} {{@site.title}} // {{t "ALL RIGHTS RESERVED"}}</div>
     <ul class="np-footer-links">
         {{#is "tag"}}
-            <li><a href="{{~> "np-tag-relative-prefix"}}articles/">{{> "np-t" key="ARTICLES"}}</a></li>
-            <li><a href="{{~> "np-tag-relative-prefix"}}articles/rss/">{{> "np-t" key="RSS"}}</a></li>
-            <li><a href="{{~> "np-tag-relative-prefix"}}portfolio/">{{> "np-t" key="PORTFOLIO"}}</a></li>
-            <li><a href="{{~> "np-tag-relative-prefix"}}about/">{{> "np-t" key="ABOUT"}}</a></li>
+            <li><a href="{{~> "np-tag-relative-prefix"}}articles/" data-np-i18n="ARTICLES">{{> "np-t" key="ARTICLES"}}</a></li>
+            <li><a href="{{~> "np-tag-relative-prefix"}}articles/rss/" data-np-i18n="RSS">{{> "np-t" key="RSS"}}</a></li>
+            <li><a href="{{~> "np-tag-relative-prefix"}}portfolio/" data-np-i18n="PORTFOLIO">{{> "np-t" key="PORTFOLIO"}}</a></li>
+            <li><a href="{{~> "np-tag-relative-prefix"}}about/" data-np-i18n="ABOUT">{{> "np-t" key="ABOUT"}}</a></li>
         {{else}}
             <li><a href="{{@site.url}}/{{> "np-locale-prefix-site"}}/articles/">{{> "np-t" key="ARTICLES"}}</a></li>
             <li><a href="{{@site.url}}/{{> "np-locale-prefix-site"}}/articles/rss/">{{> "np-t" key="RSS"}}</a></li>
