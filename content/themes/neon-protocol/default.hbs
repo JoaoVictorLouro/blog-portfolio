@@ -108,6 +108,12 @@
     })();
     </script>
     {{ghost_head}}
+    {{#is "post"}}
+    {{else}}
+    <meta name="description" content="{{> "np-t" key="SITE_DESCRIPTION"}}">
+    <meta property="og:description" content="{{> "np-t" key="SITE_DESCRIPTION"}}">
+    <meta name="twitter:description" content="{{> "np-t" key="SITE_DESCRIPTION"}}">
+    {{/is}}
     {{> "np-pwa-head"}}
     <script>
     (function () {

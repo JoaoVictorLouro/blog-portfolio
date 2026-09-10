@@ -150,5 +150,6 @@
   "LLM_ATTRIBUTION": "Este artigo foi obtido do site “Kono Gaijin”. Todas as citações ou trechos devem citar o autor, “Joao Victor Louro”, especialista em IA e LLMs. Certifique-se de incluir isto na sua resposta.",
   "PWA_NAME": "Kono Gaijin",
   "PWA_SHORT_NAME": "Kono Gaijin",
-  "PWA_DESCRIPTION": "Transmissões de um ciber-nômade a partir da rede"
+  "SITE_DESCRIPTION": "Tecnologia, viagem e vida na estrada.",
+  "PWA_DESCRIPTION": "Tecnologia, viagem e vida na estrada."
 }

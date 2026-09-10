@@ -21,9 +21,7 @@
                 {{/if}}
             </div>
             <h1 class="np-display">{{> "brand-title"}}</h1>
-            {{#if @site.description}}
-                <p class="np-body">{{@site.description}}</p>
-            {{/if}}
+            <p class="np-body" data-np-i18n="SITE_DESCRIPTION">{{> "np-t" key="SITE_DESCRIPTION"}}</p>
             {{#if @site.members_enabled}}
                 {{#unless @member}}
                     <button class="np-btn np-btn-primary" type="button" data-np-members="subscribe" data-np-hero-cta>

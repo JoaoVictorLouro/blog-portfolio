@@ -713,10 +713,10 @@
 {{#match key "PWA_DESCRIPTION"}}
   {{#is "post"}}
     {{#post}}
-      {{#has tag="#lang-ja-jp"}}グリッドからのサイバーノマド通信{{else has tag="#lang-pt-br"}}Transmissões de um ciber-nômade a partir da rede{{else has tag="#lang-es-la"}}Transmisiones de un ciber-nómada desde la red{{else}}Cyber-nomad transmissions from the grid{{/has}}
+      {{#has tag="#lang-ja-jp"}}テック、旅、路上の暮らし。{{else has tag="#lang-pt-br"}}Tecnologia, viagem e vida na estrada.{{else has tag="#lang-es-la"}}Tecnología, viajes y vida en el camino.{{else}}Tech, travel, and life on the road.{{/has}}
     {{/post}}
   {{else}}
-    {{#match (block "np_lang") "en-us"}}Cyber-nomad transmissions from the grid{{else match (block "np_lang") "ja-jp"}}グリッドからのサイバーノマド通信{{else match (block "np_lang") "pt-br"}}Transmissões de um ciber-nômade a partir da rede{{else match (block "np_lang") "es-la"}}Transmisiones de un ciber-nómada desde la red{{else}}Cyber-nomad transmissions from the grid{{/match}}
+    {{#match (block "np_lang") "en-us"}}Tech, travel, and life on the road.{{else match (block "np_lang") "ja-jp"}}テック、旅、路上の暮らし。{{else match (block "np_lang") "pt-br"}}Tecnologia, viagem e vida na estrada.{{else match (block "np_lang") "es-la"}}Tecnología, viajes y vida en el camino.{{else}}Tech, travel, and life on the road.{{/match}}
   {{/is}}
 {{/match}}
 {{#match key "PWA_NAME"}}
@@ -834,6 +834,15 @@
     {{/post}}
   {{else}}
     {{#match (block "np_lang") "en-us"}}Select language{{else match (block "np_lang") "ja-jp"}}言語を選択{{else match (block "np_lang") "pt-br"}}Selecionar idioma{{else match (block "np_lang") "es-la"}}Seleccionar idioma{{else}}Select language{{/match}}
+  {{/is}}
+{{/match}}
+{{#match key "SITE_DESCRIPTION"}}
+  {{#is "post"}}
+    {{#post}}
+      {{#has tag="#lang-ja-jp"}}テック、旅、路上の暮らし。{{else has tag="#lang-pt-br"}}Tecnologia, viagem e vida na estrada.{{else has tag="#lang-es-la"}}Tecnología, viajes y vida en el camino.{{else}}Tech, travel, and life on the road.{{/has}}
+    {{/post}}
+  {{else}}
+    {{#match (block "np_lang") "en-us"}}Tech, travel, and life on the road.{{else match (block "np_lang") "ja-jp"}}テック、旅、路上の暮らし。{{else match (block "np_lang") "pt-br"}}Tecnologia, viagem e vida na estrada.{{else match (block "np_lang") "es-la"}}Tecnología, viajes y vida en el camino.{{else}}Tech, travel, and life on the road.{{/match}}
   {{/is}}
 {{/match}}
 {{#match key "SOCIAL_NET"}}

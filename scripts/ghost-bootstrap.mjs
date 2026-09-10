@@ -1,5 +1,6 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { ABOUT_PAGES } from './i18n/about-pages.mjs';
 import { DEFAULT_LOCALE, isLanguageTagSlug, LOCALES } from './i18n/locales.mjs';
 import { seedDemoArticles } from './i18n/seed-demo-articles.mjs';
 import {
@@ -276,29 +277,6 @@ async function activateTheme(cookie) {
   );
 }
 
-const ABOUT_PAGES = {
-  'en-us': {
-    title: 'System Architect',
-    excerpt: 'STATUS: ONLINE // LOCATION: UNDEFINED',
-    html: '<p>Initializing bio sequence... Digital nomad navigating the sprawling networks of the modern metropolis. Specializing in high-fidelity interface design and atmospheric user experiences.</p><p>My operational directive is bridging the gap between raw data streams and intuitive visual narratives. I exist where the neon bleeds into the shadows, crafting systems that are both robust and evocative.</p>',
-  },
-  'ja-jp': {
-    title: 'システムアーキテクト',
-    excerpt: 'ステータス: オンライン // 位置: 未定義',
-    html: '<p>バイオシーケンスを初期化中... 現代の大都市の広がるネットワークを航行するデジタルノマド。高忠実度のインターフェース設計と雰囲気のあるユーザー体験を専門としています。</p><p>生のデータストリームと直感的なビジュアルナラティブの間のギャップを埋めることが私の運用指令です。</p>',
-  },
-  'pt-br': {
-    title: 'Arquiteto de Sistemas',
-    excerpt: 'STATUS: ONLINE // LOCAL: INDEFINIDO',
-    html: '<p>Inicializando sequência de bio... Nômade digital navegando pelas redes extensas da metrópole moderna. Especializado em design de interface de alta fidelidade e experiências atmosféricas.</p><p>Minha diretiva operacional é conectar fluxos de dados brutos a narrativas visuais intuitivas.</p>',
-  },
-  'es-la': {
-    title: 'Arquitecto de Sistemas',
-    excerpt: 'ESTADO: EN LÍNEA // UBICACIÓN: INDEFINIDA',
-    html: '<p>Inicializando secuencia de bio... Nómada digital navegando las extensas redes de la metrópolis moderna. Especializado en diseño de interfaces de alta fidelidad y experiencias atmosféricas.</p><p>Mi directiva operativa es conectar flujos de datos en bruto con narrativas visuales intuitivas.</p>',
-  },
-};
-
 async function ensureInternalTag(cookie, { name, slug, description }) {
   const { response, data } = await request(`/ghost/api/admin/tags/?filter=slug:${slug}&limit=1`, {
     cookie,
@@ -342,7 +320,7 @@ async function ensureAboutPages(cookie) {
     const template = `custom-about-${locale.code}`;
     const copy = ABOUT_PAGES[locale.code];
     const { response, data } = await request(
-      `/ghost/api/admin/pages/?filter=slug:${slug}&limit=1`,
+      `/ghost/api/admin/pages/?filter=slug:${slug}&include=tags&limit=1`,
       { cookie },
     );
     if (!response.ok) {
@@ -357,32 +335,29 @@ async function ensureAboutPages(cookie) {
 
     if (Array.isArray(data?.pages) && data.pages.length > 0) {
       const page = data.pages[0];
-      const needsUpdate =
-        page.custom_template !== template ||
-        !Array.isArray(page.tags) ||
-        !page.tags.some((tag) => tag.slug === locale.tagSlug);
-      if (needsUpdate) {
-        const updated = await request(`/ghost/api/admin/pages/${page.id}/?source=html`, {
-          method: 'PUT',
-          cookie,
-          body: {
-            pages: [
-              {
-                id: page.id,
-                updated_at: page.updated_at,
-                custom_template: template,
-                tags: [{ id: langTag.id }],
-              },
-            ],
-          },
-        });
-        if (!updated.response.ok) {
-          fail(
-            `Failed to update About page ${slug} (${updated.response.status}): ${describeError(updated.data)}`,
-          );
-        }
-        console.log(`Updated About page ${slug}`);
+      const updated = await request(`/ghost/api/admin/pages/${page.id}/?source=html`, {
+        method: 'PUT',
+        cookie,
+        body: {
+          pages: [
+            {
+              id: page.id,
+              updated_at: page.updated_at,
+              title: copy.title,
+              custom_template: template,
+              custom_excerpt: copy.excerpt,
+              html: copy.html,
+              tags: [{ id: langTag.id }],
+            },
+          ],
+        },
+      });
+      if (!updated.response.ok) {
+        fail(
+          `Failed to update About page ${slug} (${updated.response.status}): ${describeError(updated.data)}`,
+        );
       }
+      console.log(`Updated About page ${slug}`);
       continue;
     }
 
