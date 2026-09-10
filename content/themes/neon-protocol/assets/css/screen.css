@@ -3232,7 +3232,8 @@ html.np-lightbox-open {
 .np-empty,
 .np-error {
   text-align: center;
-  padding: 4rem 1rem;
+  padding: 0;
+  align-content: center;
 }
 
 .np-section-head {
