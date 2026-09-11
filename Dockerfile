@@ -5,15 +5,18 @@ COPY .npmrc .npmrc
 RUN apk add --no-cache bash curl file
 COPY scripts/ghost-cdn-manifest.json scripts/sync-ghost-cdn-assets.mjs scripts/
 COPY scripts/build-material-symbols-subset.sh scripts/build-material-symbols-subset.mjs scripts/
-COPY scripts/build-theme-i18n.mjs scripts/build-pwa-manifests.mjs scripts/
+COPY scripts/build-theme-i18n.mjs scripts/build-pwa-manifests.mjs scripts/build-sw.mjs scripts/theme-asset-hash.mjs scripts/
 COPY scripts/i18n/locales.mjs scripts/i18n/locales.mjs
 COPY content/themes/neon-protocol/locales content/themes/neon-protocol/locales
+COPY content/themes/neon-protocol/assets/images content/themes/neon-protocol/assets/images
+COPY content/themes/neon-protocol/assets/css/screen.css content/themes/neon-protocol/assets/css/screen.css
 RUN mkdir -p content/themes/neon-protocol/assets content/themes/neon-protocol/partials \
     && deno run -A scripts/sync-ghost-cdn-assets.mjs \
-    && deno run -A scripts/build-theme-i18n.mjs \
-    && deno run -A scripts/build-pwa-manifests.mjs
+    && deno run -A scripts/build-theme-i18n.mjs
 ARG MATERIAL_SYMBOLS_CACHEBUST=0
 RUN bash scripts/build-material-symbols-subset.sh
+RUN deno run -A scripts/build-pwa-manifests.mjs \
+    && deno run -A scripts/build-sw.mjs
 
 FROM ghost:6-alpine
 
@@ -41,6 +44,10 @@ COPY --from=theme-assets /build/content/themes/neon-protocol/assets/fonts \
     /ghostassets/fonts
 COPY --from=theme-assets /build/content/themes/neon-protocol/assets/data \
     /var/lib/ghost/content/themes/neon-protocol/assets/data
+COPY --from=theme-assets /build/content/themes/neon-protocol/assets/css/screen.css \
+    /var/lib/ghost/content/themes/neon-protocol/assets/css/screen.css
+COPY --from=theme-assets /build/content/themes/neon-protocol/sw.js \
+    /var/lib/ghost/content/themes/neon-protocol/sw.js
 COPY content/settings /var/lib/ghost/content/settings
 COPY content/settings/redirects.yaml /var/lib/ghost/content/data/redirects.yaml
 COPY content/public /var/lib/ghost/content/public

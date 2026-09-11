@@ -3,6 +3,7 @@
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { LOCALES } from './i18n/locales.mjs';
+import { fileRevision, themeAssetPath } from './theme-asset-hash.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
@@ -12,31 +13,32 @@ const partialsDir = join(root, 'content/themes/neon-protocol/partials');
 
 const PWA_KEYS = ['PWA_NAME', 'PWA_SHORT_NAME', 'PWA_DESCRIPTION'];
 
+const PWA_ICONS = [
+  { file: 'icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+  { file: 'icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+  { file: 'icon-512-maskable.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+];
+
+const iconRevisions = Object.fromEntries(
+  await Promise.all(
+    PWA_ICONS.map(async ({ file }) => [
+      file,
+      await fileRevision(themeAssetPath(root, `images/${file}`)),
+    ]),
+  ),
+);
+
 const SHARED = {
   display: 'standalone',
   orientation: 'any',
   background_color: '#121315',
   theme_color: '#121315',
-  icons: [
-    {
-      src: '../images/icon-192.png',
-      sizes: '192x192',
-      type: 'image/png',
-      purpose: 'any',
-    },
-    {
-      src: '../images/icon-512.png',
-      sizes: '512x512',
-      type: 'image/png',
-      purpose: 'any',
-    },
-    {
-      src: '../images/icon-512-maskable.png',
-      sizes: '512x512',
-      type: 'image/png',
-      purpose: 'maskable',
-    },
-  ],
+  icons: PWA_ICONS.map((icon) => ({
+    src: `../images/${icon.file}?v=${iconRevisions[icon.file]}`,
+    sizes: icon.sizes,
+    type: icon.type,
+    purpose: icon.purpose,
+  })),
 };
 
 function requiredString(messages, key, localeCode) {
@@ -73,7 +75,7 @@ const browserconfig = `<?xml version="1.0" encoding="utf-8"?>
 <browserconfig>
   <msapplication>
     <tile>
-      <square150x150logo src="/assets/images/icon-192.png"/>
+      <square150x150logo src="/assets/images/icon-192.png?v=${iconRevisions['icon-192.png']}"/>
       <TileColor>#121315</TileColor>
     </tile>
   </msapplication>

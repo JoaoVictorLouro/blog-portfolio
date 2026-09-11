@@ -6,3 +6,4 @@ content/themes/*/node_modules/
 content/themes/*/assets/built/
 *.min.css
 *.min.js
+content/themes/neon-protocol/sw.js

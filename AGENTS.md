@@ -49,6 +49,7 @@ Site: `http://localhost:2368` (nginx) â€” Admin: `http://localhost:2368/ghost` â
 - Portfolio is a static theme gallery under `content/themes/neon-protocol/assets/images/portfolio/` (no Ghost posts); edit images + `partials/portfolio-gallery.hbs` to change it
 - Tag every post with exactly one internal language tag (`#lang-en-us`, `#lang-ja-jp`, `#lang-pt-br`, `#lang-es-la`) and optionally one translation group tag (`#translation-{group-id}` shared across locale versions)
 - Run `deno task build:i18n` after editing locale JSON files under `content/themes/neon-protocol/locales/`
+- Run `deno task build:sw` after changing cached theme assets (fonts, PWA/favicons, hero, portfolio images) so `/sw.js` revisions update
 
 ## Don't
 
