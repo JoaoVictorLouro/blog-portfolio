@@ -1,0 +1,9 @@
+{{#has tag="#lang-ja-jp"}}
+<link rel="alternate" hreflang="ja-JP" href="{{url absolute="true"}}">
+{{else has tag="#lang-pt-br"}}
+<link rel="alternate" hreflang="pt-BR" href="{{url absolute="true"}}">
+{{else has tag="#lang-es-la"}}
+<link rel="alternate" hreflang="es-419" href="{{url absolute="true"}}">
+{{else}}
+<link rel="alternate" hreflang="en-US" href="{{url absolute="true"}}">
+{{/has}}

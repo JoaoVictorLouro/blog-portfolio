@@ -15,7 +15,7 @@
     <div class="np-toolbar">
         <div class="np-search">
             <span class="material-symbols-outlined" aria-hidden="true">search</span>
-            <button type="button" data-ghost-search data-np-i18n="Search">{{> "np-t" key="Search"}}</button>
+            <button type="button" data-ghost-search data-np-i18n-aria="Search" aria-label="{{> "np-t" key="Search"}}">{{> "np-t" key="Search"}}</button>
         </div>
         {{#tag}}
             {{> "np-article-filters" active_slug=slug filter_open=true}}

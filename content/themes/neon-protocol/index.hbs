@@ -1,5 +1,8 @@
 {{!< default}}
 
+{{#contentFor "np_hreflang_kind"}}site{{/contentFor}}
+{{#contentFor "np_hreflang_suffix"}}articles/{{/contentFor}}
+
 <main class="np-main">
     <header class="np-about-banner">
         <h1 class="np-display"><span class="np-page-title"><span class="material-symbols-outlined" aria-hidden="true">database</span>{{> "np-t" key="ARTICLES_TITLE"}}</span></h1>
@@ -9,7 +12,7 @@
     <div class="np-toolbar">
         <div class="np-search">
             <span class="material-symbols-outlined" aria-hidden="true">search</span>
-            <button type="button" data-ghost-search>{{> "np-t" key="Search"}}</button>
+            <button type="button" data-ghost-search data-np-i18n-aria="Search" aria-label="{{> "np-t" key="Search"}}">{{> "np-t" key="Search"}}</button>
         </div>
         {{> "np-article-filters"}}
     </div>

@@ -15,6 +15,7 @@ const ADMIN_EMAIL = process.env.GHOST_ADMIN_EMAIL?.trim() ?? '';
 const ADMIN_PASSWORD = process.env.GHOST_ADMIN_PASSWORD ?? '';
 const ADMIN_NAME = process.env.GHOST_ADMIN_NAME?.trim() || 'Admin';
 const SITE_TITLE = process.env.GHOST_SITE_TITLE?.trim() || 'Kono Gaijin';
+const SITE_DESCRIPTION = 'Tech, travel, and life on the road.';
 const I18N_PUBLIC_DIR =
   process.env.GHOST_I18N_PUBLIC_DIR ?? '/var/lib/ghost/content/themes/neon-protocol/assets/i18n';
 const CONTENT_API_WEBHOOK_SECRET = process.env.CONTENT_API_WEBHOOK_SECRET?.trim() ?? '';
@@ -635,6 +636,40 @@ async function seedSiteTitle(cookie) {
   console.log(`Set site title to ${SITE_TITLE}`);
 }
 
+function isGhostDefaultHandle(value) {
+  const normalized = String(value ?? '')
+    .trim()
+    .replace(/^@/, '')
+    .replace(/^https?:\/\/(www\.)?(twitter|x|facebook)\.com\//i, '')
+    .replace(/\/$/, '')
+    .toLowerCase();
+  return normalized === 'ghost';
+}
+
+async function seedSeoSettings(cookie) {
+  const settings = await getSettings(cookie);
+  const next = [];
+
+  if (settingValue(settings, 'description') !== SITE_DESCRIPTION) {
+    next.push({ key: 'description', value: SITE_DESCRIPTION });
+  }
+
+  if (isGhostDefaultHandle(settingValue(settings, 'twitter'))) {
+    next.push({ key: 'twitter', value: '' });
+  }
+
+  if (isGhostDefaultHandle(settingValue(settings, 'facebook'))) {
+    next.push({ key: 'facebook', value: '' });
+  }
+
+  if (next.length === 0) {
+    return;
+  }
+
+  await putSettings(cookie, next);
+  console.log('Seeded site description and cleared default Ghost social handles');
+}
+
 async function seedBrandTitleHtml(cookie) {
   const { response, data } = await request('/ghost/api/admin/custom_theme_settings/', { cookie });
   if (!response.ok) {
@@ -726,10 +761,11 @@ const cookie = await createSession();
 await activateTheme(cookie);
 
 if (SKIP_CONFIGS) {
-  console.log('Skipping configs (members, site title, brand HTML, navigation)');
+  console.log('Skipping configs (members, site title, brand HTML, navigation, SEO)');
 } else {
   await applyFreeMemberSettings(cookie);
   await seedSiteTitle(cookie);
+  await seedSeoSettings(cookie);
   await seedBrandTitleHtml(cookie);
   await seedNavigation(cookie);
 }

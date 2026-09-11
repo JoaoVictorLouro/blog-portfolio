@@ -6,12 +6,14 @@
     {{{block "head"}}}
     {{> "hreflang"}}
     <link type="text/plain" rel="author" href="{{@site.url}}/humans.txt">
-    {{#is "post"}}
-    {{#post}}
-    <link rel="alternate" type="application/rss+xml" title="{{@site.title}}" href="{{@site.url}}/{{> "np-locale-prefix-post"}}/articles/rss/">
-    {{/post}}
+    {{#is "post, page"}}
     {{else}}
-    <link rel="alternate" type="application/rss+xml" title="{{@site.title}}" href="{{@site.url}}/{{> "np-locale-prefix-site"}}/articles/rss/">
+    <meta name="description" content="{{> "np-site-description"}}">
+    <meta property="og:description" content="{{> "np-site-description"}}">
+    <meta name="twitter:description" content="{{> "np-site-description"}}">
+    <meta property="og:image" content="{{@site.url}}{{asset "images/hero.webp"}}">
+    <meta name="twitter:image" content="{{@site.url}}{{asset "images/hero.webp"}}">
+    <meta name="twitter:card" content="summary_large_image">
     {{/is}}
     <script>
     window.__npLocale = "{{#block "np_lang"}}en-us{{/block}}";
@@ -108,12 +110,33 @@
     })();
     </script>
     {{ghost_head}}
-    {{#is "post"}}
+    <link rel="alternate" type="application/rss+xml" title="{{@site.title}}" href="{{@site.url}}/{{#block "np_lang"}}en-us{{/block}}/articles/rss/" data-np-rss>
+    <script>
+    (function () {
+        document.querySelectorAll('link[rel="alternate"][type="application/rss+xml"]').forEach(function (link) {
+            if (!link.hasAttribute('data-np-rss')) {
+                link.remove();
+            }
+        });
+    })();
+    </script>
+    <meta property="og:locale" content="{{#block "np_bcp47"}}en-US{{/block}}">
+    {{#match (block "np_bcp47") "en-US"}}
     {{else}}
-    <meta name="description" content="{{> "np-t" key="SITE_DESCRIPTION"}}">
-    <meta property="og:description" content="{{> "np-t" key="SITE_DESCRIPTION"}}">
-    <meta name="twitter:description" content="{{> "np-t" key="SITE_DESCRIPTION"}}">
-    {{/is}}
+    <meta property="og:locale:alternate" content="en-US">
+    {{/match}}
+    {{#match (block "np_bcp47") "ja-JP"}}
+    {{else}}
+    <meta property="og:locale:alternate" content="ja-JP">
+    {{/match}}
+    {{#match (block "np_bcp47") "pt-BR"}}
+    {{else}}
+    <meta property="og:locale:alternate" content="pt-BR">
+    {{/match}}
+    {{#match (block "np_bcp47") "es-419"}}
+    {{else}}
+    <meta property="og:locale:alternate" content="es-419">
+    {{/match}}
     {{> "np-pwa-head"}}
     <script>
     (function () {
@@ -176,7 +199,7 @@
         }
     })();
     </script>
-    <title>{{meta_title page=(t " (Page %)")}}</title>
+    <title>{{#block "np_document_title"}}{{meta_title page=(t " (Page %)")}}{{/block}}</title>
     <script>
         (function () {
             var bcp47 = { 'en-us': 'en-US', 'ja-jp': 'ja-JP', 'pt-br': 'pt-BR', 'es-la': 'es-419' };

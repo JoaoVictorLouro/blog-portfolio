@@ -1,7 +1,19 @@
 {{!< default}}
 
+{{#contentFor "np_hreflang_kind"}}site{{/contentFor}}
+{{#contentFor "np_hreflang_suffix"}}{{/contentFor}}
+{{#contentFor "np_document_title"}}{{@site.title}} — {{> "np-site-description"}}{{/contentFor}}
 {{#contentFor "head"}}
     <link rel="preload" as="image" href="{{asset "images/hero-960.webp"}}" imagesrcset="{{asset "images/hero-640.webp"}} 640w, {{asset "images/hero-960.webp"}} 960w, {{asset "images/hero-1280.webp"}} 1280w, {{asset "images/hero.webp"}} 1600w" imagesizes="min(1280px, calc(100vw - 32px))" fetchpriority="high">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "{{@site.title}}",
+        "url": "{{@site.url}}/{{#block "np_lang"}}en-us{{/block}}/",
+        "description": "{{> "np-site-description"}}"
+    }
+    </script>
 {{/contentFor}}
 
 <main class="np-main np-home">
