@@ -368,9 +368,20 @@
 
   function syncTabVisibility() {
     root.classList.toggle('np-tab-hidden', document.hidden);
+    if (document.hidden) {
+      return;
+    }
+    document.querySelectorAll('[data-np-tilt].is-tilting').forEach((el) => {
+      el.classList.remove('is-tilting');
+      el.style.transform = '';
+    });
+    refreshFxVisibility();
   }
 
   function elementIsVisible(el) {
+    if (document.hidden) {
+      return true;
+    }
     if (typeof el.checkVisibility !== 'function') {
       return true;
     }
@@ -382,6 +393,9 @@
   }
 
   function handleFxIntersection(entries) {
+    if (document.hidden) {
+      return;
+    }
     entries.forEach((entry) => {
       const visible = entry.isIntersecting && elementIsVisible(entry.target);
       entry.target.classList.toggle('np-fx-paused', !visible);
@@ -426,6 +440,18 @@
     }
 
     observeFxTargets(initFxVisibility._observer);
+  }
+
+  function refreshFxVisibility() {
+    const observer = initFxVisibility._observer;
+    if (!observer) {
+      return;
+    }
+    document.querySelectorAll(FX_VISIBILITY_SELECTOR).forEach((el) => {
+      observer.unobserve(el);
+      delete el.dataset.npFxObserved;
+    });
+    observeFxTargets(observer);
   }
 
   function normalizeNavPath(pathname) {
