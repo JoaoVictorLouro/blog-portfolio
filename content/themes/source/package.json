@@ -46,7 +46,7 @@
     "@tryghost/theme-translations": "0.0.22",
     "autoprefixer": "10.6.0",
     "beeper": "3.0.0",
-    "cssnano": "8.0.10",
+    "cssnano": "9.0.4",
     "gscan": "6.6.1",
     "gulp": "5.0.1",
     "gulp-concat": "2.6.1",
