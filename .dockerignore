@@ -19,6 +19,9 @@ data/
 .vscode/
 .DS_Store
 
+# Image metadata (do not bake into static example roots)
+website-examples/Dockerfile
+
 # Task / local tooling
 Taskfile.yml
 deno.json

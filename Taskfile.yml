@@ -58,9 +58,9 @@ tasks:
       - docker compose down
 
   logs:
-    desc: Follow nginx and Ghost container logs
+    desc: Follow nginx, Ghost, and website-examples container logs
     cmds:
-      - docker compose logs -f nginx ghost
+      - docker compose logs -f nginx ghost website-examples
 
   logs:api:
     desc: Follow content-api container logs
@@ -71,6 +71,11 @@ tasks:
     desc: Follow nginx container logs
     cmds:
       - docker compose logs -f nginx
+
+  logs:website-examples:
+    desc: Follow website-examples container logs
+    cmds:
+      - docker compose logs -f website-examples
 
   status:
     desc: Show Compose service status

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sample website example</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0b0f14;
+        --fg: #e8eef4;
+        --muted: #9aa8b4;
+        --accent: #3dffb0;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--fg);
+      }
+
+      main {
+        max-width: 36rem;
+        padding: 2rem;
+      }
+
+      p {
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      code {
+        color: var(--accent);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Sample website example</h1>
+      <p>
+        This page is served from
+        <code>/website-examples/sample/</code>. Add a sibling folder under
+        <code>website-examples/</code> to publish another interactive example at its own path.
+      </p>
+    </main>
+  </body>
+</html>

@@ -24,6 +24,8 @@ jobs:
             dockerfile: Dockerfile
           - image: ghcr.io/joaovictorlouro/blog-portfolio-content-api
             dockerfile: content-api/Dockerfile
+          - image: ghcr.io/joaovictorlouro/blog-portfolio-website-examples
+            dockerfile: website-examples/Dockerfile
     steps:
       - uses: actions/checkout@v7
 

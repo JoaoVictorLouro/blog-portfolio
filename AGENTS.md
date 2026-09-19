@@ -20,7 +20,8 @@ Tooling: Task, Deno 2.x, Prettier, gscan (via Node Docker), GitHub Actions, Reno
 | `.env.secrets`                | **no**   | Local secrets (`GHOST_ADMIN_EMAIL` / `PASSWORD`, optional `GHOST_ADMIN_API_KEY`) — use `.env.secrets.example`                                                                                                     |
 | `scripts/ghost-bootstrap.mjs` | yes      | First-boot owner + theme; gated by `BOOTSTRAP_SKIP_*` (configs, tags, About pages, newsletters, content-api webhooks, demo articles). Local compose defaults all skips to false.                                  |
 | `content-api/`                | yes      | Deno REST API: in-memory article translation map at `/contentapi/i18n/article-translations.json` (hourly + Ghost webhooks) and YouTube videos cache at `/contentapi/youtube/videos.json` (boot + hourly Atom RSS) |
-| `config/nginx/`               | yes      | Reverse proxy: `/contentapi/*` → content-api, everything else → Ghost                                                                                                                                             |
+| `website-examples/`           | yes      | Static interactive examples; each folder is served at `/website-examples/<folder>/` by a dedicated nginx container                                                                                                |
+| `config/nginx/`               | yes      | Reverse proxy: `/contentapi/*` → content-api, `/website-examples/*` → website-examples nginx, everything else → Ghost                                                                                             |
 | `scripts/i18n/locales.mjs`    | yes      | Shared locale registry (`en-us`, `ja-jp`, `pt-br`, `es-la`) for bootstrap, theme build, and content-api                                                                                                           |
 
 Compose bind-mounts versioned `content/*` over the runtime `data/content` volume. The `Dockerfile` copies `content/` into the GHCR image `ghcr.io/joaovictorlouro/blog-portfolio`.
@@ -37,7 +38,7 @@ task lint        # gscan on content/themes/neon-protocol
 task test        # gscan + docker compose config
 ```
 
-Site: `http://localhost:2368` (nginx) — Admin: `http://localhost:2368/ghost` — Content API: `http://localhost:2368/contentapi/health` (owner from `GHOST_ADMIN_EMAIL` / `GHOST_ADMIN_PASSWORD` on first boot; content-api uses `GHOST_ADMIN_API_KEY` JWT when set, otherwise owner email/password)
+Site: `http://localhost:2368` (nginx) — Admin: `http://localhost:2368/ghost` — Content API: `http://localhost:2368/contentapi/health` — Website examples: `http://localhost:2368/website-examples/sample/` (owner from `GHOST_ADMIN_EMAIL` / `GHOST_ADMIN_PASSWORD` on first boot; content-api uses `GHOST_ADMIN_API_KEY` JWT when set, otherwise owner email/password)
 
 ## Do
 

@@ -22,6 +22,7 @@ Set `GHOST_ADMIN_EMAIL` and `GHOST_ADMIN_PASSWORD` in `.env.secrets` before the 
 - Articles: [http://localhost:2368/articles/](http://localhost:2368/articles/)
 - Portfolio: [http://localhost:2368/portfolio/](http://localhost:2368/portfolio/)
 - About: [http://localhost:2368/about/](http://localhost:2368/about/)
+- Website examples: [http://localhost:2368/website-examples/sample/](http://localhost:2368/website-examples/sample/)
 - Admin: [http://localhost:2368/ghost](http://localhost:2368/ghost) (log in with the env credentials; no setup wizard)
 
 Runtime data (SQLite, uploads, logs) lives under `./data/content` and is gitignored. An existing database that already has an owner keeps that user; later `.env.secrets` password changes are ignored. Content-api refreshes the translation map with `GHOST_ADMIN_API_KEY` (JWT) when that env var is set; otherwise it uses owner email/password (local compose disables staff device verification).
@@ -38,11 +39,15 @@ Tracked under `content/`:
 
 These folders are bind-mounted into Ghost and baked into the published image.
 
-## Container image
+## Container images
 
-Image: `ghcr.io/joaovictorlouro/blog-portfolio`
+| Image                                                     | Purpose                                                |
+| --------------------------------------------------------- | ------------------------------------------------------ |
+| `ghcr.io/joaovictorlouro/blog-portfolio`                  | Ghost 6 Alpine + versioned content (root `Dockerfile`) |
+| `ghcr.io/joaovictorlouro/blog-portfolio-content-api`      | Deno content API                                       |
+| `ghcr.io/joaovictorlouro/blog-portfolio-website-examples` | Static nginx host for `website-examples/`              |
 
-Built from the root `Dockerfile` (Ghost 6 Alpine + versioned content). Pushes to GHCR on `main` and `v*` tags.
+Pushes to GHCR on `main` and `v*` tags. Local compose bind-mounts `website-examples/` so example edits apply without a rebuild. Each folder under `website-examples/` is served at `/website-examples/<folder>/`.
 
 ## Useful commands
 
@@ -102,7 +107,7 @@ Portfolio is a static image gallery in the theme (`content/themes/neon-protocol/
 ## CI
 
 - **Pull requests** — Deno format check, gscan lint, and theme/Compose tests
-- **Publish** — build and push the Docker image to GHCR
+- **Publish** — build and push Ghost, content-api, and website-examples images to GHCR
 - **Renovate** — dependency updates Saturdays 09:00–20:00 (`America/Sao_Paulo`); minor and patch for `>=1.0.0` automerge (0.x and majors stay manual)
 
 Install the [Renovate GitHub App](https://github.com/apps/renovate) on this repository if it is not already enabled.
