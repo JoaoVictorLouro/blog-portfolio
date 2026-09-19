@@ -1,5 +1,31 @@
 <footer class="np-footer">
-    <div class="np-footer-copy">© {{date format="YYYY"}} {{@site.title}} // {{t "ALL RIGHTS RESERVED"}}</div>
+    <div class="np-footer-brand">
+        <div class="np-footer-copy">© {{date format="YYYY"}} {{@site.title}} // {{t "ALL RIGHTS RESERVED"}}</div>
+        <nav class="np-footer-social" aria-label="Social">
+            {{#with @site}}
+                {{#if youtube}}
+                    <a href="{{social_url type="youtube"}}" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+                        {{> "icons/youtube"}}
+                    </a>
+                {{/if}}
+                {{#if twitter}}
+                    <a href="{{social_url type="twitter"}}" target="_blank" rel="noopener noreferrer" aria-label="X">
+                        {{> "icons/x"}}
+                    </a>
+                {{/if}}
+                {{#if bluesky}}
+                    <a href="{{social_url type="bluesky"}}" target="_blank" rel="noopener noreferrer" aria-label="Bluesky">
+                        {{> "icons/bluesky"}}
+                    </a>
+                {{/if}}
+            {{/with}}
+            {{#if @custom.discord_server_url}}
+                <a href="{{@custom.discord_server_url}}" target="_blank" rel="noopener noreferrer" aria-label="Discord">
+                    {{> "icons/discord"}}
+                </a>
+            {{/if}}
+        </nav>
+    </div>
     <ul class="np-footer-links">
         {{#is "tag"}}
             <li><a href="{{~> "np-tag-relative-prefix"}}articles/" data-np-i18n="ARTICLES">{{> "np-t" key="ARTICLES"}}</a></li>

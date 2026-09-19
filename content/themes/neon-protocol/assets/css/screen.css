@@ -3,7 +3,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../fonts/material-symbols-subset.woff2?v=a1755c94') format('woff2');
+  src: url('../fonts/material-symbols-subset.woff2?v=e83db7ec') format('woff2');
 }
 
 :root,
@@ -931,6 +931,47 @@ body:has(#announcement-bar-root .gh-announcement-bar) .np-main {
 
 .np-footer-copy {
   color: var(--np-tertiary-dim);
+}
+
+.np-footer-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.np-footer-social {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.np-footer-social:not(:has(a)) {
+  display: none;
+}
+
+.np-footer-social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1;
+}
+
+.np-footer-social-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  display: block;
+  fill: currentColor;
+}
+
+.np-footer-social-icon--outline {
+  fill: none;
 }
 
 .np-footer-links {
@@ -3745,6 +3786,14 @@ html.np-tab-hidden .np-fx-layer::after {
     flex-direction: row;
     justify-content: space-between;
     padding-bottom: calc(var(--np-portal-trigger-height) + var(--np-portal-trigger-gap) * 3 + 1rem);
+  }
+
+  .np-footer-brand {
+    align-items: flex-start;
+  }
+
+  .np-footer-social {
+    justify-content: flex-start;
   }
 
   .np-main {

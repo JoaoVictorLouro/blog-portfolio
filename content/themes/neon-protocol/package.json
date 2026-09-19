@@ -56,9 +56,13 @@
         "type": "text",
         "description": "GitHub profile or repo URL for NETWORK_NODES."
       },
-      "social_url": {
+      "discord_user_url": {
         "type": "text",
-        "description": "Primary social profile URL for NETWORK_NODES."
+        "description": "Discord user profile URL for NETWORK_NODES (https://discord.com/users/…)."
+      },
+      "discord_server_url": {
+        "type": "text",
+        "description": "Discord server invite URL for NETWORK_NODES (https://discord.gg/…)."
       },
       "show_node_widget": {
         "type": "boolean",
