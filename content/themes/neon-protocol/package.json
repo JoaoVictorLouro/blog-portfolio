@@ -64,6 +64,10 @@
         "type": "text",
         "description": "Discord server invite URL for NETWORK_NODES (https://discord.gg/…)."
       },
+      "buy_me_a_coffee_url": {
+        "type": "text",
+        "description": "Buy Me a Coffee URL for footer and NETWORK_NODES (https://buymeacoffee.com/…)."
+      },
       "show_node_widget": {
         "type": "boolean",
         "default": true,

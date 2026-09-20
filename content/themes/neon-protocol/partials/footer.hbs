@@ -24,6 +24,11 @@
                     {{> "icons/discord"}}
                 </a>
             {{/if}}
+            {{#if @custom.buy_me_a_coffee_url}}
+                <a href="{{@custom.buy_me_a_coffee_url}}" target="_blank" rel="noopener noreferrer" aria-label="{{t "BUY_ME_A_COFFEE"}}">
+                    {{> "icons/buy-me-a-coffee"}}
+                </a>
+            {{/if}}
         </nav>
     </div>
     <ul class="np-footer-links">
