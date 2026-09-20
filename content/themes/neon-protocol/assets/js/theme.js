@@ -26,6 +26,7 @@
       }
     });
     syncGhostCommentsTheme(next);
+    renderMermaidDiagrams();
   }
 
   const COMMENTS_TOKENS = {
@@ -2206,6 +2207,7 @@
   }
 
   let prismLoadPromise = null;
+  let mermaidLoadPromise = null;
 
   function loadPrism() {
     const url = window.__npGhostAssetUrls?.prism;
@@ -2231,9 +2233,104 @@
     return prismLoadPromise;
   }
 
+  function loadMermaid() {
+    const url = window.__npGhostAssetUrls?.mermaid;
+    if (!url) {
+      return Promise.resolve(null);
+    }
+    if (window.mermaid?.run) {
+      return Promise.resolve(window.mermaid);
+    }
+    if (mermaidLoadPromise) {
+      return mermaidLoadPromise;
+    }
+    mermaidLoadPromise = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = url;
+      script.async = true;
+      script.onload = () => resolve(window.mermaid || null);
+      script.onerror = () => reject(new Error('Failed to load Mermaid'));
+      document.head.appendChild(script);
+    });
+    return mermaidLoadPromise;
+  }
+
+  function wrapMermaidFences(prose) {
+    prose.querySelectorAll('pre code.language-mermaid').forEach((code) => {
+      const pre = code.closest('pre');
+      if (!pre || pre.closest('.np-mermaid')) {
+        return;
+      }
+      const source = code.textContent || '';
+      const figure = document.createElement('figure');
+      figure.className = 'np-mermaid';
+      figure.setAttribute('data-np-mermaid-source', source);
+
+      const diagram = document.createElement('div');
+      diagram.className = 'np-mermaid-diagram mermaid';
+      diagram.setAttribute('role', 'img');
+      diagram.setAttribute('aria-label', 'Diagram');
+      diagram.textContent = source;
+
+      const details = document.createElement('details');
+      details.className = 'np-mermaid-source';
+      const summary = document.createElement('summary');
+      summary.textContent = 'SOURCE';
+      details.append(summary);
+
+      const parent = pre.parentNode;
+      figure.append(diagram, details);
+      parent.insertBefore(figure, pre);
+      details.append(pre);
+    });
+  }
+
+  function mermaidConfig(theme) {
+    return {
+      startOnLoad: false,
+      securityLevel: 'strict',
+      theme: theme === 'light' ? 'neutral' : 'dark',
+    };
+  }
+
+  function renderMermaidDiagrams() {
+    const mermaid = window.mermaid;
+    if (!mermaid?.run || !mermaid.initialize) {
+      return;
+    }
+    const nodes = document.querySelectorAll('.np-mermaid-diagram');
+    if (!nodes.length) {
+      return;
+    }
+    mermaid.initialize(mermaidConfig(currentTheme()));
+    nodes.forEach((el) => {
+      const source = el.closest('.np-mermaid')?.getAttribute('data-np-mermaid-source');
+      if (!source) {
+        return;
+      }
+      el.removeAttribute('data-processed');
+      delete el.dataset.processed;
+      el.textContent = source;
+    });
+    mermaid.run({ querySelector: '.np-mermaid-diagram' }).catch(() => {});
+  }
+
   function initSyntaxHighlighting() {
     const prose = document.querySelector('.np-prose');
-    if (!prose?.querySelector('pre code')) {
+    if (!prose) {
+      return;
+    }
+    wrapMermaidFences(prose);
+    if (prose.querySelector('.np-mermaid')) {
+      loadMermaid()
+        .then((mermaid) => {
+          if (mermaid) {
+            renderMermaidDiagrams();
+          }
+        })
+        .catch(() => {});
+    }
+    if (!prose.querySelector('pre code')) {
       return;
     }
     loadPrism()

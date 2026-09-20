@@ -101,3 +101,40 @@ try {
 } finally {
   await Deno.remove(prismTmp, { recursive: true });
 }
+
+const MERMAID_VERSION = '10.9.4';
+const MERMAID_TARBALL = `https://registry.npmjs.org/mermaid/-/mermaid-${MERMAID_VERSION}.tgz`;
+const mermaidTarballResponse = await fetch(MERMAID_TARBALL, {
+  headers: { 'User-Agent': USER_AGENT },
+});
+if (!mermaidTarballResponse.ok) {
+  throw new Error(
+    `Failed to download mermaid@${MERMAID_VERSION} (${mermaidTarballResponse.status}): ${MERMAID_TARBALL}`,
+  );
+}
+
+const mermaidTmp = await Deno.makeTempDir({ prefix: 'mermaid-' });
+try {
+  const mermaidTgz = join(mermaidTmp, 'mermaid.tgz');
+  await Deno.writeFile(mermaidTgz, new Uint8Array(await mermaidTarballResponse.arrayBuffer()));
+
+  const extract = new Deno.Command('tar', {
+    args: ['-xzf', mermaidTgz, '-C', mermaidTmp],
+  });
+  const extractResult = await extract.output();
+  if (!extractResult.success) {
+    const err = new TextDecoder().decode(extractResult.stderr);
+    throw new Error(`Failed to extract mermaid tarball: ${err || extractResult.code}`);
+  }
+
+  const mermaidSrc = join(mermaidTmp, 'package', 'dist', 'mermaid.min.js');
+  const mermaidOutFile = new URL('js/vendor/mermaid.min.js', OUT_DIR);
+  const mermaidOutPath = fileURLToPath(mermaidOutFile);
+  await Deno.mkdir(dirname(mermaidOutPath), { recursive: true });
+  await Deno.copyFile(mermaidSrc, mermaidOutPath);
+  console.log(
+    `Wrote ${mermaidOutFile.pathname} (${(await Deno.stat(mermaidOutPath)).size} bytes) from mermaid@${MERMAID_VERSION}`,
+  );
+} finally {
+  await Deno.remove(mermaidTmp, { recursive: true });
+}

@@ -2400,6 +2400,60 @@ html.np-members-open {
   color: #8a6a00;
 }
 
+.np-prose .np-mermaid {
+  margin: 0;
+}
+
+.np-prose .np-mermaid-diagram {
+  background: var(--np-charcoal);
+  border-left: 2px solid var(--np-neon-teal);
+  padding: 1.5rem;
+  overflow-x: auto;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.np-prose .np-mermaid-diagram svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+[data-theme='light'] .np-prose .np-mermaid-diagram {
+  background: var(--np-surface-bright);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--np-outline-variant) 45%, transparent);
+}
+
+.np-prose .np-mermaid-source {
+  margin-top: 0.75rem;
+}
+
+.np-prose .np-mermaid-source summary {
+  font-family: var(--np-font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--np-neon-teal);
+  cursor: pointer;
+  list-style: none;
+}
+
+.np-prose .np-mermaid-source summary::-webkit-details-marker {
+  display: none;
+}
+
+.np-prose .np-mermaid-source summary::before {
+  content: '▸ ';
+}
+
+.np-prose .np-mermaid-source[open] summary::before {
+  content: '▾ ';
+}
+
+.np-prose .np-mermaid-source pre {
+  margin-top: 0.75rem;
+}
+
 .np-prose blockquote {
   margin: 2.5rem 0;
   padding: 1rem 1.5rem;
