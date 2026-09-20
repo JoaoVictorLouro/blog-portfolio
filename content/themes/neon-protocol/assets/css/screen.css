@@ -2401,7 +2401,10 @@ html.np-members-open {
 }
 
 .np-prose .np-mermaid {
-  margin: 0;
+  --np-mermaid-width: min(100vw - 2 * var(--np-margin), var(--np-max));
+  width: var(--np-mermaid-width);
+  max-width: none;
+  margin-inline: calc(50% - var(--np-mermaid-width) / 2);
 }
 
 .np-prose .np-mermaid-diagram {
