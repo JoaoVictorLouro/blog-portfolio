@@ -2,7 +2,7 @@ FROM denoland/deno:alpine AS theme-assets
 WORKDIR /build
 ENV NPM_CONFIG_REGISTRY=https://registry.npmjs.org/
 COPY .npmrc .npmrc
-RUN apk add --no-cache bash curl file
+RUN apk add --no-cache bash curl file tar
 COPY scripts/ghost-cdn-manifest.json scripts/sync-ghost-cdn-assets.mjs scripts/
 COPY scripts/build-material-symbols-subset.sh scripts/build-material-symbols-subset.mjs scripts/
 COPY scripts/build-theme-i18n.mjs scripts/build-pwa-manifests.mjs scripts/build-sw.mjs scripts/theme-asset-hash.mjs scripts/

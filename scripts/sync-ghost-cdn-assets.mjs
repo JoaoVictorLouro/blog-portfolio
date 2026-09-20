@@ -1,6 +1,6 @@
 #!/usr/bin/env -S deno run -A
 
-import { dirname } from 'node:path';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 const ROOT = new URL('../', import.meta.url);
 const MANIFEST_PATH = new URL('./ghost-cdn-manifest.json', import.meta.url);
@@ -30,4 +30,74 @@ for (const [key, entry] of Object.entries(manifest)) {
 
   const resolved = response.url;
   console.log(`Wrote ${outFile.pathname} (${bytes.byteLength} bytes) from ${resolved}`);
+}
+
+const PRISM_VERSION = '1.29.0';
+const PRISM_TARBALL = `https://registry.npmjs.org/prismjs/-/prismjs-${PRISM_VERSION}.tgz`;
+const PRISM_PARTS = [
+  'components/prism-core.min.js',
+  'components/prism-markup.min.js',
+  'components/prism-css.min.js',
+  'components/prism-clike.min.js',
+  'components/prism-javascript.min.js',
+  'components/prism-markup-templating.min.js',
+  'components/prism-typescript.min.js',
+  'components/prism-json.min.js',
+  'components/prism-bash.min.js',
+  'components/prism-yaml.min.js',
+  'components/prism-markdown.min.js',
+  'components/prism-docker.min.js',
+  'components/prism-nginx.min.js',
+  'components/prism-handlebars.min.js',
+  'components/prism-sql.min.js',
+  'components/prism-python.min.js',
+  'components/prism-go.min.js',
+  'components/prism-rust.min.js',
+  'components/prism-diff.min.js',
+  'components/prism-graphql.min.js',
+  'components/prism-toml.min.js',
+  'components/prism-mermaid.min.js',
+];
+
+const prismTarballResponse = await fetch(PRISM_TARBALL, {
+  headers: { 'User-Agent': USER_AGENT },
+});
+if (!prismTarballResponse.ok) {
+  throw new Error(
+    `Failed to download prismjs@${PRISM_VERSION} (${prismTarballResponse.status}): ${PRISM_TARBALL}`,
+  );
+}
+
+const prismTmp = await Deno.makeTempDir({ prefix: 'prismjs-' });
+try {
+  const prismTgz = join(prismTmp, 'prismjs.tgz');
+  await Deno.writeFile(prismTgz, new Uint8Array(await prismTarballResponse.arrayBuffer()));
+
+  const extract = new Deno.Command('tar', {
+    args: ['-xzf', prismTgz, '-C', prismTmp],
+  });
+  const extractResult = await extract.output();
+  if (!extractResult.success) {
+    const err = new TextDecoder().decode(extractResult.stderr);
+    throw new Error(`Failed to extract prismjs tarball: ${err || extractResult.code}`);
+  }
+
+  const prismPackageDir = join(prismTmp, 'package');
+  const prismChunks = [
+    `/* PrismJS ${PRISM_VERSION} MIT https://prismjs.com — installed at image build from npm prismjs */\n`,
+  ];
+  for (const part of PRISM_PARTS) {
+    const partPath = join(prismPackageDir, part);
+    prismChunks.push(await Deno.readTextFile(partPath), '\n');
+  }
+
+  const prismOutFile = new URL('js/vendor/prism.min.js', OUT_DIR);
+  const prismOutPath = fileURLToPath(prismOutFile);
+  await Deno.mkdir(dirname(prismOutPath), { recursive: true });
+  await Deno.writeTextFile(prismOutPath, prismChunks.join(''));
+  console.log(
+    `Wrote ${prismOutFile.pathname} (${(await Deno.stat(prismOutPath)).size} bytes) from prismjs@${PRISM_VERSION}`,
+  );
+} finally {
+  await Deno.remove(prismTmp, { recursive: true });
 }
