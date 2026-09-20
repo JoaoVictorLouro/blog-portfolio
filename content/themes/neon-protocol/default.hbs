@@ -27,7 +27,8 @@
         announcement: "{{asset 'js/vendor/ghost-announcement-bar.min.js'}}",
         searchStyles: "{{asset 'css/vendor/ghost-sodo-search.min.css'}}",
         comments: "{{asset 'js/vendor/ghost-comments-ui.min.js'}}",
-        commentsOverrides: "{{asset 'css/ghost-comments-overrides.css'}}"
+        commentsOverrides: "{{asset 'css/ghost-comments-overrides.css'}}"{{#is "post, page"}},
+        prism: "{{asset 'js/vendor/prism.min.js'}}"{{/is}}
     };
     (function () {
         var bcp47 = { 'en-us': 'en-US', 'ja-jp': 'ja-JP', 'pt-br': 'pt-BR', 'es-la': 'es-419' };

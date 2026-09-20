@@ -2205,6 +2205,46 @@
     });
   }
 
+  let prismLoadPromise = null;
+
+  function loadPrism() {
+    const url = window.__npGhostAssetUrls?.prism;
+    if (!url) {
+      return Promise.resolve(null);
+    }
+    if (window.Prism?.highlightAllUnder) {
+      return Promise.resolve(window.Prism);
+    }
+    if (prismLoadPromise) {
+      return prismLoadPromise;
+    }
+    window.Prism = window.Prism || {};
+    window.Prism.manual = true;
+    prismLoadPromise = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = url;
+      script.async = true;
+      script.onload = () => resolve(window.Prism || null);
+      script.onerror = () => reject(new Error('Failed to load Prism'));
+      document.head.appendChild(script);
+    });
+    return prismLoadPromise;
+  }
+
+  function initSyntaxHighlighting() {
+    const prose = document.querySelector('.np-prose');
+    if (!prose?.querySelector('pre code')) {
+      return;
+    }
+    loadPrism()
+      .then((Prism) => {
+        if (Prism?.highlightAllUnder) {
+          Prism.highlightAllUnder(prose);
+        }
+      })
+      .catch(() => {});
+  }
+
   function boot() {
     setTheme(currentTheme());
     patchSodoSearchIndexFetch();
@@ -2231,6 +2271,7 @@
     initWorkChipPulse();
     initWorkCertTilt();
     initWebShare();
+    initSyntaxHighlighting();
     initServiceWorker();
   }
 

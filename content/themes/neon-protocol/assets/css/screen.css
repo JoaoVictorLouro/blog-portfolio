@@ -2283,8 +2283,121 @@ html.np-members-open {
   padding: 0;
 }
 
+[data-theme='light'] .np-prose pre {
+  background: var(--np-surface-bright);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--np-outline-variant) 45%, transparent);
+}
+
 [data-theme='light'] .np-prose pre code {
-  color: #e3e2e3;
+  background: none;
+  color: var(--np-on-surface);
+}
+
+.np-prose .kg-code-card {
+  margin: 0;
+}
+
+.np-prose .kg-code-card pre {
+  margin: 0;
+}
+
+.np-prose .kg-code-card figcaption {
+  margin-top: 0.75rem;
+  font-family: var(--np-font-mono);
+  font-size: 0.8rem;
+  color: var(--np-on-surface-variant);
+}
+
+.np-prose pre .token.comment,
+.np-prose pre .token.prolog,
+.np-prose pre .token.doctype,
+.np-prose pre .token.cdata {
+  color: #849495;
+}
+
+.np-prose pre .token.punctuation,
+.np-prose pre .token.operator,
+.np-prose pre .token.entity,
+.np-prose pre .token.url {
+  color: #b9cacb;
+}
+
+.np-prose pre .token.keyword,
+.np-prose pre .token.important,
+.np-prose pre .token.atrule,
+.np-prose pre .token.selector,
+.np-prose pre .token.builtin {
+  color: var(--np-cyber-magenta);
+}
+
+.np-prose pre .token.string,
+.np-prose pre .token.attr-value,
+.np-prose pre .token.char,
+.np-prose pre .token.regex,
+.np-prose pre .token.inserted {
+  color: var(--np-lantern-amber);
+}
+
+.np-prose pre .token.function,
+.np-prose pre .token.class-name,
+.np-prose pre .token.tag,
+.np-prose pre .token.property,
+.np-prose pre .token.attr-name {
+  color: var(--np-neon-teal);
+}
+
+.np-prose pre .token.number,
+.np-prose pre .token.boolean,
+.np-prose pre .token.constant,
+.np-prose pre .token.symbol,
+.np-prose pre .token.deleted {
+  color: var(--np-lantern-yellow);
+}
+
+[data-theme='light'] .np-prose pre .token.comment,
+[data-theme='light'] .np-prose pre .token.prolog,
+[data-theme='light'] .np-prose pre .token.doctype,
+[data-theme='light'] .np-prose pre .token.cdata {
+  color: var(--np-outline);
+}
+
+[data-theme='light'] .np-prose pre .token.punctuation,
+[data-theme='light'] .np-prose pre .token.operator,
+[data-theme='light'] .np-prose pre .token.entity,
+[data-theme='light'] .np-prose pre .token.url {
+  color: var(--np-on-surface-variant);
+}
+
+[data-theme='light'] .np-prose pre .token.keyword,
+[data-theme='light'] .np-prose pre .token.important,
+[data-theme='light'] .np-prose pre .token.atrule,
+[data-theme='light'] .np-prose pre .token.selector,
+[data-theme='light'] .np-prose pre .token.builtin {
+  color: #b0008c;
+}
+
+[data-theme='light'] .np-prose pre .token.string,
+[data-theme='light'] .np-prose pre .token.attr-value,
+[data-theme='light'] .np-prose pre .token.char,
+[data-theme='light'] .np-prose pre .token.regex,
+[data-theme='light'] .np-prose pre .token.inserted {
+  color: #9a6400;
+}
+
+[data-theme='light'] .np-prose pre .token.function,
+[data-theme='light'] .np-prose pre .token.class-name,
+[data-theme='light'] .np-prose pre .token.tag,
+[data-theme='light'] .np-prose pre .token.property,
+[data-theme='light'] .np-prose pre .token.attr-name {
+  color: #007a82;
+}
+
+[data-theme='light'] .np-prose pre .token.number,
+[data-theme='light'] .np-prose pre .token.boolean,
+[data-theme='light'] .np-prose pre .token.constant,
+[data-theme='light'] .np-prose pre .token.symbol,
+[data-theme='light'] .np-prose pre .token.deleted {
+  color: #8a6a00;
 }
 
 .np-prose blockquote {
