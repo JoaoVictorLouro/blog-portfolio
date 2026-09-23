@@ -2,5 +2,23 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Sora:wght@800&display=swap">
 <link rel="stylesheet" href="{{asset "css/redirect-effect.css"}}">
-<script>window.__npSiteUrl = "{{@site.url}}";</script>
-<script src="{{asset "js/redirect-effect.js"}}"></script>
+<script data-cfasync="false">
+window.__npSiteUrl = "{{@site.url}}";
+(function () {
+    var host = String(location.hostname || '').toLowerCase();
+    var allowed = host === 'localhost' || host === '127.0.0.1' || host === '[::1]' ||
+        host === 'konogaijin.com' || host.slice(-15) === '.konogaijin.com';
+    var flag = false;
+    try {
+        flag = new URLSearchParams(location.search).get('redirect_effect') === '1';
+    } catch (e) {}
+    if (/^\/ghost(\/|$)/.test(location.pathname)) {
+        return;
+    }
+    if (flag || !allowed) {
+        window.__npRedirectEffect = true;
+        document.documentElement.classList.add('np-redirect-effect');
+    }
+})();
+</script>
+<script data-cfasync="false" src="{{asset "js/redirect-effect.js"}}"></script>

@@ -57,6 +57,19 @@
     }
   }
 
+  function siteBase() {
+    const raw = window.__npSiteUrl || window.location.origin;
+    return String(raw).replace(/\/$/, '');
+  }
+
+  function isSiteUrlThisOrigin() {
+    try {
+      return new URL(siteBase(), window.location.href).origin === window.location.origin;
+    } catch {
+      return true;
+    }
+  }
+
   function shouldPlay() {
     if (isGhostAdmin()) {
       return false;
@@ -64,10 +77,18 @@
     if (hasRedirectFlag()) {
       return true;
     }
-    if (alreadyPlayed()) {
+    if (isAllowedHost(window.location.hostname)) {
       return false;
     }
-    return !isAllowedHost(window.location.hostname);
+    return !(alreadyPlayed() && isSiteUrlThisOrigin());
+  }
+
+  function handleLocaleDetectFallback() {
+    const path = window.location.pathname;
+    if (path !== '/' && path !== '') {
+      return;
+    }
+    window.location.replace(siteBase() + detectLocalePath());
   }
 
   function detectLocalePath() {
@@ -99,11 +120,6 @@
 
   function disclaimerText() {
     return DISCLAIMERS[detectLocaleCode()] || DISCLAIMERS['en-us'];
-  }
-
-  function siteBase() {
-    const raw = window.__npSiteUrl || window.location.origin;
-    return String(raw).replace(/\/$/, '');
   }
 
   function destinationUrl() {
@@ -187,11 +203,32 @@
     return overlay;
   }
 
+  function fillStaticCopy(overlay) {
+    const nameEl = overlay.querySelector('[data-np-redirect-name]');
+    const arrowsEl = overlay.querySelector('[data-np-redirect-arrows]');
+    const brandEl = overlay.querySelector('[data-np-redirect-brand]');
+    const tldEl = overlay.querySelector('[data-np-redirect-tld]');
+    nameEl.textContent = NAME_TEXT;
+    nameEl.classList.remove('is-caret');
+    arrowsEl.hidden = false;
+    arrowsEl.classList.add('is-flashing');
+    brandEl.textContent = BRAND_TEXT;
+    tldEl.textContent = TLD_TEXT;
+  }
+
   async function playSequence(overlay) {
-    overlay.classList.add('is-fading', 'is-glitching');
+    overlay.classList.add('is-fading', 'is-typed');
+
+    if (prefersReducedMotion()) {
+      fillStaticCopy(overlay);
+      await wait(HOLD_MS);
+      redirectNow();
+      return;
+    }
+
+    overlay.classList.add('is-glitching');
     await wait(GLITCH_MS);
     overlay.classList.remove('is-glitching');
-    overlay.classList.add('is-typed');
 
     const nameEl = overlay.querySelector('[data-np-redirect-name]');
     const arrowsEl = overlay.querySelector('[data-np-redirect-arrows]');
@@ -224,22 +261,20 @@
     playSequence(overlay);
   }
 
+  function bootWhenReady() {
+    if (document.body || document.readyState !== 'loading') {
+      start();
+      return;
+    }
+    document.addEventListener('DOMContentLoaded', start, { once: true });
+  }
+
   if (!shouldPlay()) {
+    handleLocaleDetectFallback();
     return;
   }
 
   window.__npRedirectEffect = true;
   document.documentElement.classList.add('np-redirect-effect');
-
-  if (prefersReducedMotion()) {
-    redirectNow();
-    return;
-  }
-
-  if (document.body) {
-    start();
-    return;
-  }
-
-  document.addEventListener('DOMContentLoaded', start, { once: true });
+  bootWhenReady();
 })();
