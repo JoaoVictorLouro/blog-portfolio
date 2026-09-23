@@ -3,12 +3,16 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {{> "redirect-effect"}}
     <title>Redirecting…</title>
     <noscript>
         <meta http-equiv="refresh" content="0; url={{@site.url}}/en-us/">
     </noscript>
     <script>
     (function () {
+        if (window.__npRedirectEffect) {
+            return;
+        }
         var base = "{{@site.url}}";
         var locales = [
             { prefix: 'en', path: '/en-us/' },
