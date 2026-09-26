@@ -3,7 +3,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../fonts/material-symbols-subset.woff2?v=892653ad') format('woff2');
+  src: url('../fonts/material-symbols-subset.woff2?v=42e9e00b') format('woff2');
 }
 
 :root,
@@ -1911,15 +1911,19 @@ html.np-members-open {
 }
 
 .np-hero-log-media {
+  position: relative;
   display: block;
-  min-height: 16rem;
   overflow: hidden;
+  aspect-ratio: 16 / 9;
+  min-height: 16rem;
 }
 
 .np-hero-log-media img {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
-  min-height: 16rem;
+  height: 100%;
   object-fit: cover;
   object-position: center;
 }
@@ -2123,6 +2127,7 @@ html.np-members-open {
 .np-article-wrap {
   position: relative;
   max-width: 48rem;
+  min-width: 0;
   margin: 0 auto;
   padding: 0 2rem;
 }
@@ -2232,6 +2237,7 @@ html.np-members-open {
 }
 
 .np-prose {
+  min-width: 0;
   font-size: 1.125rem;
   line-height: 1.7;
   color: var(--np-on-surface);
@@ -2468,8 +2474,18 @@ html.np-members-open {
 }
 
 /* Prose tables */
+.np-table-scroll,
+.np-prose .kg-table-card {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  box-shadow: inset -1rem 0 0.85rem -0.75rem
+    color-mix(in srgb, var(--np-neon-teal) 28%, transparent);
+}
+
 .np-prose table {
-  width: 100%;
+  width: max-content;
+  min-width: 100%;
   border-collapse: collapse;
   font-size: 0.95em;
   border: 1px solid color-mix(in srgb, var(--np-outline-variant) 30%, transparent);
@@ -3937,6 +3953,15 @@ html.np-tab-hidden .np-fx-layer::after {
         env(safe-area-inset-bottom, 0px) + 2rem + env(safe-area-inset-bottom, 0px)
     );
   }
+
+  .np-prose table {
+    font-size: 0.85em;
+  }
+
+  .np-prose table th,
+  .np-prose table td {
+    padding: 0.5rem 0.75rem;
+  }
 }
 
 @media (min-width: 768px) {
@@ -3982,7 +4007,9 @@ html.np-tab-hidden .np-fx-layer::after {
 
   .np-hero-log-media {
     width: 66%;
-    min-height: auto;
+    min-height: 0;
+    aspect-ratio: auto;
+    align-self: stretch;
   }
 
   .np-hero-log-body {

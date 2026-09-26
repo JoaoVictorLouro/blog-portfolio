@@ -2315,6 +2315,22 @@
     mermaid.run({ querySelector: '.np-mermaid-diagram' }).catch(() => {});
   }
 
+  function wrapProseTables() {
+    const prose = document.querySelector('.np-prose');
+    if (!prose) {
+      return;
+    }
+    prose.querySelectorAll(':scope > table').forEach((table) => {
+      if (table.closest('.np-table-scroll, .gist')) {
+        return;
+      }
+      const wrapper = document.createElement('div');
+      wrapper.className = 'np-table-scroll';
+      table.parentNode.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    });
+  }
+
   function initSyntaxHighlighting() {
     const prose = document.querySelector('.np-prose');
     if (!prose) {
@@ -2368,6 +2384,7 @@
     initWorkChipPulse();
     initWorkCertTilt();
     initWebShare();
+    wrapProseTables();
     initSyntaxHighlighting();
     initServiceWorker();
   }
