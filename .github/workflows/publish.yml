@@ -57,3 +57,20 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=${{ matrix.image }}
           cache-to: type=gha,mode=max,scope=${{ matrix.image }}
+
+  refresh-argocd:
+    name: Refresh Argo CD
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Argo CD webhook
+        env:
+          ARGOCD_WEBHOOK_URL: ${{ secrets.ARGOCD_WEBHOOK_URL }}
+          ARGOCD_WEBHOOK_SECRET: ${{ secrets.ARGOCD_WEBHOOK_SECRET }}
+        run: |
+          : "${ARGOCD_WEBHOOK_URL:?Set repository secret ARGOCD_WEBHOOK_URL}"
+          : "${ARGOCD_WEBHOOK_SECRET:?Set repository secret ARGOCD_WEBHOOK_SECRET}"
+          curl -fsS -X POST "$ARGOCD_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: ${ARGOCD_WEBHOOK_SECRET}" \
+            --data '{}'
