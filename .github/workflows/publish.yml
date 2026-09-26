@@ -70,7 +70,14 @@ jobs:
         run: |
           : "${ARGOCD_WEBHOOK_URL:?Set repository secret ARGOCD_WEBHOOK_URL}"
           : "${ARGOCD_WEBHOOK_SECRET:?Set repository secret ARGOCD_WEBHOOK_SECRET}"
-          curl -fsS -X POST "$ARGOCD_WEBHOOK_URL" \
-            -H "Content-Type: application/json" \
-            -H "Authorization: ${ARGOCD_WEBHOOK_SECRET}" \
-            --data '{}'
+          BODY='{"action":"published","package":{"name":"blog-portfolio","package_type":"container","owner":{"login":"joaovictorlouro"},"package_version":{"container_metadata":{"tag":{"name":"latest"}}}}}'
+          SIG="$(printf '%s' "$BODY" | openssl dgst -sha256 -hmac "$ARGOCD_WEBHOOK_SECRET" | awk '{print $2}')"
+          curl -fsS -D - -o /tmp/image-updater-webhook.out \
+            -X POST \
+            -H 'Content-Type: application/json' \
+            -H 'X-GitHub-Event: package' \
+            -H "X-Hub-Signature-256: sha256=${SIG}" \
+            --data-binary "$BODY" \
+            "$ARGOCD_WEBHOOK_URL"
+          echo
+          cat /tmp/image-updater-webhook.out
