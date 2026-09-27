@@ -65,6 +65,7 @@ Site: `http://localhost:2368` (nginx) — Admin: `http://localhost:2368/ghost` �
 
 - Article copy review from a live URL: [`.cursor/skills/review-article/SKILL.md`](.cursor/skills/review-article/SKILL.md)
 - Translate a post into missing locales as Ghost drafts: [`.cursor/skills/translate-article/SKILL.md`](.cursor/skills/translate-article/SKILL.md)
+- Create a Ghost draft from local markdown (uploads media, never publishes): [`.cursor/skills/create-draft/SKILL.md`](.cursor/skills/create-draft/SKILL.md)
 - [`.cursorignore`](.cursorignore) excludes `.env` / `.env.*` (keeps `*.example` templates) and `data/`
 - [`.cursor/hooks.json`](.cursor/hooks.json):
   - `beforeReadFile` — deny agent reads of `.env` files (`failClosed`)
