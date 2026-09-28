@@ -65,12 +65,14 @@ Never `"status": "published"`. Do not send `newsletters`.
 
 ## Slugs
 
-Strip trailing `-ja`, `-pt`, `-es` to get `base` (demo convention).
+Translate the source slug into the target language. The locale stays in the path (`/{locale}/articles/{slug}/`), so the slug does not repeat it.
 
-- Target `en-us`: `base`
-- Target `ja-jp`: `base-ja`
-- Target `pt-br`: `base-pt`
-- Target `es-la`: `base-es`
+- Lowercase, hyphenated, ASCII (`^[a-z0-9]+(?:-[a-z0-9]+)*$`)
+- Keep product names and industry terms in English. `Motion Graphics` stays `motion-graphics`
+- Japanese: Hepburn romanization, no kana and no macrons (`手軽に` → `tegaru-ni`)
+- Do not append `-ja`, `-pt`, or `-es`
+
+`#translation-{groupId}` stays the source slug (or the tag already on the source). Do not rebuild that id from the translated slug.
 
 If `filter=slug:{candidate}` already exists, try `candidate-2`, `candidate-3`, …
 

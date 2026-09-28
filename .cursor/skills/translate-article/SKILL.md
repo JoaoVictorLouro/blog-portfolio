@@ -24,9 +24,9 @@ Use env `GHOST_ADMIN_EMAIL`, `GHOST_ADMIN_PASSWORD`, `URL` (default `http://loca
 3. Source locale from `#lang-*`. If missing, infer from URL and attach that lang tag on the source (`PUT` tags only; do not change `status`).
 4. Reuse `#translation-{id}` on the source. If none, create `#translation-{source-slug}` and attach it to the source without publishing.
 5. List siblings via Admin (`filter` on the translation tag, include drafts). Skip locales that already have a sibling. Admin is source of truth (content-api JSON omits drafts).
-6. For each missing locale, rework title, `custom_excerpt`, HTML, and `feature_image_alt` into that locale. Keep HTML structure, `href`/`src`, code, and product names. Keep the author’s voice (terminal-style titles OK). Targets: `en-US`, `ja-JP`, `pt-BR`, `es-419`.
+6. For each missing locale, rework title, slug, `custom_excerpt`, HTML, and `feature_image_alt` into that locale. Keep HTML structure, `href`/`src`, code, and product names. Keep industry terms in English (`Motion Graphics` stays `Motion Graphics`). Keep the author’s voice (terminal-style titles OK). Targets: `en-US`, `ja-JP`, `pt-BR`, `es-419`.
 7. `POST /ghost/api/admin/posts/?source=html` with `status: "draft"`. Copy `feature_image`, public tags, translation tag, exactly one target `#lang-*`. No newsletters.
-8. Slugs: to `en-us` use unsuffixed base; otherwise `{base}-ja` / `-pt` / `-es`. If taken, append `-2`, etc.
+8. Slug is a translation of the source slug: lowercase, hyphenated, ASCII. Japanese is Hepburn, not kana. Do not append `-ja`, `-pt`, or `-es`; the locale is already in the path. If taken, append `-2`, etc.
 
 ## Return
 

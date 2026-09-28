@@ -4,6 +4,7 @@
     "jsr:@std/assert@1": "1.0.19",
     "jsr:@std/internal@^1.0.12": "1.0.14",
     "npm:@resvg/resvg-js@*": "2.6.2",
+    "npm:marked@15.0.12": "15.0.12",
     "npm:prettier@3.9.6": "3.9.6"
   },
   "jsr": {
@@ -94,6 +95,10 @@
         "@resvg/resvg-js-win32-ia32-msvc",
         "@resvg/resvg-js-win32-x64-msvc"
       ]
+    },
+    "marked@15.0.12": {
+      "integrity": "sha512-8dD6FusOQSrpv9Z1rdNMdlSgQOIP880DHqnohobOmYLElGEqAL/JvxvuxZO16r4HtjTlfPRDC1hbvxC9dPN2nA==",
+      "bin": true
     },
     "prettier@3.9.6": {
       "integrity": "sha512-OpN0zzVdiaiAhxpuuj5efpIS4sY9j7bY6uR5mnj5yPzGkdkjNKSJeUThPb60Jw29QuAZgA4o+/iB49kFiaBX6g==",
