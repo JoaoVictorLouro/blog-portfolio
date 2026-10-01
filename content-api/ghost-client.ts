@@ -96,6 +96,25 @@ export async function createAdminJwt(
 
 export type AdminAuth = { kind: 'jwt'; adminApiKey: string } | { kind: 'session'; cookie: string };
 
+export function adminTransportHeaders(origin: string): Record<string, string> {
+  const url = new URL(origin);
+  if (url.protocol !== 'https:') {
+    return {};
+  }
+  return {
+    Host: url.host,
+    'X-Forwarded-Proto': 'https',
+  };
+}
+
+function throwIfAdminRedirect(response: Response): void {
+  if (response.status !== 301 && response.status !== 302) {
+    return;
+  }
+  const location = response.headers.get('location') ?? 'unknown location';
+  throw new Error(`Admin request redirected (${response.status}) to ${location}`);
+}
+
 export async function createAdminSession(
   apiBase: string,
   origin: string,
@@ -106,24 +125,27 @@ export async function createAdminSession(
   const started = Date.now();
   const response = await fetch(`${apiBase}${sessionPath}`, {
     method: 'POST',
+    redirect: 'manual',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
       'Accept-Version': ACCEPT_VERSION,
       Origin: origin,
+      ...adminTransportHeaders(origin),
     },
     body: JSON.stringify({ username: email, password }),
   });
   const durationMs = Date.now() - started;
-  const session = extractAdminSessionCookie(response.headers);
   logGhostHttp({
     method: 'POST',
     path: sessionPath,
     status: response.status,
     durationMs,
     headers: response.headers,
-    extra: `sessionCookie=${session ? 'yes' : 'no'}`,
+    extra: `sessionCookie=${extractAdminSessionCookie(response.headers) ? 'yes' : 'no'}`,
   });
+  throwIfAdminRedirect(response);
+  const session = extractAdminSessionCookie(response.headers);
   const text = await response.text();
   if (response.status === 403) {
     throw new Error(
@@ -147,6 +169,7 @@ async function adminAuthHeaders(origin: string, auth: AdminAuth): Promise<Record
     Accept: 'application/json',
     'Accept-Version': ACCEPT_VERSION,
     Origin: origin,
+    ...adminTransportHeaders(origin),
   };
   if (auth.kind === 'jwt') {
     headers.Authorization = `Ghost ${await createAdminJwt(auth.adminApiKey)}`;
@@ -164,6 +187,7 @@ async function adminRequest(
 ): Promise<Record<string, unknown>> {
   const started = Date.now();
   const response = await fetch(`${apiBase}${path}`, {
+    redirect: 'manual',
     headers: await adminAuthHeaders(origin, auth),
   });
   logGhostHttp({
@@ -173,6 +197,7 @@ async function adminRequest(
     durationMs: Date.now() - started,
     headers: response.headers,
   });
+  throwIfAdminRedirect(response);
   const text = await response.text();
   let data: Record<string, unknown> | null = null;
   if (text) {
