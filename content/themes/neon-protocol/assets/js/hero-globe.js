@@ -19,11 +19,64 @@
   const TILT = (60 * Math.PI) / 180;
   const tiltCos = Math.cos(TILT);
   const tiltSin = Math.sin(TILT);
+  const FOCUS_SHIFT = -0.2;
+  const FOCUS = [
+    { lat: -14.2, lon: -52 },
+    { lat: 39.6, lon: -8 },
+    { lat: 36.2, lon: 138.2 },
+    { lat: 39.8, lon: -98.6 },
+  ];
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const limbPlane = 1 / CAMERA;
 
+  function wrapAngle(angle) {
+    const turn = Math.PI * 2;
+    return ((angle % turn) + turn) % turn;
+  }
+
+  function projectFocus(lat, lon, aimYaw, aimPitch) {
+    const latRad = (lat * Math.PI) / 180;
+    const lonRad = (lon * Math.PI) / 180;
+    const cosLat = Math.cos(latRad);
+    const point = rotatePoint(
+      cosLat * Math.sin(lonRad),
+      Math.sin(latRad),
+      cosLat * Math.cos(lonRad),
+      Math.cos(aimYaw),
+      Math.sin(aimYaw),
+      Math.cos(aimPitch),
+      Math.sin(aimPitch),
+    );
+    const scale = CAMERA / (CAMERA - point[2]);
+    return [point[0] * scale, point[1] * scale];
+  }
+
+  function aimFocus(place) {
+    const limb = Math.sqrt(1 - limbPlane * limbPlane) * (CAMERA / (CAMERA - limbPlane));
+    const targetX = FOCUS_SHIFT * 2 * limb;
+    let aimYaw = wrapAngle((-place.lon * Math.PI) / 180);
+    let aimPitch = wrapAngle((place.lat * Math.PI) / 180 - TILT);
+    const step = 1e-4;
+    for (let iteration = 0; iteration < 8; iteration += 1) {
+      const [sx, sy] = projectFocus(place.lat, place.lon, aimYaw, aimPitch);
+      const [sxYaw, syYaw] = projectFocus(place.lat, place.lon, aimYaw + step, aimPitch);
+      const [sxPitch, syPitch] = projectFocus(place.lat, place.lon, aimYaw, aimPitch + step);
+      const dsxDyaw = (sxYaw - sx) / step;
+      const dsyDyaw = (syYaw - sy) / step;
+      const dsxDpitch = (sxPitch - sx) / step;
+      const dsyDpitch = (syPitch - sy) / step;
+      const det = dsxDyaw * dsyDpitch - dsxDpitch * dsyDyaw;
+      aimYaw += (dsyDpitch * (targetX - sx) - dsxDpitch * -sy) / det;
+      aimPitch += (-dsyDyaw * (targetX - sx) + dsxDyaw * -sy) / det;
+    }
+    return [wrapAngle(aimYaw), wrapAngle(aimPitch)];
+  }
+
+  const focus = FOCUS[Math.floor(Math.random() * FOCUS.length)];
+  const [initialYaw, initialPitch] = aimFocus(focus);
   let rings = [];
-  let angle = 0.35;
+  let yaw = initialYaw;
+  const pitch = initialPitch;
   let frameId = 0;
   let running = false;
   let onScreen = false;
@@ -56,11 +109,12 @@
     return rect.width > 0 && rect.height > 0;
   }
 
-  function rotatePoint(x, y, z, cos, sin) {
-    const xr = x * cos + z * sin;
-    const yr = y;
-    const zr = -x * sin + z * cos;
-    return [xr, yr * tiltCos - zr * tiltSin, yr * tiltSin + zr * tiltCos];
+  function rotatePoint(x, y, z, yawCos, yawSin, pitchCos, pitchSin) {
+    const x1 = x * yawCos + z * yawSin;
+    const z1 = -x * yawSin + z * yawCos;
+    const y2 = y * pitchCos - z1 * pitchSin;
+    const z2 = y * pitchSin + z1 * pitchCos;
+    return [x1, y2 * tiltCos - z2 * tiltSin, y2 * tiltSin + z2 * tiltCos];
   }
 
   function clipFront(start, end) {
@@ -85,7 +139,7 @@
     return [point[0] * scale * radius, point[1] * scale * radius, point[2]];
   }
 
-  function draw(rotation) {
+  function draw() {
     if (!rings.length || !resize()) {
       return;
     }
@@ -94,14 +148,24 @@
     const cx = width / 2;
     const cy = height / 2;
     const radius = Math.min(width, height) * 0.42;
-    const cos = Math.cos(rotation);
-    const sin = Math.sin(rotation);
+    const yawCos = Math.cos(yaw);
+    const yawSin = Math.sin(yaw);
+    const pitchCos = Math.cos(pitch);
+    const pitchSin = Math.sin(pitch);
     const bands = [[], [], []];
 
     rings.forEach((ring) => {
       let previous = null;
       for (let index = 0; index < ring.length; index += 3) {
-        const point = rotatePoint(ring[index], ring[index + 1], ring[index + 2], cos, sin);
+        const point = rotatePoint(
+          ring[index],
+          ring[index + 1],
+          ring[index + 2],
+          yawCos,
+          yawSin,
+          pitchCos,
+          pitchSin,
+        );
         if (previous) {
           const segment = clipFront(previous, point);
           if (segment) {
@@ -180,11 +244,11 @@
     }
     const delta = Math.min(now - lastTime, 48);
     lastTime = now;
-    angle += (delta / TURN_MS) * Math.PI * 2;
-    if (angle > Math.PI * 2) {
-      angle -= Math.PI * 2;
+    yaw += (delta / TURN_MS) * Math.PI * 2;
+    if (yaw > Math.PI * 2) {
+      yaw -= Math.PI * 2;
     }
-    draw(angle);
+    draw();
     frameId = window.requestAnimationFrame(frame);
   }
 
@@ -224,7 +288,7 @@
   const themeObserver = new MutationObserver(() => {
     readColors();
     if (!running) {
-      draw(angle);
+      draw();
     }
   });
   themeObserver.observe(document.documentElement, {
@@ -234,7 +298,7 @@
 
   const resizeObserver = new ResizeObserver(() => {
     if (!running) {
-      draw(angle);
+      draw();
     }
   });
   resizeObserver.observe(canvas);
@@ -260,7 +324,7 @@
         });
         return points;
       });
-      draw(angle);
+      draw();
       sync();
     })
     .catch(() => {});

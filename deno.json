@@ -7,6 +7,7 @@
     "build:pwa-manifests": "deno run -A scripts/build-pwa-manifests.mjs",
     "build:sw": "deno run -A scripts/build-sw.mjs",
     "build:i18n": "deno run -A scripts/build-theme-i18n.mjs",
+    "build:countries-lines": "deno run -A scripts/geo/build-countries-lines.mjs",
     "sync:ghost-assets": "deno run -A scripts/sync-ghost-cdn-assets.mjs",
     "lint": "docker run --rm -e NPM_CONFIG_REGISTRY=https://registry.npmjs.org/ -v \"$PWD:/work\" -w /work node:22-bookworm-slim npx --yes gscan@6.4.2 content/themes/neon-protocol --verbose",
     "test:content-api": "deno test -A content-api/ scripts/ghost-session-cookie_test.ts",
