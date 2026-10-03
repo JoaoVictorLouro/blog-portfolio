@@ -1238,6 +1238,35 @@ html[data-np-path-locale='es-la'] .np-tag-locale-panel[data-np-tag-locale='es-la
   );
 }
 
+.np-hero-globe-slot {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  container-type: size;
+}
+
+.np-hero-globe {
+  position: absolute;
+  top: 50%;
+  right: 15%;
+  width: 140cqh;
+  height: 140cqh;
+  transform: translate(50%, -50%);
+  opacity: 0.9;
+  mix-blend-mode: screen;
+}
+
+[data-theme='light'] .np-hero-globe {
+  mix-blend-mode: normal;
+}
+
+@media (max-width: 767px) {
+  .np-hero-globe {
+    opacity: 0.55;
+  }
+}
+
 .np-hero-body {
   position: relative;
   z-index: 5;
@@ -3903,7 +3932,8 @@ html.np-tab-hidden .np-fx-layer::after {
   }
 
   .np-hero-media,
-  .np-article-hero-media {
+  .np-article-hero-media,
+  .np-hero-globe {
     animation: none;
   }
 

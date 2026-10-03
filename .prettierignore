@@ -7,3 +7,4 @@ content/themes/*/assets/built/
 *.min.css
 *.min.js
 content/themes/neon-protocol/sw.js
+content/themes/neon-protocol/assets/geo/countries-lines.json

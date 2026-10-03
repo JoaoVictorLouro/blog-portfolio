@@ -23,6 +23,9 @@
             <img class="np-hero-media np-fx-layer" src="{{asset "images/hero.webp"}}" fetchpriority="high" alt="" aria-hidden="true" decoding="async" width="1600" height="900">
         </picture>
         <div class="np-hero-shade np-fx-layer" aria-hidden="true"></div>
+        <div class="np-hero-globe-slot" aria-hidden="true">
+            <canvas class="np-hero-globe np-fx-layer" data-np-hero-globe data-np-hero-globe-src="{{asset "geo/countries-lines.json"}}" width="640" height="640"></canvas>
+        </div>
         {{> "cover-scan-overlay" line1="NODE_SYNC_COMPLETE" line2="BANDWIDTH: OPTIMAL" line3="AWAITING_TRANSMISSION..."}}
         <div class="np-glitch-effect np-fx-layer" aria-hidden="true"></div>
         <div class="np-hero-body">
@@ -127,3 +130,4 @@
         </aside>
     </div>
 </main>
+<script src="{{asset "js/hero-globe.js"}}" defer></script>
