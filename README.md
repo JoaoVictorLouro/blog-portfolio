@@ -44,7 +44,7 @@ These folders are bind-mounted into Ghost and baked into the published image.
 | Image                                                     | Purpose                                                |
 | --------------------------------------------------------- | ------------------------------------------------------ |
 | `ghcr.io/joaovictorlouro/blog-portfolio`                  | Ghost 6 Alpine + versioned content (root `Dockerfile`) |
-| `ghcr.io/joaovictorlouro/blog-portfolio-content-api`      | Deno content API                                       |
+| `ghcr.io/joaovictorlouro/blog-portfolio-content-api`      | Go content API                                         |
 | `ghcr.io/joaovictorlouro/blog-portfolio-website-examples` | Static nginx host for `website-examples/`              |
 
 Pushes to GHCR on `main` and `v*` tags. Local compose bind-mounts `website-examples/` so example edits apply without a rebuild. Each folder under `website-examples/` is served at `/website-examples/<folder>/`.
@@ -58,8 +58,9 @@ task down       # stop
 task update     # pull base images, rebuild, restart
 task recreate   # recreate container after env file changes
 task setup      # create .env / .env.secrets if missing and ensure dirs
-task format     # Prettier write (Deno)
-task lint       # gscan neon-protocol theme checks
+task format     # Prettier + gofmt (content-api)
+task format:check # formatting check (CI)
+task lint       # gscan theme + gofmt/go vet on content-api
 task test       # gscan + docker compose config
 ```
 

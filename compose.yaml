@@ -117,13 +117,7 @@ services:
       YOUTUBE_CHANNEL_ID: ${YOUTUBE_CHANNEL_ID:-}
       YOUTUBE_REFRESH_MS: ${YOUTUBE_REFRESH_MS:-3600000}
     healthcheck:
-      test:
-        [
-          'CMD',
-          'deno',
-          'eval',
-          "const r=await fetch('http://127.0.0.1:8080/health');process.exit(r.ok?0:1)",
-        ]
+      test: ['CMD', 'wget', '-qO-', 'http://127.0.0.1:8080/health']
       interval: 30s
       timeout: 5s
       retries: 5

@@ -1,5 +1,5 @@
 import { basename, extname, isAbsolute, join, normalize, sep } from 'node:path';
-import { createAdminJwt, parseAdminApiKey } from '../../../content-api/ghost-client.ts';
+import { createAdminJwt, parseAdminApiKey } from '../../../scripts/ghost-admin-auth.mjs';
 
 const ACCEPT_VERSION = 'v6.0';
 const LOCALE_CODES = ['en-us', 'ja-jp', 'pt-br', 'es-la'] as const;

@@ -67,6 +67,16 @@ tasks:
     cmds:
       - docker compose logs -f content-api
 
+  content-api:run:
+    desc: Run content-api locally (requires Ghost admin env)
+    cmds:
+      - go run -C content-api ./cmd/content-api
+
+  content-api:refresh-once:
+    desc: Refresh content-api caches once and exit
+    cmds:
+      - go run -C content-api ./cmd/content-api --once
+
   logs:nginx:
     desc: Follow nginx container logs
     cmds:
@@ -104,14 +114,23 @@ tasks:
         docker compose up -d --force-recreate --build ghost
 
   format:
-    desc: Format repo files with Prettier (via Deno)
+    desc: Format repo files (Prettier + gofmt on content-api)
     cmds:
-      - deno task format
+      - deno task format:prettier
+      - gofmt -w content-api
+
+  format:check:
+    desc: Check Prettier and Go formatting without writing
+    cmds:
+      - deno task format:prettier:check
+      - deno task format:go:check
 
   lint:
-    desc: Lint neon-protocol Ghost theme with gscan
+    desc: Lint neon-protocol theme (gscan) and content-api (gofmt, go vet)
     cmds:
-      - deno task lint
+      - deno task lint:theme
+      - deno task format:go:check
+      - go vet -C content-api ./...
 
   test:
     desc: Run theme checks and validate Compose config
