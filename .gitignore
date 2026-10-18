@@ -39,3 +39,6 @@ tmp/
 temp/
 
 skills.env
+
+# Local Go binary (go build from content-api module)
+content-api/content-api

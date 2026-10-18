@@ -1,15 +1,19 @@
-FROM denoland/deno:alpine
+FROM golang:1.23-alpine AS build
 
-WORKDIR /app
-ENV NPM_CONFIG_REGISTRY=https://registry.npmjs.org/
-
-COPY .npmrc .npmrc
+WORKDIR /src
 COPY content-api/ content-api/
-COPY scripts/i18n/ scripts/i18n/
-COPY scripts/ghost-session-cookie.mjs scripts/ghost-session-cookie.mjs
 
-RUN deno cache content-api/main.ts
+RUN cd content-api && CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /content-api ./cmd/content-api
+
+FROM alpine:3.21
+
+RUN apk add --no-cache wget
+
+COPY --from=build /content-api /usr/local/bin/content-api
 
 EXPOSE 8080
 
-CMD ["deno", "run", "-A", "content-api/main.ts"]
+HEALTHCHECK --interval=30s --timeout=5s --retries=5 \
+  CMD wget -qO- http://127.0.0.1:8080/health >/dev/null || exit 1
+
+CMD ["content-api"]

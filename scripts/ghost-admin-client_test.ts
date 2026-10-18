@@ -2,11 +2,10 @@ import { assertEquals, assertRejects, assertThrows } from 'jsr:@std/assert@1';
 import {
   adminTransportHeaders,
   createAdminJwt,
-  createAdminSession,
   decodeJwtPart,
-  fetchPublishedPosts,
   parseAdminApiKey,
-} from './ghost-client.ts';
+} from './ghost-admin-auth.mjs';
+import { createAdminSession, fetchPublishedPosts } from './ghost-admin-client.mjs';
 
 const KEY_ID = '64c3f3a1b2c3d4e5f6071829';
 const SECRET_HEX = 'aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899';

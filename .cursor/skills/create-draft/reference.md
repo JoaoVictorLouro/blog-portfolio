@@ -1,6 +1,6 @@
 # Create draft — Ghost Admin
 
-The script signs `CONTENT_API_KEY` (`id:secret`) with `createAdminJwt` from `content-api/ghost-client.ts`. Header `Authorization: Ghost {jwt}`, `Accept-Version: v6.0`, `Origin: {GHOST_URL}`.
+The script signs `CONTENT_API_KEY` (`id:secret`) with `createAdminJwt` from `scripts/ghost-admin-auth.mjs`. Header `Authorization: Ghost {jwt}`, `Accept-Version: v6.0`, `Origin: {GHOST_URL}`.
 
 `status` is hardcoded to `draft`. The manifest cannot publish.
 

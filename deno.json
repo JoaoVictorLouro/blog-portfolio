@@ -1,7 +1,11 @@
 {
   "tasks": {
-    "format": "NPM_CONFIG_REGISTRY=https://registry.npmjs.org/ deno run -A npm:prettier@3.9.6 --write .",
-    "format:check": "NPM_CONFIG_REGISTRY=https://registry.npmjs.org/ deno run -A npm:prettier@3.9.6 --check .",
+    "format:prettier": "NPM_CONFIG_REGISTRY=https://registry.npmjs.org/ deno run -A npm:prettier@3.9.6 --write .",
+    "format:prettier:check": "NPM_CONFIG_REGISTRY=https://registry.npmjs.org/ deno run -A npm:prettier@3.9.6 --check .",
+    "format:go": "gofmt -w content-api",
+    "format:go:check": "sh -c 'out=$(gofmt -l content-api); if test -n \"$out\"; then printf \"%s\\n\" \"$out\"; exit 1; fi'",
+    "format": "deno task format:prettier && deno task format:go",
+    "format:check": "deno task format:prettier:check && deno task format:go:check",
     "build:icons": "deno run -A scripts/build-material-symbols-subset.mjs",
     "build:pwa-icons": "NPM_CONFIG_REGISTRY=https://registry.npmjs.org/ deno run -A scripts/build-pwa-icons.mjs",
     "build:pwa-manifests": "deno run -A scripts/build-pwa-manifests.mjs",
@@ -9,11 +13,12 @@
     "build:i18n": "deno run -A scripts/build-theme-i18n.mjs",
     "build:countries-lines": "deno run -A scripts/geo/build-countries-lines.mjs",
     "sync:ghost-assets": "deno run -A scripts/sync-ghost-cdn-assets.mjs",
-    "lint": "docker run --rm -e NPM_CONFIG_REGISTRY=https://registry.npmjs.org/ -v \"$PWD:/work\" -w /work node:22-bookworm-slim npx --yes gscan@6.4.2 content/themes/neon-protocol --verbose",
-    "test:content-api": "deno test -A content-api/ scripts/ghost-session-cookie_test.ts",
-    "content-api:run": "deno run -A content-api/main.ts",
-    "content-api:refresh-once": "deno run -A content-api/main.ts --once",
-    "test": "deno task build:i18n && deno task test:content-api && deno task lint && docker compose config --quiet"
+    "lint:theme": "NPM_CONFIG_REGISTRY=https://registry.npmjs.org/ deno run -A npm:gscan@6.4.2 content/themes/neon-protocol --verbose",
+    "lint:go": "deno task format:go:check && go vet -C content-api ./...",
+    "lint": "deno task lint:theme && deno task lint:go",
+    "test:content-api": "go test -C content-api ./...",
+    "test:ghost-admin": "deno test -A scripts/ghost-admin-client_test.ts scripts/ghost-session-cookie_test.ts",
+    "test": "deno task build:i18n && deno task test:content-api && deno task test:ghost-admin && deno task lint && docker compose config --quiet"
   },
   "nodeModulesDir": "none",
   "exclude": ["data/", "node_modules/", "content/themes/*/node_modules/"]
