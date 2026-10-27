@@ -13,7 +13,7 @@
     "build:i18n": "deno run -A scripts/build-theme-i18n.mjs",
     "build:countries-lines": "deno run -A scripts/geo/build-countries-lines.mjs",
     "sync:ghost-assets": "deno run -A scripts/sync-ghost-cdn-assets.mjs",
-    "lint:theme": "NPM_CONFIG_REGISTRY=https://registry.npmjs.org/ deno run -A npm:gscan@6.4.2 content/themes/neon-protocol --verbose",
+    "lint:theme": "NPM_CONFIG_REGISTRY=https://registry.npmjs.org/ deno run -A npm:gscan@6.6.1 content/themes/neon-protocol --verbose",
     "lint:go": "deno task format:go:check && go vet -C content-api ./...",
     "lint": "deno task lint:theme && deno task lint:go",
     "test:content-api": "go test -C content-api ./...",
