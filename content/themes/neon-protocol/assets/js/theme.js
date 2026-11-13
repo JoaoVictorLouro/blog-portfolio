@@ -1329,6 +1329,9 @@
           titleEl.textContent = title;
         }
       }
+      if (next === 'subscribe') {
+        document.dispatchEvent(new CustomEvent('np-members-subscribe-open'));
+      }
       return next;
     }
 
@@ -1705,6 +1708,310 @@
     });
 
     return window.__npGhostLoaders[kind];
+  }
+
+  const ANTIBOT_MIN_MS = 1000;
+
+  let antibotConfigPromise = null;
+  let turnstileScriptPromise = null;
+  let antibotStringsPromise = null;
+
+  function antibotString(key, fallback) {
+    if (window.__npAntibotStrings?.[key]) {
+      return window.__npAntibotStrings[key];
+    }
+    return fallback;
+  }
+
+  function loadAntibotStrings() {
+    if (!antibotStringsPromise) {
+      const locale = currentPathLocale();
+      const stringsUrl = `${window.__npI18nBase || `${window.__npSiteUrl || ''}/assets/i18n/`}${locale}.json`;
+      antibotStringsPromise = fetch(stringsUrl, { cache: 'no-store' })
+        .then((response) => (response.ok ? response.json() : {}))
+        .then((strings) => {
+          if (strings && typeof strings === 'object') {
+            window.__npAntibotStrings = strings;
+          }
+        })
+        .catch(() => {});
+    }
+    return antibotStringsPromise;
+  }
+
+  function loadAntibotConfig() {
+    if (!antibotConfigPromise) {
+      const url = window.__npAntibotConfigUrl;
+      if (!url) {
+        antibotConfigPromise = Promise.resolve({ enabled: false, siteKey: '' });
+      } else {
+        antibotConfigPromise = fetch(url, { cache: 'no-store' })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`config HTTP ${response.status}`);
+            }
+            return response.json();
+          })
+          .catch(() => ({ enabled: false, siteKey: '' }));
+      }
+    }
+    return antibotConfigPromise;
+  }
+
+  function loadTurnstileScript() {
+    if (window.turnstile) {
+      return Promise.resolve();
+    }
+    if (!turnstileScriptPromise) {
+      turnstileScriptPromise = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+        script.async = true;
+        script.defer = true;
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error('Turnstile script failed'));
+        document.head.appendChild(script);
+      });
+    }
+    return turnstileScriptPromise;
+  }
+
+  function armAntibotForm(form) {
+    if (!form) {
+      return;
+    }
+    const at = Date.now();
+    form.dataset.npAntibotArmed = String(at);
+    const hidden = form.querySelector('[data-np-antibot-armed-at]');
+    if (hidden) {
+      hidden.value = String(at);
+    }
+  }
+
+  function antibotArmedAt(form) {
+    const raw =
+      form.dataset.npAntibotArmed || form.querySelector('[data-np-antibot-armed-at]')?.value;
+    const value = Number(raw);
+    return Number.isFinite(value) ? value : 0;
+  }
+
+  function setSubscribeFormError(form, message) {
+    form.classList.remove('loading', 'success');
+    form.classList.add('error');
+    const errorEl = form.querySelector('[data-members-error]');
+    if (errorEl) {
+      errorEl.textContent = message || '';
+    }
+  }
+
+  function fakeSubscribeSuccess(form) {
+    form.classList.remove('loading', 'error');
+    form.classList.add('success');
+    const errorEl = form.querySelector('[data-members-error]');
+    if (errorEl) {
+      errorEl.textContent = '';
+    }
+  }
+
+  function turnstileToken(form) {
+    return form.querySelector('[name="cf-turnstile-response"]')?.value?.trim() || '';
+  }
+
+  function resetTurnstileWidget(form, hard = false) {
+    const widgetId = form.dataset.npTurnstileWidget;
+    if (!widgetId || !window.turnstile) {
+      return;
+    }
+    try {
+      if (hard) {
+        if (typeof window.turnstile.remove === 'function') {
+          window.turnstile.remove(widgetId);
+        }
+        delete form.dataset.npTurnstileWidget;
+        form.querySelector('[data-np-turnstile]')?.replaceChildren();
+        return;
+      }
+      if (typeof window.turnstile.reset === 'function') {
+        window.turnstile.reset(widgetId);
+      }
+    } catch {
+      // Ignore reset failures.
+    }
+  }
+
+  async function ensureTurnstileWidget(form, config) {
+    const mount = form.querySelector('[data-np-turnstile]');
+    if (!mount || !config?.enabled || !config.siteKey) {
+      if (mount) {
+        mount.hidden = true;
+      }
+      return;
+    }
+    mount.hidden = false;
+    if (form.dataset.npTurnstileWidget) {
+      return;
+    }
+    await loadTurnstileScript();
+    if (!window.turnstile?.render) {
+      return;
+    }
+    const theme =
+      document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+    const widgetId = window.turnstile.render(mount, {
+      sitekey: config.siteKey,
+      action: 'subscribe',
+      theme,
+    });
+    form.dataset.npTurnstileWidget = String(widgetId);
+  }
+
+  function watchSubscribeTurnstileReset() {
+    document.querySelectorAll('[data-members-form="subscribe"]').forEach((form) => {
+      const observer = new MutationObserver(() => {
+        if (!form.classList.contains('success')) {
+          return;
+        }
+        const widgetId = form.dataset.npTurnstileWidget;
+        if (widgetId && typeof window.turnstile?.reset === 'function') {
+          try {
+            window.turnstile.reset(widgetId);
+          } catch {
+            // Ignore reset failures.
+          }
+        }
+      });
+      observer.observe(form, { attributes: true, attributeFilter: ['class'] });
+    });
+  }
+
+  async function verifyAntibotToken(token) {
+    const url = window.__npAntibotVerifyUrl;
+    if (!url) {
+      return true;
+    }
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({ token }),
+    });
+    if (!response.ok) {
+      return false;
+    }
+    const payload = await response.json();
+    return Boolean(payload?.ok);
+  }
+
+  async function continueSubscribeSubmit(form) {
+    form.dataset.npAntibotBypass = '1';
+    if (typeof form.requestSubmit === 'function') {
+      form.requestSubmit();
+      return;
+    }
+    form.submit();
+  }
+
+  function initMembersAntibot() {
+    loadAntibotStrings();
+    const configReady = loadAntibotConfig();
+
+    document.addEventListener('np-members-subscribe-open', () => {
+      const form = document.querySelector(
+        '[data-np-members-dialog] [data-members-form="subscribe"]',
+      );
+      if (form) {
+        armAntibotForm(form);
+        configReady.then((config) => ensureTurnstileWidget(form, config));
+      }
+    });
+
+    document.addEventListener(
+      'focusin',
+      (event) => {
+        const form = event.target.closest('[data-members-form="subscribe"]');
+        if (!form) {
+          return;
+        }
+        armAntibotForm(form);
+        configReady.then((config) => ensureTurnstileWidget(form, config));
+      },
+      true,
+    );
+
+    document.querySelector('[data-np-members-dialog]')?.addEventListener('close', () => {
+      document
+        .querySelectorAll('[data-np-members-dialog] [data-members-form="subscribe"]')
+        .forEach((form) => resetTurnstileWidget(form, true));
+    });
+
+    document.addEventListener(
+      'submit',
+      (event) => {
+        const form = event.target.closest('[data-members-form="subscribe"]');
+        if (!form) {
+          return;
+        }
+        if (form.dataset.npAntibotBypass === '1') {
+          delete form.dataset.npAntibotBypass;
+          return;
+        }
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        const honeypot = form.querySelector('[data-np-antibot-honeypot]');
+        if (honeypot?.value?.trim()) {
+          fakeSubscribeSuccess(form);
+          return;
+        }
+
+        const armedAt = antibotArmedAt(form);
+        if (!armedAt || Date.now() - armedAt < ANTIBOT_MIN_MS) {
+          setSubscribeFormError(
+            form,
+            antibotString('ANTIBOT_TOO_FAST', 'Wait a moment before submitting.'),
+          );
+          return;
+        }
+
+        const run = async () => {
+          const config = await configReady;
+          if (config.enabled) {
+            const token = turnstileToken(form);
+            if (!token) {
+              setSubscribeFormError(
+                form,
+                antibotString('ANTIBOT_CAPTCHA_REQUIRED', 'Complete the captcha to continue.'),
+              );
+              return;
+            }
+            const verified = await verifyAntibotToken(token);
+            if (!verified) {
+              resetTurnstileWidget(form, true);
+              await ensureTurnstileWidget(form, config);
+              setSubscribeFormError(
+                form,
+                antibotString('ANTIBOT_CAPTCHA_FAILED', 'Captcha verification failed. Try again.'),
+              );
+              return;
+            }
+          }
+
+          setSubscribeFormError(form, '');
+          form.classList.remove('error', 'success');
+          await continueSubscribeSubmit(form);
+        };
+
+        run().catch(() => {
+          setSubscribeFormError(
+            form,
+            antibotString('ANTIBOT_CAPTCHA_FAILED', 'Captcha verification failed. Try again.'),
+          );
+        });
+      },
+      true,
+    );
+
+    watchSubscribeTurnstileReset();
   }
 
   function initDeferredGhostScripts() {
@@ -2361,6 +2668,7 @@
   function boot() {
     setTheme(currentTheme());
     patchSodoSearchIndexFetch();
+    initMembersAntibot();
     initDeferredGhostScripts();
     initGhostCommentsThemeSync();
     initAnnouncementLayout();

@@ -76,18 +76,20 @@ task recreate
 
 `.env` (from `.env.example`):
 
-| Variable                      | Purpose                                                                |
-| ----------------------------- | ---------------------------------------------------------------------- |
-| `URL`                         | Public URL Ghost uses for links                                        |
-| `PORT`                        | Host port mapped to Ghost                                              |
-| `GHOST_ADMIN_NAME`            | Owner display name (default `Admin`)                                   |
-| `GHOST_SITE_TITLE`            | Site title (default `Kono Gaijin`)                                     |
-| `BOOTSTRAP_SKIP_CONFIGS`      | Skip members, site title, brand HTML, and navigation (default `false`) |
-| `BOOTSTRAP_SKIP_TAGS`         | Skip language tags and default-locale tagging (default `false`)        |
-| `BOOTSTRAP_SKIP_PAGES`        | Skip locale About pages (default `false`)                              |
-| `BOOTSTRAP_SKIP_NEWSLETTERS`  | Skip locale newsletters (default `false`)                              |
-| `BOOTSTRAP_SKIP_INTEGRATIONS` | Skip content-api webhook registration (default `false`)                |
-| `BOOTSTRAP_SKIP_ARTICLES`     | Skip demo articles (default `false`)                                   |
+| Variable                      | Purpose                                                                                                                                                                              |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `URL`                         | Public URL Ghost uses for links                                                                                                                                                      |
+| `PORT`                        | Host port mapped to Ghost                                                                                                                                                            |
+| `GHOST_ADMIN_NAME`            | Owner display name (default `Admin`)                                                                                                                                                 |
+| `GHOST_SITE_TITLE`            | Site title (default `Kono Gaijin`)                                                                                                                                                   |
+| `BOOTSTRAP_SKIP_CONFIGS`      | Skip members, site title, brand HTML, and navigation (default `false`)                                                                                                               |
+| `BOOTSTRAP_SKIP_TAGS`         | Skip language tags and default-locale tagging (default `false`)                                                                                                                      |
+| `BOOTSTRAP_SKIP_PAGES`        | Skip locale About pages (default `false`)                                                                                                                                            |
+| `BOOTSTRAP_SKIP_NEWSLETTERS`  | Skip locale newsletters (default `false`)                                                                                                                                            |
+| `BOOTSTRAP_SKIP_INTEGRATIONS` | Skip content-api webhook registration (default `false`)                                                                                                                              |
+| `BOOTSTRAP_SKIP_ARTICLES`     | Skip demo articles (default `false`)                                                                                                                                                 |
+| `TURNSTILE_SITE_KEY`          | Optional public Cloudflare Turnstile site key for subscribe antibot (honeypot + timing always; captcha when secret is set too). Sign-in unchanged.                                   |
+| `TURNSTILE_HOSTNAMES`         | Comma-separated hostnames allowed in Turnstile siteverify (`localhost,127.0.0.1,konogaijin.com` locally; production should list only the public host). Widget action is `subscribe`. |
 
 Local compose leaves every skip flag `false`, so development bootstraps everything. In production, set the relevant flags to `true` so Ghost Admin content is not overwritten on each bootstrap run. Owner creation and theme activation always run. `CONTENT_API_WEBHOOK_SECRET` is required unless `BOOTSTRAP_SKIP_INTEGRATIONS` is true.
 
@@ -98,6 +100,7 @@ Local compose leaves every skip flag `false`, so development bootstraps everythi
 | `GHOST_ADMIN_EMAIL`    | Owner email (created once on first boot)                                                                                           |
 | `GHOST_ADMIN_PASSWORD` | Owner password (min 10 characters)                                                                                                 |
 | `GHOST_ADMIN_API_KEY`  | Optional content-api JWT (`id:secret` from Ghost Admin → Integrations). When unset, content-api uses owner email/password instead. |
+| `TURNSTILE_SECRET_KEY` | Optional Turnstile secret; pair with `TURNSTILE_SITE_KEY` in `.env` for subscribe captcha via content-api.                         |
 
 If you still have a combined `.env` from before this split, move `GHOST_ADMIN_EMAIL` and `GHOST_ADMIN_PASSWORD` into `.env.secrets`.
 

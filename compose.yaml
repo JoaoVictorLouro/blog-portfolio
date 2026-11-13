@@ -116,6 +116,9 @@ services:
       I18N_REFRESH_MS: '3600000'
       YOUTUBE_CHANNEL_ID: ${YOUTUBE_CHANNEL_ID:-}
       YOUTUBE_REFRESH_MS: ${YOUTUBE_REFRESH_MS:-3600000}
+      TURNSTILE_SITE_KEY: ${TURNSTILE_SITE_KEY:-}
+      TURNSTILE_HOSTNAMES: ${TURNSTILE_HOSTNAMES:-}
+      # TURNSTILE_SECRET_KEY: load only from .env.secrets via env_file (compose ${VAR} here would override with empty)
     healthcheck:
       test: ['CMD', 'wget', '-qO-', 'http://127.0.0.1:8080/health']
       interval: 30s
