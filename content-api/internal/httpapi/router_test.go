@@ -87,6 +87,45 @@ func TestWebhookUnauthorized(t *testing.T) {
 	}
 }
 
+func TestAntibotConfigDisabled(t *testing.T) {
+	store := cache.NewStore()
+	srv := testServer(store)
+	req := httptest.NewRequest(http.MethodGet, "/antibot/config", nil)
+	rec := httptest.NewRecorder()
+	srv.Handler().ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK || !strings.Contains(rec.Body.String(), `"enabled":false`) {
+		t.Fatalf("%d %s", rec.Code, rec.Body.String())
+	}
+}
+
+func TestAntibotConfigEnabled(t *testing.T) {
+	store := cache.NewStore()
+	cfg := config.Config{
+		WebhookSecret:      "secret",
+		TurnstileSiteKey:   "site-key",
+		TurnstileSecretKey: "secret-key",
+	}
+	srv := NewServer(cfg, store, i18n.NewRefresher(cfg, store))
+	req := httptest.NewRequest(http.MethodGet, "/antibot/config", nil)
+	rec := httptest.NewRecorder()
+	srv.Handler().ServeHTTP(rec, req)
+	if !strings.Contains(rec.Body.String(), `"enabled":true`) || !strings.Contains(rec.Body.String(), "site-key") {
+		t.Fatalf("%s", rec.Body.String())
+	}
+}
+
+func TestAntibotVerifySkippedWhenDisabled(t *testing.T) {
+	store := cache.NewStore()
+	srv := testServer(store)
+	req := httptest.NewRequest(http.MethodPost, "/antibot/verify", strings.NewReader(`{"token":"x"}`))
+	req.Header.Set("Content-Type", "application/json")
+	rec := httptest.NewRecorder()
+	srv.Handler().ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK || !strings.Contains(rec.Body.String(), `"skipped":true`) {
+		t.Fatalf("%d %s", rec.Code, rec.Body.String())
+	}
+}
+
 func TestNotFound(t *testing.T) {
 	store := cache.NewStore()
 	srv := testServer(store)

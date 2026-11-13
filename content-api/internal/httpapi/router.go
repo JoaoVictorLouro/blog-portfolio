@@ -3,8 +3,11 @@ package httpapi
 import (
 	"encoding/json"
 	"io"
+	"net"
 	"net/http"
+	"strings"
 
+	"github.com/joaovictorlouro/blog-portfolio/content-api/internal/antibot"
 	"github.com/joaovictorlouro/blog-portfolio/content-api/internal/cache"
 	"github.com/joaovictorlouro/blog-portfolio/content-api/internal/config"
 	"github.com/joaovictorlouro/blog-portfolio/content-api/internal/i18n"
@@ -41,6 +44,8 @@ func (s *Server) Handler() http.Handler {
 	mux.HandleFunc("/i18n/article-translations.json", s.handleTranslations)
 	mux.HandleFunc("/youtube/videos.json", s.handleYouTube)
 	mux.HandleFunc("/webhooks/ghost", s.handleGhostWebhook)
+	mux.HandleFunc("/antibot/config", s.handleAntibotConfig)
+	mux.HandleFunc("/antibot/verify", s.handleAntibotVerify)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		_, pattern := mux.Handler(r)
 		if pattern == "" {
@@ -90,6 +95,74 @@ func (s *Server) handleYouTube(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusOK, payload)
+}
+
+func (s *Server) handleAntibotConfig(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		methodNotAllowed(w)
+		return
+	}
+	enabled := antibot.TurnstileEnabled(s.cfg.TurnstileSiteKey, s.cfg.TurnstileSecretKey)
+	writeJSON(w, http.StatusOK, map[string]interface{}{
+		"enabled": enabled,
+		"siteKey": s.cfg.TurnstileSiteKey,
+	})
+}
+
+type antibotVerifyRequest struct {
+	Token string `json:"token"`
+}
+
+func (s *Server) handleAntibotVerify(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		methodNotAllowed(w)
+		return
+	}
+	if !antibot.TurnstileEnabled(s.cfg.TurnstileSiteKey, s.cfg.TurnstileSecretKey) {
+		writeJSON(w, http.StatusOK, map[string]bool{"ok": true, "skipped": true})
+		return
+	}
+
+	var body antibotVerifyRequest
+	if err := json.NewDecoder(io.LimitReader(r.Body, 1<<20)).Decode(&body); err != nil {
+		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Bad request"})
+		return
+	}
+	token := strings.TrimSpace(body.Token)
+	if token == "" {
+		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Missing token"})
+		return
+	}
+
+	ok, err := antibot.VerifySubscribeToken(
+		r.Context(),
+		s.cfg.TurnstileSecretKey,
+		token,
+		clientIP(r),
+		s.cfg.TurnstileHostnames,
+	)
+	if err != nil {
+		writeJSON(w, http.StatusBadGateway, map[string]string{"error": "Verification failed"})
+		return
+	}
+	if !ok {
+		writeJSON(w, http.StatusForbidden, map[string]bool{"ok": false})
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]bool{"ok": true})
+}
+
+func clientIP(r *http.Request) string {
+	if fwd := r.Header.Get("X-Forwarded-For"); fwd != "" {
+		parts := strings.Split(fwd, ",")
+		if ip := strings.TrimSpace(parts[0]); ip != "" {
+			return ip
+		}
+	}
+	if host, _, err := net.SplitHostPort(r.RemoteAddr); err == nil {
+		return host
+	}
+	return strings.TrimSpace(r.RemoteAddr)
 }
 
 func (s *Server) handleGhostWebhook(w http.ResponseWriter, r *http.Request) {

@@ -3,7 +3,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../fonts/material-symbols-subset.woff2?v=42e9e00b') format('woff2');
+  src: url('../fonts/material-symbols-subset.woff2?v=1f0961d4') format('woff2');
 }
 
 :root,
@@ -1612,6 +1612,27 @@ html[data-np-path-locale='es-la'] .np-tag-locale-panel[data-np-tag-locale='es-la
 
 .np-members-form.error .np-members-status--error {
   color: var(--np-error);
+}
+
+.np-antibot-honeypot {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.np-antibot-turnstile {
+  margin: 0.75rem 0 0.25rem;
+  min-height: 65px;
+}
+
+.np-subscribe .np-antibot-turnstile {
+  margin-top: 0.5rem;
 }
 
 .np-members-form.loading .np-btn,

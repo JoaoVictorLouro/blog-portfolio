@@ -24,6 +24,7 @@
                     <label class="np-label">{{> "np-t" key="Comm_Link_ID [Email]"}}
                         <input class="np-field" data-members-email type="email" required autocomplete="email" placeholder="{{> "np-t" key="ENTER_ADDRESS"}}" aria-label="{{> "np-t" key="Subscribe"}}">
                     </label>
+                    {{> "members-antibot"}}
                     <button class="np-btn np-btn-primary" type="submit">
                         {{> "np-t" key="OPEN_CHANNEL"}}<span class="material-symbols-outlined" aria-hidden="true">bolt</span>
                     </button>
