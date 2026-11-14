@@ -44,6 +44,7 @@
                     <label class="np-label">{{> "np-t" key="Comm_Link_ID [Email]"}}
                         <input class="np-field" data-members-email type="email" required autocomplete="email" placeholder="{{> "np-t" key="ENTER_ADDRESS"}}" aria-label="{{> "np-t" key="Sign in"}}">
                     </label>
+                    {{> "members-antibot" turnstile_action="signin"}}
                     <button class="np-btn np-btn-primary" type="submit">
                         {{> "np-t" key="REQUEST_TOKEN"}}<span class="material-symbols-outlined" aria-hidden="true">key</span>
                     </button>

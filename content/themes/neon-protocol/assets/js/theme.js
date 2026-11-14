@@ -1331,6 +1331,8 @@
       }
       if (next === 'subscribe') {
         document.dispatchEvent(new CustomEvent('np-members-subscribe-open'));
+      } else if (next === 'signin') {
+        document.dispatchEvent(new CustomEvent('np-members-signin-open'));
       }
       return next;
     }
@@ -1859,14 +1861,14 @@
       document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
     const widgetId = window.turnstile.render(mount, {
       sitekey: config.siteKey,
-      action: 'subscribe',
+      action: antibotTurnstileAction(form),
       theme,
     });
     form.dataset.npTurnstileWidget = String(widgetId);
   }
 
-  function watchSubscribeTurnstileReset() {
-    document.querySelectorAll('[data-members-form="subscribe"]').forEach((form) => {
+  function watchAntibotTurnstileReset() {
+    queryAntibotTurnstileForms().forEach((form) => {
       const observer = new MutationObserver(() => {
         if (!form.classList.contains('success')) {
           return;
@@ -1884,7 +1886,17 @@
     });
   }
 
-  async function verifyAntibotToken(token) {
+  const ANTIBOT_TURNSTILE_FORMS = '[data-members-form="subscribe"], [data-members-form="signin"]';
+
+  function antibotTurnstileAction(form) {
+    return form.querySelector('[data-np-turnstile]')?.getAttribute('data-action') || 'subscribe';
+  }
+
+  function queryAntibotTurnstileForms(root = document) {
+    return root.querySelectorAll(ANTIBOT_TURNSTILE_FORMS);
+  }
+
+  async function verifyAntibotToken(token, action) {
     const url = window.__npAntibotVerifyUrl;
     if (!url) {
       return true;
@@ -1892,7 +1904,7 @@
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({ token }),
+      body: JSON.stringify({ token, action }),
     });
     if (!response.ok) {
       return false;
@@ -1910,24 +1922,98 @@
     form.submit();
   }
 
+  function armAntibotPanelForm(formName) {
+    const form = document.querySelector(
+      `[data-np-members-dialog] [data-members-form="${formName}"]`,
+    );
+    if (!form) {
+      return;
+    }
+    armAntibotForm(form);
+    loadAntibotConfig().then((config) => ensureTurnstileWidget(form, config));
+  }
+
+  function handleAntibotMembersSubmit(event, configReady) {
+    const form = event.target.closest(ANTIBOT_TURNSTILE_FORMS);
+    if (!form) {
+      return;
+    }
+    if (form.dataset.npAntibotBypass === '1') {
+      delete form.dataset.npAntibotBypass;
+      return;
+    }
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    const honeypot = form.querySelector('[data-np-antibot-honeypot]');
+    if (honeypot?.value?.trim()) {
+      fakeSubscribeSuccess(form);
+      return;
+    }
+
+    const armedAt = antibotArmedAt(form);
+    if (!armedAt || Date.now() - armedAt < ANTIBOT_MIN_MS) {
+      setSubscribeFormError(
+        form,
+        antibotString('ANTIBOT_TOO_FAST', 'Wait a moment before submitting.'),
+      );
+      return;
+    }
+
+    const action = antibotTurnstileAction(form);
+    const run = async () => {
+      const config = await configReady;
+      if (config.enabled) {
+        const token = turnstileToken(form);
+        if (!token) {
+          setSubscribeFormError(
+            form,
+            antibotString('ANTIBOT_CAPTCHA_REQUIRED', 'Complete the captcha to continue.'),
+          );
+          return;
+        }
+        const verified = await verifyAntibotToken(token, action);
+        if (!verified) {
+          resetTurnstileWidget(form, true);
+          await ensureTurnstileWidget(form, config);
+          setSubscribeFormError(
+            form,
+            antibotString('ANTIBOT_CAPTCHA_FAILED', 'Captcha verification failed. Try again.'),
+          );
+          return;
+        }
+      }
+
+      setSubscribeFormError(form, '');
+      form.classList.remove('error', 'success');
+      await continueSubscribeSubmit(form);
+    };
+
+    run().catch(() => {
+      setSubscribeFormError(
+        form,
+        antibotString('ANTIBOT_CAPTCHA_FAILED', 'Captcha verification failed. Try again.'),
+      );
+    });
+  }
+
   function initMembersAntibot() {
     loadAntibotStrings();
     const configReady = loadAntibotConfig();
 
     document.addEventListener('np-members-subscribe-open', () => {
-      const form = document.querySelector(
-        '[data-np-members-dialog] [data-members-form="subscribe"]',
-      );
-      if (form) {
-        armAntibotForm(form);
-        configReady.then((config) => ensureTurnstileWidget(form, config));
-      }
+      armAntibotPanelForm('subscribe');
+    });
+
+    document.addEventListener('np-members-signin-open', () => {
+      armAntibotPanelForm('signin');
     });
 
     document.addEventListener(
       'focusin',
       (event) => {
-        const form = event.target.closest('[data-members-form="subscribe"]');
+        const form = event.target.closest(ANTIBOT_TURNSTILE_FORMS);
         if (!form) {
           return;
         }
@@ -1938,80 +2024,20 @@
     );
 
     document.querySelector('[data-np-members-dialog]')?.addEventListener('close', () => {
-      document
-        .querySelectorAll('[data-np-members-dialog] [data-members-form="subscribe"]')
-        .forEach((form) => resetTurnstileWidget(form, true));
+      queryAntibotTurnstileForms(
+        document.querySelector('[data-np-members-dialog]') || document,
+      ).forEach((form) => resetTurnstileWidget(form, true));
     });
 
     document.addEventListener(
       'submit',
       (event) => {
-        const form = event.target.closest('[data-members-form="subscribe"]');
-        if (!form) {
-          return;
-        }
-        if (form.dataset.npAntibotBypass === '1') {
-          delete form.dataset.npAntibotBypass;
-          return;
-        }
-
-        event.preventDefault();
-        event.stopImmediatePropagation();
-
-        const honeypot = form.querySelector('[data-np-antibot-honeypot]');
-        if (honeypot?.value?.trim()) {
-          fakeSubscribeSuccess(form);
-          return;
-        }
-
-        const armedAt = antibotArmedAt(form);
-        if (!armedAt || Date.now() - armedAt < ANTIBOT_MIN_MS) {
-          setSubscribeFormError(
-            form,
-            antibotString('ANTIBOT_TOO_FAST', 'Wait a moment before submitting.'),
-          );
-          return;
-        }
-
-        const run = async () => {
-          const config = await configReady;
-          if (config.enabled) {
-            const token = turnstileToken(form);
-            if (!token) {
-              setSubscribeFormError(
-                form,
-                antibotString('ANTIBOT_CAPTCHA_REQUIRED', 'Complete the captcha to continue.'),
-              );
-              return;
-            }
-            const verified = await verifyAntibotToken(token);
-            if (!verified) {
-              resetTurnstileWidget(form, true);
-              await ensureTurnstileWidget(form, config);
-              setSubscribeFormError(
-                form,
-                antibotString('ANTIBOT_CAPTCHA_FAILED', 'Captcha verification failed. Try again.'),
-              );
-              return;
-            }
-          }
-
-          setSubscribeFormError(form, '');
-          form.classList.remove('error', 'success');
-          await continueSubscribeSubmit(form);
-        };
-
-        run().catch(() => {
-          setSubscribeFormError(
-            form,
-            antibotString('ANTIBOT_CAPTCHA_FAILED', 'Captcha verification failed. Try again.'),
-          );
-        });
+        handleAntibotMembersSubmit(event, configReady);
       },
       true,
     );
 
-    watchSubscribeTurnstileReset();
+    watchAntibotTurnstileReset();
   }
 
   function initDeferredGhostScripts() {

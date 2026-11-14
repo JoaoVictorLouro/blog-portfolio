@@ -3,4 +3,4 @@
     <input type="text" name="np_company" data-np-antibot-honeypot autocomplete="off" tabindex="-1">
 </label>
 <input type="hidden" data-np-antibot-armed-at value="" aria-hidden="true">
-<div class="np-antibot-turnstile cf-turnstile" data-np-turnstile data-action="subscribe" hidden></div>
+<div class="np-antibot-turnstile cf-turnstile" data-np-turnstile data-action="{{#if turnstile_action}}{{turnstile_action}}{{else}}subscribe{{/if}}" hidden></div>

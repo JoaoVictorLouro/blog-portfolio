@@ -44,6 +44,10 @@ func TestVerifySubscribeToken(t *testing.T) {
 			_ = json.NewEncoder(w).Encode(siteVerifyResponse{
 				Success: true, Action: SubscribeAction, Hostname: "localhost",
 			})
+		case "signin-good-token":
+			_ = json.NewEncoder(w).Encode(siteVerifyResponse{
+				Success: true, Action: SigninAction, Hostname: "localhost",
+			})
 		case "bad-action":
 			_ = json.NewEncoder(w).Encode(siteVerifyResponse{
 				Success: true, Action: "login", Hostname: "localhost",
@@ -83,6 +87,16 @@ func TestVerifySubscribeToken(t *testing.T) {
 	ok, err = VerifySubscribeToken(ctx, "test-secret", "bad-host", "", allowed)
 	if err != nil || ok {
 		t.Fatalf("ok=%v err=%v", ok, err)
+	}
+
+	ok, err = VerifySigninToken(ctx, "test-secret", "signin-good-token", "", allowed)
+	if err != nil || !ok {
+		t.Fatalf("signin ok=%v err=%v", ok, err)
+	}
+
+	ok, err = VerifySigninToken(ctx, "test-secret", "good-token", "", allowed)
+	if err != nil || ok {
+		t.Fatalf("signin wrong action ok=%v err=%v", ok, err)
 	}
 
 	longToken := strings.Repeat("a", MaxTurnstileTokenLen+1)
