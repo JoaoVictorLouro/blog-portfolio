@@ -15,6 +15,8 @@ const (
 	defaultSiteVerifyURL = "https://challenges.cloudflare.com/turnstile/v0/siteverify"
 	// SubscribeAction is the Turnstile widget action for newsletter subscribe forms.
 	SubscribeAction = "subscribe"
+	// SigninAction is the Turnstile widget action for member sign-in forms.
+	SigninAction = "signin"
 	// MaxTurnstileTokenLen is Cloudflare's documented upper bound for the response token.
 	MaxTurnstileTokenLen = 2048
 )
@@ -54,8 +56,28 @@ func VerifySubscribeToken(
 	secret, token, remoteIP string,
 	allowedHostnames []string,
 ) (bool, error) {
+	return VerifyActionToken(ctx, secret, token, remoteIP, allowedHostnames, SubscribeAction)
+}
+
+// VerifySigninToken checks a token with Cloudflare and enforces signin action + hostname allowlist.
+func VerifySigninToken(
+	ctx context.Context,
+	secret, token, remoteIP string,
+	allowedHostnames []string,
+) (bool, error) {
+	return VerifyActionToken(ctx, secret, token, remoteIP, allowedHostnames, SigninAction)
+}
+
+// VerifyActionToken checks a token with Cloudflare and enforces the expected action + hostname allowlist.
+func VerifyActionToken(
+	ctx context.Context,
+	secret, token, remoteIP string,
+	allowedHostnames []string,
+	expectedAction string,
+) (bool, error) {
 	secret = strings.TrimSpace(secret)
 	token = strings.TrimSpace(token)
+	expectedAction = strings.TrimSpace(expectedAction)
 	if secret == "" {
 		return false, errors.New("turnstile secret not configured")
 	}
@@ -64,6 +86,9 @@ func VerifySubscribeToken(
 	}
 	if len(token) > MaxTurnstileTokenLen {
 		return false, errors.New("token too long")
+	}
+	if expectedAction == "" {
+		return false, errors.New("missing action")
 	}
 	if len(allowedHostnames) == 0 {
 		return false, errors.New("turnstile hostnames not configured")
@@ -76,7 +101,7 @@ func VerifySubscribeToken(
 	if !payload.Success {
 		return false, nil
 	}
-	if payload.Action != SubscribeAction {
+	if payload.Action != expectedAction {
 		return false, nil
 	}
 	if !HostnameAllowed(payload.Hostname, allowedHostnames) {

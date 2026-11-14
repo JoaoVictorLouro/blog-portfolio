@@ -1629,6 +1629,8 @@ html[data-np-path-locale='es-la'] .np-tag-locale-panel[data-np-tag-locale='es-la
 .np-antibot-turnstile {
   margin: 0.75rem 0 0.25rem;
   min-height: 65px;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .np-subscribe .np-antibot-turnstile {
@@ -1685,7 +1687,8 @@ html[data-np-path-locale='es-la'] .np-tag-locale-panel[data-np-tag-locale='es-la
   border: 0;
   background: transparent;
   color: var(--np-on-surface);
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .np-members[open] {
@@ -1710,14 +1713,23 @@ html[data-np-path-locale='es-la'] .np-tag-locale-panel[data-np-tag-locale='es-la
 .np-members-panel {
   position: relative;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
   width: min(100%, 30rem);
   max-height: calc(100vh - 2 * var(--np-margin));
-  overflow: auto;
+  overflow: hidden;
   padding: 1.5rem;
   border-left: 2px solid var(--np-neon-teal);
   box-shadow:
     0 0 0 1px color-mix(in srgb, var(--np-border-bright) 45%, transparent),
     0 0 40px color-mix(in srgb, var(--np-neon-teal) 12%, transparent);
+}
+
+.np-members-body {
+  flex: 1;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .np-members-bracket {

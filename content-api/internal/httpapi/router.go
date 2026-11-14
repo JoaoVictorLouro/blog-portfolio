@@ -110,7 +110,8 @@ func (s *Server) handleAntibotConfig(w http.ResponseWriter, r *http.Request) {
 }
 
 type antibotVerifyRequest struct {
-	Token string `json:"token"`
+	Token  string `json:"token"`
+	Action string `json:"action"`
 }
 
 func (s *Server) handleAntibotVerify(w http.ResponseWriter, r *http.Request) {
@@ -134,13 +135,33 @@ func (s *Server) handleAntibotVerify(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ok, err := antibot.VerifySubscribeToken(
-		r.Context(),
-		s.cfg.TurnstileSecretKey,
-		token,
-		clientIP(r),
-		s.cfg.TurnstileHostnames,
-	)
+	action := strings.TrimSpace(body.Action)
+	if action == "" {
+		action = antibot.SubscribeAction
+	}
+	var ok bool
+	var err error
+	switch action {
+	case antibot.SubscribeAction:
+		ok, err = antibot.VerifySubscribeToken(
+			r.Context(),
+			s.cfg.TurnstileSecretKey,
+			token,
+			clientIP(r),
+			s.cfg.TurnstileHostnames,
+		)
+	case antibot.SigninAction:
+		ok, err = antibot.VerifySigninToken(
+			r.Context(),
+			s.cfg.TurnstileSecretKey,
+			token,
+			clientIP(r),
+			s.cfg.TurnstileHostnames,
+		)
+	default:
+		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Invalid action"})
+		return
+	}
 	if err != nil {
 		writeJSON(w, http.StatusBadGateway, map[string]string{"error": "Verification failed"})
 		return

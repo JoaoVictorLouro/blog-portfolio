@@ -88,7 +88,7 @@ task recreate
 | `BOOTSTRAP_SKIP_NEWSLETTERS`  | Skip locale newsletters (default `false`)                                                                                                                                            |
 | `BOOTSTRAP_SKIP_INTEGRATIONS` | Skip content-api webhook registration (default `false`)                                                                                                                              |
 | `BOOTSTRAP_SKIP_ARTICLES`     | Skip demo articles (default `false`)                                                                                                                                                 |
-| `TURNSTILE_SITE_KEY`          | Optional public Cloudflare Turnstile site key for subscribe antibot (honeypot + timing always; captcha when secret is set too). Sign-in unchanged.                                   |
+| `TURNSTILE_SITE_KEY`          | Optional public Cloudflare Turnstile site key for subscribe and sign-in antibot (honeypot + timing always; captcha when secret is set too).                                          |
 | `TURNSTILE_HOSTNAMES`         | Comma-separated hostnames allowed in Turnstile siteverify (`localhost,127.0.0.1,konogaijin.com` locally; production should list only the public host). Widget action is `subscribe`. |
 
 Local compose leaves every skip flag `false`, so development bootstraps everything. In production, set the relevant flags to `true` so Ghost Admin content is not overwritten on each bootstrap run. Owner creation and theme activation always run. `CONTENT_API_WEBHOOK_SECRET` is required unless `BOOTSTRAP_SKIP_INTEGRATIONS` is true.
